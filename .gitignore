@@ -1,0 +1,10 @@
+/.gradle/
+/.settings/
+/bin/
+/build/
+/target/
+/.classpath
+/.project
+
+*.kate-swp
+*.swp
