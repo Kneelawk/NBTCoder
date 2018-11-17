@@ -2,33 +2,37 @@ package com.github.kneelawk.nbt;
 
 public class NBTUtils {
 	public static String getTagType(Tag tag) {
-		switch (tag.getId()) {
+		return getTagType(tag.getId());
+	}
+
+	public static String getTagType(byte type) {
+		switch (type) {
 		case NBTValues.TAG_BYTE:
-			return "tag_byte";
+			return "TagByte";
 		case NBTValues.TAG_SHORT:
-			return "tag_short";
+			return "TagShort";
 		case NBTValues.TAG_INT:
-			return "tag_int";
+			return "TagInt";
 		case NBTValues.TAG_LONG:
-			return "tag_long";
+			return "TagLong";
 		case NBTValues.TAG_FLOAT:
-			return "tag_float";
+			return "TagFloat";
 		case NBTValues.TAG_DOUBLE:
-			return "tag_double";
+			return "TagDouble";
 		case NBTValues.TAG_BYTE_ARRAY:
-			return "tag_byte_array";
+			return "TagByteArray";
 		case NBTValues.TAG_STRING:
-			return "tag_string";
+			return "TagString";
 		case NBTValues.TAG_LIST:
-			return "tag_list";
+			return "TagList";
 		case NBTValues.TAG_COMPOUND:
-			return "tag_compound";
+			return "TagCompound";
 		case NBTValues.TAG_INT_ARRAY:
-			return "tag_int_array";
+			return "TagIntArray";
 		case NBTValues.TAG_LONG_ARRAY:
-			return "tag_long_array";
+			return "TagLongArray";
 		default:
-			return "unknown";
+			return "TagUnknown" + type;
 		}
 	}
 }
