@@ -2,59 +2,64 @@ package com.github.kneelawk.nbtcoder;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class NBTLanguageParseException extends RuntimeException {
 
 	private static final long serialVersionUID = 6365836743322003806L;
 
-	private ParserRuleContext erroringRule;
+	private ParseTree erroringRule;
 
-	public NBTLanguageParseException(ParserRuleContext erroringRule) {
+	public NBTLanguageParseException(ParseTree erroringRule) {
 		super(fromParserRuleContext(erroringRule));
 		this.erroringRule = erroringRule;
 	}
 
-	public NBTLanguageParseException(String message, ParserRuleContext erroringRule) {
+	public NBTLanguageParseException(String message, ParseTree erroringRule) {
 		super(message + ", " + fromParserRuleContext(erroringRule));
 		this.erroringRule = erroringRule;
 	}
 
-	public NBTLanguageParseException(Throwable cause, ParserRuleContext erroringRule) {
+	public NBTLanguageParseException(Throwable cause, ParseTree erroringRule) {
 		super(fromParserRuleContext(erroringRule), cause);
 		this.erroringRule = erroringRule;
 	}
 
-	public NBTLanguageParseException(String message, Throwable cause, ParserRuleContext erroringRule) {
+	public NBTLanguageParseException(String message, Throwable cause, ParseTree erroringRule) {
 		super(message + ", " + fromParserRuleContext(erroringRule), cause);
 		this.erroringRule = erroringRule;
 	}
 
 	public NBTLanguageParseException(String message, Throwable cause, boolean enableSuppression,
-			boolean writableStackTrace, ParserRuleContext erroringRule) {
+			boolean writableStackTrace, ParseTree erroringRule) {
 		super(message + ", " + fromParserRuleContext(erroringRule), cause, enableSuppression, writableStackTrace);
 		this.erroringRule = erroringRule;
 	}
 
-	public ParserRuleContext getErroringRule() {
+	public ParseTree getErroringRule() {
 		return erroringRule;
 	}
 
-	private static String fromParserRuleContext(ParserRuleContext ctx) {
-		Token start = ctx.getStart();
-		Token end = ctx.getStop();
+	private static String fromParserRuleContext(ParseTree tree) {
 		String str = "";
-		if (start.getLine() == end.getLine()) {
-			str = start.getLine() + ":";
-			if (start.getStartIndex() == start.getStopIndex() && end.getStartIndex() == end.getStopIndex()
-					&& start.getStartIndex() == end.getStartIndex()) {
-				str += start.getStartIndex();
+		if (tree instanceof ParserRuleContext) {
+			ParserRuleContext ctx = (ParserRuleContext) tree;
+			Token start = ctx.getStart();
+			Token end = ctx.getStop();
+			if (start.getLine() == end.getLine()) {
+				str = start.getLine() + ":";
+				if (start.getStartIndex() == start.getStopIndex() && end.getStartIndex() == end.getStopIndex()
+						&& start.getStartIndex() == end.getStartIndex()) {
+					str += start.getStartIndex();
+				} else {
+					str += start.getStartIndex() + "-" + end.getStopIndex();
+				}
 			} else {
-				str += start.getStartIndex() + "-" + end.getStopIndex();
+				str = start.getLine() + ":" + start.getStartIndex() + "-" + end.getLine() + ":" + end.getStopIndex();
 			}
-		} else {
-			str = start.getLine() + ":" + start.getStartIndex() + "-" + end.getLine() + ":" + end.getStopIndex();
+			str += " ";
 		}
-		str += " (" + ctx.getText() + ")";
+		str += "(" + tree.getText() + ")";
 		return str;
 	}
 }

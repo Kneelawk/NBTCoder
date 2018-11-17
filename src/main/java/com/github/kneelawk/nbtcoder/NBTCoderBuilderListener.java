@@ -195,7 +195,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
 	@Override
 	public void visitErrorNode(ErrorNode node) {
-
+		throw new NBTLanguageParseException("Error node", node);
 	}
 
 	private byte determineListType(List<AbstractTag> list) throws IncompatibleTagTypeException {
