@@ -291,8 +291,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_SHORT) {
 				throw new ClassCastException("This TagList does not contain shorts");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain shorts");
 		}
 		return (TagList<TagShort>) list;
 	}
@@ -304,8 +302,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_INT) {
 				throw new ClassCastException("This TagList does not contain ints");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain ints");
 		}
 		return (TagList<TagInt>) list;
 	}
@@ -317,8 +313,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_LONG) {
 				throw new ClassCastException("This TagList does not contain longs");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain longs");
 		}
 		return (TagList<TagLong>) list;
 	}
@@ -330,8 +324,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_FLOAT) {
 				throw new ClassCastException("This TagList does not contain floats");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain floats");
 		}
 		return (TagList<TagFloat>) list;
 	}
@@ -343,8 +335,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_DOUBLE) {
 				throw new ClassCastException("This TagList does not contain dobules");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain doubles");
 		}
 		return (TagList<TagDouble>) list;
 	}
@@ -356,8 +346,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_BYTE_ARRAY) {
 				throw new ClassCastException("This TagList does not contain byte arrays");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain byte arrays");
 		}
 		return (TagList<TagByteArray>) list;
 	}
@@ -369,8 +357,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_STRING) {
 				throw new ClassCastException("This TagList does not contain strings");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain strings");
 		}
 		return (TagList<TagString>) list;
 	}
@@ -382,8 +368,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_LIST) {
 				throw new ClassCastException("This TagList does not contain lists");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain lists");
 		}
 		return (TagList<TagList<? extends Tag>>) list;
 	}
@@ -395,8 +379,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_COMPOUND) {
 				throw new ClassCastException("This TagList does not contain compound tags");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain compound tags");
 		}
 		return (TagList<TagCompound>) list;
 	}
@@ -408,8 +390,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_INT_ARRAY) {
 				throw new ClassCastException("This TagList does not contain int arrays");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain int arrays");
 		}
 		return (TagList<TagIntArray>) list;
 	}
@@ -421,8 +401,6 @@ public class TagCompound extends AbstractTag {
 			if (list.get(0).getId() != NBTValues.TAG_LONG_ARRAY) {
 				throw new ClassCastException("This TagList does not contain long arrays");
 			}
-		} else {
-			throw new ClassCastException("This TagList does not contain long arrays");
 		}
 		return (TagList<TagLongArray>) list;
 	}
