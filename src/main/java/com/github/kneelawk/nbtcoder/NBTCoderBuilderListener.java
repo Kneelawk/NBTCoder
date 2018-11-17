@@ -15,6 +15,7 @@ import com.github.kneelawk.nbt.NBTValues;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagByte;
 import com.github.kneelawk.nbt.TagByteArray;
+import com.github.kneelawk.nbt.TagCompound;
 import com.github.kneelawk.nbt.TagDouble;
 import com.github.kneelawk.nbt.TagFloat;
 import com.github.kneelawk.nbt.TagInt;
@@ -45,8 +46,10 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
 	private AbstractTag root;
 	private Stack<AbstractTag> tags = new Stack<>();
+
 	private Stack<List<AbstractTag>> listItems = new Stack<>();
-	private List<Object> typedArrayItems = new ArrayList<>();
+	private Stack<List<AbstractTag>> compoundItems = new Stack<>();
+	private List<String> typedArrayItems = new ArrayList<>();
 
 	public Tag getRoot() {
 		return root;
@@ -139,16 +142,16 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 		case "b":
 			byte[] bytes = new byte[typedArrayItems.size()];
 			for (int i = 0; i < typedArrayItems.size(); i++) {
-				bytes[i] = (byte) typedArrayItems.get(i);
+				bytes[i] = Byte.parseByte(typedArrayItems.get(i));
 			}
 			array = new TagByteArray("", bytes);
 			break;
 		case "i":
-			int[] ints = typedArrayItems.stream().mapToInt(o -> (int) o).toArray();
+			int[] ints = typedArrayItems.stream().mapToInt(o -> Integer.parseInt(o)).toArray();
 			array = new TagIntArray("", ints);
 			break;
 		case "l":
-			long[] longs = typedArrayItems.stream().mapToLong(o -> (long) o).toArray();
+			long[] longs = typedArrayItems.stream().mapToLong(o -> Long.parseLong(o)).toArray();
 			array = new TagLongArray("", longs);
 			break;
 		default:
@@ -165,17 +168,17 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
 	@Override
 	public void exitTypedArrayItem(TypedArrayItemContext ctx) {
-
+		typedArrayItems.add(ctx.STRING().getText());
 	}
 
 	@Override
 	public void enterTagCompound(TagCompoundContext ctx) {
-
+		compoundItems.add(new ArrayList<>());
 	}
 
 	@Override
 	public void exitTagCompound(TagCompoundContext ctx) {
-
+		tags.push(new TagCompound("", compoundItems.pop()));
 	}
 
 	@Override
@@ -185,7 +188,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
 	@Override
 	public void exitCompoundItem(CompoundItemContext ctx) {
-
+		compoundItems.peek().add(tags.pop());
 	}
 
 	@Override
