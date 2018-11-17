@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.github.kneelawk.nbt.AbstractTag;
+import com.github.kneelawk.nbt.NBTUtils;
 import com.github.kneelawk.nbt.NBTValues;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagByte;
@@ -214,12 +215,13 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 			return tagType;
 		} else if (currentType == tagType) {
 			return tagType;
-		} else if (!STAGS.get(currentType) || !STAGS.get(tagType)) {
-			throw new IncompatibleTagTypeException("List contains different types of complex tags");
-		} else if (currentType == NBTValues.TAG_INT) {
+		} else if (currentType == NBTValues.TAG_INT && STAGS.get(tagType)) {
 			return tagType;
+		} else if (tagType == NBTValues.TAG_INT && STAGS.get(currentType)) {
+			return currentType;
 		} else {
-			throw new IncompatibleTagTypeException("List contains different types of tags");
+			throw new IncompatibleTagTypeException("List contains different types of tags: both "
+					+ NBTUtils.getTagType(currentType) + " and " + NBTUtils.getTagType(tagType));
 		}
 	}
 
@@ -250,10 +252,12 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 			case NBTValues.TAG_STRING:
 				return new TagString("", String.valueOf(value));
 			default:
-				throw new IncompatibleTagTypeException("Unable to convert a TagInt into a tag of type: " + type);
+				throw new IncompatibleTagTypeException(
+						"Unable to convert a TagInt into a tag of type: " + NBTUtils.getTagType(type));
 			}
 		} else {
-			throw new IncompatibleTagTypeException("Unable to convert between different types of tags");
+			throw new IncompatibleTagTypeException("Unable to convert from a " + NBTUtils.getTagType(oldTag) + " to a "
+					+ NBTUtils.getTagType(type) + "");
 		}
 	}
 
