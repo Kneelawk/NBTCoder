@@ -34,7 +34,7 @@ public class TagCompound extends AbstractTag {
 	public void read(DataInput in, TagFactory factory) throws IOException {
 		elements.clear();
 		Tag tag;
-		while ((tag = NBTUtils.readNamedTag(in, factory)).getId() != NBTValues.TAG_END) {
+		while ((tag = NBTInternalUtils.readNamedTag(in, factory)).getId() != NBTValues.TAG_END) {
 			elements.put(tag.getName(), tag);
 		}
 	}
@@ -42,9 +42,9 @@ public class TagCompound extends AbstractTag {
 	@Override
 	public void write(DataOutput out) throws IOException {
 		for (Tag tag : elements.values()) {
-			NBTUtils.writeNamedTag(tag, out);
+			NBTInternalUtils.writeNamedTag(tag, out);
 		}
-		NBTUtils.writeNamedTag(new TagEnd(), out);
+		NBTInternalUtils.writeNamedTag(new TagEnd(), out);
 	}
 
 	@Override

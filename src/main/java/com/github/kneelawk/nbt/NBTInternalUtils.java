@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NBTUtils {
+public class NBTInternalUtils {
 	public static Tag readNamedTag(DataInput in, TagFactory factory) throws IOException {
 		byte type = in.readByte();
 

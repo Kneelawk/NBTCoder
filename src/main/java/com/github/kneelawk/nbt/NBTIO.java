@@ -15,11 +15,11 @@ import java.util.zip.GZIPOutputStream;
 
 public class NBTIO {
 	public static Tag read(DataInput in, TagFactory factory) throws IOException {
-		return NBTUtils.readNamedTag(in, factory);
+		return NBTInternalUtils.readNamedTag(in, factory);
 	}
 
 	public static TagCompound readCompound(DataInput in, TagFactory factory) throws IOException {
-		Tag tag = NBTUtils.readNamedTag(in, factory);
+		Tag tag = NBTInternalUtils.readNamedTag(in, factory);
 		if (tag.getId() != NBTValues.TAG_COMPOUND) {
 			throw new IOException("The root tag is not a named compound tag");
 		}
@@ -27,7 +27,7 @@ public class NBTIO {
 	}
 
 	public static void write(Tag tag, DataOutput out) throws IOException {
-		NBTUtils.writeNamedTag(tag, out);
+		NBTInternalUtils.writeNamedTag(tag, out);
 	}
 
 	public static Tag readStream(InputStream is, TagFactory factory) throws IOException {
