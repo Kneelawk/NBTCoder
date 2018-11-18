@@ -11,7 +11,7 @@ public class NBTCoderMain {
 
 	public static void main(String[] args) {
 		NBTLanguageParser parser = new NBTLanguageParser();
-		NBTLanguagePrinter printer = new NBTLanguagePrinter();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
 		try (FileInputStream fis = new FileInputStream(new File("test-input.txt"))) {
 			Tag tag = parser.parse(fis);
 			System.out.println("Tag:\n" + printer.print(tag));

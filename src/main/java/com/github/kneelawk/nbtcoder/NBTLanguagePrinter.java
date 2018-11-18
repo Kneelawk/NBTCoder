@@ -24,9 +24,50 @@ public class NBTLanguagePrinter {
 	private static final int INT_ARRAY_LINE_LENGTH = 8;
 	private static final int LONG_ARRAY_LINE_LENGTH = 4;
 
+	public static class Builder {
+		private boolean prettyPrint = true;
+		private boolean printRootName = true;
+
+		public Builder() {
+		}
+
+		public Builder(boolean prettyPrint, boolean printRootName) {
+			this.prettyPrint = prettyPrint;
+			this.printRootName = printRootName;
+		}
+
+		public NBTLanguagePrinter build() {
+			return new NBTLanguagePrinter(prettyPrint, printRootName);
+		}
+
+		public boolean isPrettyPrint() {
+			return prettyPrint;
+		}
+
+		public void setPrettyPrint(boolean prettyPrint) {
+			this.prettyPrint = prettyPrint;
+		}
+
+		public boolean isPrintRootName() {
+			return printRootName;
+		}
+
+		public void setPrintRootName(boolean printRootName) {
+			this.printRootName = printRootName;
+		}
+	}
+
+	private final boolean prettyPrint;
+	private final boolean printRootName;
+
+	public NBTLanguagePrinter(boolean prettyPrint, boolean printRootName) {
+		this.prettyPrint = prettyPrint;
+		this.printRootName = printRootName;
+	}
+
 	public String print(Tag tag) {
 		String name = tag.getName();
-		if (name.isEmpty()) {
+		if (!printRootName || name.isEmpty()) {
 			return printTag(tag, 0);
 		} else {
 			return name + ": " + printTag(tag, 0);
@@ -93,18 +134,22 @@ public class NBTLanguagePrinter {
 		String s = "[B;";
 		byte[] data = tag.getValue();
 		if (data.length > 0) {
-			s += "\n" + tabs(indent + 1);
+			if (prettyPrint)
+				s += "\n" + tabs(indent + 1);
 			for (int i = 0; i < data.length; i++) {
-				s += String.format("%3d", data[i]);
+				if (prettyPrint)
+					s += String.format("%3d", data[i]);
+				else
+					s += String.valueOf(data[i]);
 				if (i < data.length - 1) {
-					if (i % BYTE_ARRAY_LINE_LENGTH == BYTE_ARRAY_LINE_LENGTH - 1) {
-						s += ",\n" + tabs(indent + 1);
-					} else {
-						s += ",";
+					s += ",";
+					if (prettyPrint && i % BYTE_ARRAY_LINE_LENGTH == BYTE_ARRAY_LINE_LENGTH - 1) {
+						s += "\n" + tabs(indent + 1);
 					}
 				}
 			}
-			s += "\n" + tabs(indent);
+			if (prettyPrint)
+				s += "\n" + tabs(indent);
 		}
 		s += "]";
 		return s;
@@ -118,14 +163,18 @@ public class NBTLanguagePrinter {
 		String s = "[";
 		int size = tag.size();
 		if (size > 0) {
-			s += "\n" + tabs(indent + 1);
+			if (prettyPrint)
+				s += "\n" + tabs(indent + 1);
 			for (int i = 0; i < size; i++) {
 				s += printTag(tag.get(i), indent + 1);
 				if (i < size - 1) {
-					s += ",\n" + tabs(indent + 1);
+					s += ",";
+					if (prettyPrint)
+						s += "\n" + tabs(indent + 1);
 				}
 			}
-			s += "\n" + tabs(indent);
+			if (prettyPrint)
+				s += "\n" + tabs(indent);
 		}
 		s += "]";
 		return s;
@@ -134,15 +183,22 @@ public class NBTLanguagePrinter {
 	protected String printCompound(TagCompound tag, int indent) {
 		String s = "{";
 		if (!tag.isEmpty()) {
-			s += "\n" + tabs(indent + 1);
+			if (prettyPrint)
+				s += "\n" + tabs(indent + 1);
 			for (Iterator<Tag> it = tag.tags().iterator(); it.hasNext();) {
 				Tag child = it.next();
-				s += child.getName() + ": " + printTag(child, indent + 1);
+				s += child.getName() + ":";
+				if (prettyPrint)
+					s += " ";
+				s += printTag(child, indent + 1);
 				if (it.hasNext()) {
-					s += ",\n" + tabs(indent + 1);
+					s += ",";
+					if (prettyPrint)
+						s += "\n" + tabs(indent + 1);
 				}
 			}
-			s += "\n" + tabs(indent);
+			if (prettyPrint)
+				s += "\n" + tabs(indent);
 		}
 		s += "}";
 		return s;
@@ -152,18 +208,22 @@ public class NBTLanguagePrinter {
 		String s = "[I;";
 		int[] data = tag.getValue();
 		if (data.length > 0) {
-			s += "\n" + tabs(indent + 1);
+			if (prettyPrint)
+				s += "\n" + tabs(indent + 1);
 			for (int i = 0; i < data.length; i++) {
-				s += String.format("%3d", data[i]);
+				if (prettyPrint)
+					s += String.format("%3d", data[i]);
+				else
+					s += String.valueOf(data[i]);
 				if (i < data.length - 1) {
-					if (i % INT_ARRAY_LINE_LENGTH == INT_ARRAY_LINE_LENGTH - 1) {
-						s += ",\n" + tabs(indent + 1);
-					} else {
-						s += ",";
+					s += ",";
+					if (prettyPrint && i % INT_ARRAY_LINE_LENGTH == INT_ARRAY_LINE_LENGTH - 1) {
+						s += "\n" + tabs(indent + 1);
 					}
 				}
 			}
-			s += "\n" + tabs(indent);
+			if (prettyPrint)
+				s += "\n" + tabs(indent);
 		}
 		s += "]";
 		return s;
@@ -173,18 +233,22 @@ public class NBTLanguagePrinter {
 		String s = "[L;";
 		long[] data = tag.getValue();
 		if (data.length > 0) {
-			s += "\n" + tabs(indent + 1);
+			if (prettyPrint)
+				s += "\n" + tabs(indent + 1);
 			for (int i = 0; i < data.length; i++) {
-				s += String.format("%3d", data[i]);
+				if (prettyPrint)
+					s += String.format("%3d", data[i]);
+				else
+					s += String.valueOf(data[i]);
 				if (i < data.length - 1) {
-					if (i % LONG_ARRAY_LINE_LENGTH == LONG_ARRAY_LINE_LENGTH - 1) {
+					s += ",";
+					if (prettyPrint && i % LONG_ARRAY_LINE_LENGTH == LONG_ARRAY_LINE_LENGTH - 1) {
 						s += ",\n" + tabs(indent + 1);
-					} else {
-						s += ",";
 					}
 				}
 			}
-			s += "\n" + tabs(indent);
+			if (prettyPrint)
+				s += "\n" + tabs(indent);
 		}
 		s += "]";
 		return s;
