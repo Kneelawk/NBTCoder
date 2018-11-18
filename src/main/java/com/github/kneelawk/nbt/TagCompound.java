@@ -30,6 +30,10 @@ public class TagCompound extends AbstractTag {
 		}
 	}
 
+	public Map<String, Tag> getElements() {
+		return elements;
+	}
+
 	@Override
 	public void read(DataInput in, TagFactory factory) throws IOException {
 		elements.clear();

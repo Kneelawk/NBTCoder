@@ -32,6 +32,10 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 		this.elements.addAll(value);
 	}
 
+	public List<E> getElements() {
+		return elements;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public void read(DataInput in, TagFactory factory) throws IOException {
