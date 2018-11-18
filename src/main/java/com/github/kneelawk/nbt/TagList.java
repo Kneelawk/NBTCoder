@@ -26,7 +26,7 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 		super(name);
 	}
 
-	public TagList(String name, byte elementType, Collection<? extends E> value) {
+	public TagList(String name, Collection<? extends E> value) {
 		super(name);
 		this.elements.addAll(value);
 	}
