@@ -38,7 +38,7 @@ import com.github.kneelawk.nbtcoder.NBTCoderParser.TypedArrayItemContext;
 
 public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
-	private static final Pattern NUMBER = Pattern.compile("-?([0-9]*\\.)?[0-9]+[a-zA-Z]?");
+	private static final Pattern NUMBER = Pattern.compile("-?([0-9]*\\.)?[0-9]+([eE]-?[0-9]+)?[a-zA-Z]?");
 	private static final BitSet STAGS = new BitSet();
 
 	static {
@@ -293,11 +293,11 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 				} else {
 					switch (type) {
 					case 'b':
-						return new TagByte("", Byte.parseByte(str));
+						return new TagByte("", Byte.parseByte(str.substring(0, str.length() - 1)));
 					case 's':
-						return new TagShort("", Short.parseShort(str));
+						return new TagShort("", Short.parseShort(str.substring(0, str.length() - 1)));
 					case 'l':
-						return new TagLong("", Long.parseLong(str));
+						return new TagLong("", Long.parseLong(str.substring(0, str.length() - 1)));
 					case 'f':
 						return new TagFloat("", Float.parseFloat(str));
 					case 'd':
