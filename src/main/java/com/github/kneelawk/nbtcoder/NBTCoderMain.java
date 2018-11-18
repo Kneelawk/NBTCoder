@@ -11,9 +11,10 @@ public class NBTCoderMain {
 
 	public static void main(String[] args) {
 		NBTLanguageParser parser = new NBTLanguageParser();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter();
 		try (FileInputStream fis = new FileInputStream(new File("test-input.txt"))) {
 			Tag tag = parser.parse(fis);
-			System.out.println("Tag name: " + tag.getName());
+			System.out.println("Tag:\n" + printer.print(tag));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
