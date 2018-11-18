@@ -59,7 +59,8 @@ public class NBTLanguageParseException extends RuntimeException {
 			}
 			str += " ";
 		}
-		str += "(" + tree.getText() + ")";
+		String text = tree.getText();
+		str += "(" + (text.length() > 30 ? text.substring(0, 30) + "..." : text) + ")";
 		return str;
 	}
 }
