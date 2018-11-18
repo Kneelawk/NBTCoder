@@ -41,7 +41,7 @@ listItem
 
 tagTypedArray
 :
-	LIST_START STRING SIMICOLON
+	LIST_START STRING SEMICOLON
 	(
 		(
 			typedArrayItem COMMA
@@ -74,7 +74,7 @@ COLON
 	':'
 ;
 
-SIMICOLON
+SEMICOLON
 :
 	';'
 ;
@@ -106,7 +106,7 @@ LIST_END
 
 STRING
 :
-	~[:,{}[\] \t\r\n]+
+	~[:;,{}[\] \t\r\n]+
 	| '"' (~'"')+ '"'
 ;
 
