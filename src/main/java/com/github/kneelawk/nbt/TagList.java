@@ -28,6 +28,7 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
 	public TagList(String name, Collection<? extends E> value) {
 		super(name);
+		checkTagTypes(value);
 		this.elements.addAll(value);
 	}
 
@@ -119,6 +120,7 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
 	@Override
 	public boolean add(E e) {
+		checkNewTagType(e);
 		return elements.add(e);
 	}
 
@@ -134,11 +136,13 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
 	@Override
 	public boolean addAll(Collection<? extends E> c) {
+		checkNewTagTypes(c);
 		return elements.addAll(c);
 	}
 
 	@Override
 	public boolean addAll(int index, Collection<? extends E> c) {
+		checkNewTagTypes(c);
 		return elements.addAll(index, c);
 	}
 
@@ -154,7 +158,11 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
 	@Override
 	public void replaceAll(UnaryOperator<E> operator) {
-		elements.replaceAll(operator);
+		List<E> nelements = new ArrayList<>(elements);
+		nelements.replaceAll(operator);
+		checkTagTypes(nelements);
+		elements.clear();
+		elements.addAll(nelements);
 	}
 
 	@Override
@@ -205,11 +213,13 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
 	@Override
 	public E set(int index, E element) {
+		checkNewTagType(element);
 		return elements.set(index, element);
 	}
 
 	@Override
 	public void add(int index, E element) {
+		checkNewTagType(element);
 		elements.add(index, element);
 	}
 
@@ -256,5 +266,46 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 	@Override
 	public Spliterator<E> spliterator() {
 		return elements.spliterator();
+	}
+
+	private void checkNewTagType(Tag tag) {
+		if (!elements.isEmpty()) {
+			if (elements.get(0).getId() != tag.getId()) {
+				throw new IllegalArgumentException("Trying to insert an incompatible type of tag");
+			}
+		}
+	}
+
+	private void checkNewTagTypes(Collection<? extends E> tags) {
+		byte type;
+
+		if (elements.isEmpty()) {
+			type = 0;
+		} else {
+			type = elements.get(0).getId();
+		}
+
+		for (Tag tag : tags) {
+			if (type == 0) {
+				type = tag.getId();
+			}
+
+			if (tag.getId() != type) {
+				throw new IllegalArgumentException("Incompatible types of tags detected");
+			}
+		}
+	}
+
+	private void checkTagTypes(Collection<? extends E> tags) {
+		byte type = 0;
+		for (Tag tag : tags) {
+			if (type == 0) {
+				type = tag.getId();
+			}
+
+			if (tag.getId() != type) {
+				throw new IllegalArgumentException("Different types of tags detected");
+			}
+		}
 	}
 }
