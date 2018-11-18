@@ -189,7 +189,9 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
 	@Override
 	public void exitCompoundItem(CompoundItemContext ctx) {
-		compoundItems.peek().add(tags.pop());
+		AbstractTag tag = tags.pop();
+		tag.setName(ctx.STRING().getText());
+		compoundItems.peek().add(tag);
 	}
 
 	@Override
