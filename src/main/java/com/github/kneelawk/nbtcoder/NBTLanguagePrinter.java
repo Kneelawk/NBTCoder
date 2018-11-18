@@ -247,7 +247,7 @@ public class NBTLanguagePrinter {
 				if (i < data.length - 1) {
 					s += ",";
 					if (prettyPrint && i % LONG_ARRAY_LINE_LENGTH == LONG_ARRAY_LINE_LENGTH - 1) {
-						s += ",\n" + tabs(indent + 1);
+						s += "\n" + tabs(indent + 1);
 					}
 				}
 			}
