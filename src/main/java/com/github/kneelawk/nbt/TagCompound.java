@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
@@ -14,7 +14,7 @@ import java.util.function.UnaryOperator;
 
 public class TagCompound extends AbstractTag {
 
-	private Map<String, Tag> elements = new HashMap<>();
+	private Map<String, Tag> elements = new LinkedHashMap<>();
 
 	public TagCompound() {
 	}
