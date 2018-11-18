@@ -1,0 +1,4 @@
+name, foo, "name: ""foo"""
+value, foo, "value: ""foo"""
+name, bar, "name: ""bar"""
+value, bar, "value: ""bar"""
