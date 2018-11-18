@@ -3,6 +3,7 @@ package com.github.kneelawk.nbt;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class TagIntArray extends AbstractTag {
 
@@ -58,6 +59,33 @@ public class TagIntArray extends AbstractTag {
 		int[] nvalue = new int[value.length];
 		System.arraycopy(value, 0, nvalue, 0, value.length);
 		return new TagIntArray(getName(), nvalue);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Arrays.hashCode(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TagIntArray other = (TagIntArray) obj;
+		if (!Arrays.equals(value, other.value))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TagIntArray(" + getName() + ", " + Arrays.toString(value) + ")";
 	}
 
 }

@@ -108,13 +108,33 @@ public class TagCompound extends AbstractTag {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		return elements.equals(o);
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((elements == null) ? 0 : elements.hashCode());
+		return result;
 	}
 
 	@Override
-	public int hashCode() {
-		return elements.hashCode();
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TagCompound other = (TagCompound) obj;
+		if (elements == null) {
+			if (other.elements != null)
+				return false;
+		} else if (!elements.equals(other.elements))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TagCompound(" + getName() + ", " + elements + ")";
 	}
 
 	public Tag getOrDefault(String key, Tag defaultValue) {

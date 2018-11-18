@@ -50,4 +50,31 @@ public class TagFloat extends AbstractTag {
 		return new TagFloat(getName(), value);
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Float.floatToIntBits(value);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TagFloat other = (TagFloat) obj;
+		if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "TagFloat(" + getName() + ", " + value + ")";
+	}
+
 }

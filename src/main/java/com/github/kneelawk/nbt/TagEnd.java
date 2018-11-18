@@ -32,4 +32,9 @@ public class TagEnd implements Tag {
 		return new TagEnd();
 	}
 
+	@Override
+	public String toString() {
+		return "TagEnd()";
+	}
+
 }
