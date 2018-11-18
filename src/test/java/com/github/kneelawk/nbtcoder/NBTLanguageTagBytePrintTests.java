@@ -16,7 +16,7 @@ public class NBTLanguageTagBytePrintTests {
 
 		String out = printer.print(b);
 
-		assertEquals(out, expected);
+		assertEquals(expected, out);
 	}
 
 	@ParameterizedTest
@@ -27,7 +27,7 @@ public class NBTLanguageTagBytePrintTests {
 
 		String out = printer.print(b);
 
-		assertEquals(out, expected);
+		assertEquals(expected, out);
 	}
 
 	@ParameterizedTest
@@ -38,7 +38,7 @@ public class NBTLanguageTagBytePrintTests {
 
 		String out = printer.print(b);
 
-		assertEquals(out, expected);
+		assertEquals(expected, out);
 	}
 
 	@ParameterizedTest
@@ -49,6 +49,6 @@ public class NBTLanguageTagBytePrintTests {
 
 		String out = printer.print(b);
 
-		assertEquals(out, expected);
+		assertEquals(expected, out);
 	}
 }
