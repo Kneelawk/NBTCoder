@@ -38,7 +38,7 @@ import com.github.kneelawk.nbtcoder.NBTCoderParser.TypedArrayItemContext;
 
 public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 
-	private static final Pattern NUMBER = Pattern.compile("([0-9]*\\.)?[0-9]+[a-zA-Z]?");
+	private static final Pattern NUMBER = Pattern.compile("-?([0-9]*\\.)?[0-9]+[a-zA-Z]?");
 	private static final BitSet STAGS = new BitSet();
 
 	static {
@@ -139,24 +139,28 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 	public void exitTagTypedArray(TagTypedArrayContext ctx) {
 		String arrayTypeStr = ctx.STRING().getText().toLowerCase();
 		AbstractTag array;
-		switch (arrayTypeStr) {
-		case "b":
-			byte[] bytes = new byte[typedArrayItems.size()];
-			for (int i = 0; i < typedArrayItems.size(); i++) {
-				bytes[i] = Byte.parseByte(typedArrayItems.get(i));
+		try {
+			switch (arrayTypeStr) {
+			case "b":
+				byte[] bytes = new byte[typedArrayItems.size()];
+				for (int i = 0; i < typedArrayItems.size(); i++) {
+					bytes[i] = Byte.parseByte(typedArrayItems.get(i));
+				}
+				array = new TagByteArray("", bytes);
+				break;
+			case "i":
+				int[] ints = typedArrayItems.stream().mapToInt(o -> Integer.parseInt(o)).toArray();
+				array = new TagIntArray("", ints);
+				break;
+			case "l":
+				long[] longs = typedArrayItems.stream().mapToLong(o -> Long.parseLong(o)).toArray();
+				array = new TagLongArray("", longs);
+				break;
+			default:
+				throw new NBTLanguageParseException("Unknown typed array type: " + arrayTypeStr, ctx);
 			}
-			array = new TagByteArray("", bytes);
-			break;
-		case "i":
-			int[] ints = typedArrayItems.stream().mapToInt(o -> Integer.parseInt(o)).toArray();
-			array = new TagIntArray("", ints);
-			break;
-		case "l":
-			long[] longs = typedArrayItems.stream().mapToLong(o -> Long.parseLong(o)).toArray();
-			array = new TagLongArray("", longs);
-			break;
-		default:
-			throw new NBTLanguageParseException("Unknown typed array type: " + arrayTypeStr, ctx);
+		} catch (NumberFormatException e) {
+			throw new NBTLanguageParseException(e, ctx);
 		}
 		typedArrayItems.clear();
 		tags.push(array);
@@ -266,7 +270,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 	private AbstractTag parseString(String str) throws TagParseException {
 		Matcher match = NUMBER.matcher(str);
 		if (str.startsWith("\"") && str.endsWith("\"")) {
-			return new TagString(str.substring(1, str.length() - 1));
+			return new TagString("", str.substring(1, str.length() - 1));
 		} else if (match.matches()) {
 			char type = Character.toLowerCase(str.charAt(str.length() - 1));
 			if (Character.isDigit(type)) {
