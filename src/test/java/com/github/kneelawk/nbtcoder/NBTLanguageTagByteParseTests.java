@@ -19,4 +19,13 @@ public class NBTLanguageTagByteParseTests {
 		assertEquals(name, b.getName());
 		assertEquals(value, b.getValue());
 	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "prettyPrintTagByteWithoutName.csv", "simplePrintTagByteWithoutName.csv" })
+	public void parseTagByteWithoutName(String name, byte value, String input) throws IOException {
+		NBTLanguageParser parser = new NBTLanguageParser();
+		TagByte b = (TagByte) parser.parse(input);
+
+		assertEquals(value, b.getValue());
+	}
 }
