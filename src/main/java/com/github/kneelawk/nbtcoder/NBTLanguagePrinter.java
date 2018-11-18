@@ -70,7 +70,11 @@ public class NBTLanguagePrinter {
 		if (!printRootName || name.isEmpty()) {
 			return printTag(tag, 0);
 		} else {
-			return name + ": " + printTag(tag, 0);
+			String s = name + ":";
+			if (prettyPrint)
+				s += " ";
+			s += printTag(tag, 0);
+			return s;
 		}
 	}
 
