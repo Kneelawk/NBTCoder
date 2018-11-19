@@ -22,7 +22,7 @@ public class NBTLanguageTagListParseTests {
 		TagList<Tag> tag = (TagList<Tag>) parser.parse(input);
 
 		assertEquals(name, tag.getName());
-		assertEquals(data, tag.getElements());
+		assertIterableEquals(data, tag.getElements());
 	}
 
 	@ParameterizedTest
@@ -33,6 +33,6 @@ public class NBTLanguageTagListParseTests {
 		@SuppressWarnings("unchecked")
 		TagList<Tag> tag = (TagList<Tag>) parser.parse(input);
 
-		assertEquals(data, tag.getElements());
+		assertIterableEquals(data, tag.getElements());
 	}
 }
