@@ -1,0 +1,89 @@
+name, "", "{}"
+value, "", "{}"
+name, "foo: 1b| bar: 2b| baz: 3b", "{
+	foo: 1b,
+	bar: 2b,
+	baz: 3b
+}"
+name, "foo: [B;1,2,3]| bar: [B;4,5,6]| baz: [B;7,8,9]", "{
+	foo: [B;
+		  1,  2,  3
+	],
+	bar: [B;
+		  4,  5,  6
+	],
+	baz: [B;
+		  7,  8,  9
+	]
+}"
+name, "foo: ""There""| bar: ""Came""| baz: ""An Echo""", "{
+	foo: ""There"",
+	bar: ""Came"",
+	baz: ""An Echo""
+}"
+name, "foo: [1b,2b,3b]| bar: [4l,5l,6l]| baz: [""There"",""Came"",""An Echo""]", "{
+	foo: [
+		1b,
+		2b,
+		3b
+	],
+	bar: [
+		4l,
+		5l,
+		6l
+	],
+	baz: [
+		""There"",
+		""Came"",
+		""An Echo""
+	]
+}"
+name, "foo: {hello:1,world:2}| bar: {first:""something"",second:3l}| baz: {there:[B;1],came:[I;2],an-echo:[L;3]}", "{
+	foo: {
+		hello: 1,
+		world: 2
+	},
+	bar: {
+		first: ""something"",
+		second: 3l
+	},
+	baz: {
+		there: [B;
+			  1
+		],
+		came: [I;
+			  2
+		],
+		an-echo: [L;
+			  3
+		]
+	}
+}"
+name, "byte: 1b| short: 2s| int: 3| long: 4l| float: 5.5f| double: 6.6d| byte-array: [B;7,8,9]| string: ""hello""| list: [10, 11, 12]| compound: {foo:1b,bar:2.2f,baz:""Herro :)""}| int-array: [I;13,14,15]| long-array: [L;16,17,18]", "{
+	byte: 1b,
+	short: 2s,
+	int: 3,
+	long: 4l,
+	float: 5.5f,
+	double: 6.6d,
+	byte-array: [B;
+		  7,  8,  9
+	],
+	string: ""hello"",
+	list: [
+		10,
+		11,
+		12
+	],
+	compound: {
+		foo: 1b,
+		bar: 2.2f,
+		baz: ""Herro :)""
+	},
+	int-array: [I;
+		 13, 14, 15
+	],
+	long-array: [L;
+		 16, 17, 18
+	]
+}"
