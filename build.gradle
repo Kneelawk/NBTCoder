@@ -15,7 +15,7 @@ repositories {
 dependencies {
 	implementation 'com.google.guava:guava:27.0-jre'
 	implementation 'commons-io:commons-io:2.6'
-	implementation 'info.picocli:picocli:3.8.0'
+	implementation 'it.jnrpe.yaclp:cli-parser:1.0.4'
 	implementation 'org.apache.commons:commons-compress:1.18'
 	
 	antlr 'org.antlr:antlr4:4.7.1'
