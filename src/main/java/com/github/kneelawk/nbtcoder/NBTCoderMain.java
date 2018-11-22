@@ -1,57 +1,80 @@
 package com.github.kneelawk.nbtcoder;
 
-import it.jnrpe.yaclp.CommandLine;
-import it.jnrpe.yaclp.HelpFormatter;
-import it.jnrpe.yaclp.IOption;
-import it.jnrpe.yaclp.OptionBuilder;
-import it.jnrpe.yaclp.Parser;
-import it.jnrpe.yaclp.ParserBuilder;
-import it.jnrpe.yaclp.ParsingException;
+import java.io.IOException;
+import java.io.PrintStream;
+
+import com.github.kneelawk.nbt.DefaultTagFactory;
+import com.github.kneelawk.nbt.NBTIO;
+import com.github.kneelawk.nbt.Tag;
+import com.github.kneelawk.nbt.TagFactory;
 
 public class NBTCoderMain {
 	public static final String VERSION = "0.0.1-SNAPSHOT";
 
 	public static void main(String[] args) {
-		IOption modeOption = OptionBuilder.forMutuallyExclusiveOption()
-				.withOptions(
-						OptionBuilder.forOption("-h", "--human-readable")
-								.description("Input file is in human-readable format").build(),
-						OptionBuilder.forOption("-n", "--nbt").description("Input file is in NBT format").build())
-				.build();
+		NBTCoderArgs argsObj = new NBTCoderArgs(args);
+		argsObj.parse();
 
-		Parser p = ParserBuilder.forOptionsBasedCli().withOption(
-				OptionBuilder.forMutuallyExclusiveOption()
-						.withOptions(OptionBuilder.forOption("--help").description("Print this help message").build(),
-								OptionBuilder.forOption("--version").description("Print this program's version")
-										.build(),
-								modeOption)
-						.description("Operation mode").mandatory(true).build(),
-				OptionBuilder.forOption("-i", "--in-file").requires(modeOption)
-						.description("Input file or '-' for stdin").build(),
-				OptionBuilder.forOption("-o", "--out-file").requires(modeOption)
-						.description("Output file or '-' for stdout").build())
-				.build();
+		TagFactory factory = new DefaultTagFactory();
 
-		HelpFormatter formatter = new HelpFormatter("NBTCoder", p);
+		switch (argsObj.getMode()) {
+		case NBT_TO_HUMAN: {
+			Tag tag = null;
+			if (argsObj.isCompressed()) {
+				try {
+					tag = NBTIO.readCompressedStream(argsObj.getInput(), factory);
+				} catch (IOException e) {
+					System.err.println("Unable to parse this NBT file.");
+					e.printStackTrace();
+					System.exit(-1);
+				}
+			} else {
+				try {
+					tag = NBTIO.readStream(argsObj.getInput(), factory);
+				} catch (IOException e) {
+					System.err.println("Unable to parse this NBT file.");
+					e.printStackTrace();
+					System.exit(-1);
+				}
+			}
 
-		CommandLine cli = null;
-		try {
-			cli = p.parse(args);
-		} catch (ParsingException e) {
-			System.err.println("Error: " + e.getLocalizedMessage());
-			formatter.printUsage(System.err);
-			formatter.printHelp(System.err);
-			System.exit(-1);
+			NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
+			String str = printer.print(tag);
+
+			PrintStream out = new PrintStream(argsObj.getOutput());
+			out.print(str);
+			out.close();
+			break;
 		}
+		case HUMAN_TO_NBT:
+			NBTLanguageParser parser = new NBTLanguageParser();
+			Tag tag = null;
+			try {
+				tag = parser.parse(argsObj.getInput());
+			} catch (IOException e) {
+				System.err.println("Unable to parse.");
+				e.printStackTrace();
+				System.exit(-1);
+			}
 
-		if (cli.hasCommand("--help")) {
-			formatter.printUsage(System.out);
-			formatter.printHelp(System.out);
-			System.exit(0);
-		}
-
-		if (cli.hasCommand("--version")) {
-			System.out.println("NBTCoder version " + VERSION);
+			if (argsObj.isCompressed()) {
+				try {
+					NBTIO.writeCompressedStream(tag, argsObj.getOutput());
+				} catch (IOException e) {
+					System.err.println("Unable to write this NBT file.");
+					e.printStackTrace();
+					System.exit(-1);
+				}
+			} else {
+				try {
+					NBTIO.writeStream(tag, argsObj.getOutput());
+				} catch (IOException e) {
+					System.err.println("Unable to write this NBT file.");
+					e.printStackTrace();
+					System.exit(-1);
+				}
+			}
+			break;
 		}
 	}
 }
