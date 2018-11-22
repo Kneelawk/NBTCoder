@@ -42,7 +42,7 @@ public class NBTCoderMain {
 			String str = printer.print(tag);
 
 			PrintStream out = new PrintStream(argsObj.getOutput());
-			out.print(str);
+			out.println(str);
 			out.close();
 			break;
 		}
