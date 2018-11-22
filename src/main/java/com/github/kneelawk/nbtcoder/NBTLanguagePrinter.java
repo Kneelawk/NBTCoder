@@ -3,6 +3,8 @@ package com.github.kneelawk.nbtcoder;
 import static com.github.kneelawk.nbtcoder.StringUtils.*;
 
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.kneelawk.nbt.NBTValues;
 import com.github.kneelawk.nbt.Tag;
@@ -23,6 +25,7 @@ public class NBTLanguagePrinter {
 	private static final int BYTE_ARRAY_LINE_LENGTH = 16;
 	private static final int INT_ARRAY_LINE_LENGTH = 8;
 	private static final int LONG_ARRAY_LINE_LENGTH = 4;
+	private static final Pattern LEGAL_STRING = Pattern.compile("[^:;,{}\\[\\] \\t\\r\\n]+");
 
 	public static class Builder {
 		private boolean prettyPrint = true;
@@ -70,7 +73,7 @@ public class NBTLanguagePrinter {
 		if (!printRootName || name.isEmpty()) {
 			return printTag(tag, 0);
 		} else {
-			String s = name + ":";
+			String s = printName(name) + ":";
 			if (prettyPrint)
 				s += " ";
 			s += printTag(tag, 0);
@@ -107,6 +110,15 @@ public class NBTLanguagePrinter {
 			return printLongArray((TagLongArray) tag, indent);
 		default:
 			throw new IllegalArgumentException("Unknown tag type: " + tag.getId());
+		}
+	}
+
+	protected String printName(String name) {
+		Matcher match = LEGAL_STRING.matcher(name);
+		if (!match.matches()) {
+			return "\"" + name.replace("\"", "\\\"") + "\"";
+		} else {
+			return name;
 		}
 	}
 
@@ -160,7 +172,7 @@ public class NBTLanguagePrinter {
 	}
 
 	protected String printString(TagString tag, int indent) {
-		return "\"" + tag.getValue() + "\"";
+		return "\"" + tag.getValue().replace("\"", "\\\"") + "\"";
 	}
 
 	protected String printList(TagList<Tag> tag, int indent) {
@@ -191,7 +203,7 @@ public class NBTLanguagePrinter {
 				s += "\n" + tabs(indent + 1);
 			for (Iterator<Tag> it = tag.tags().iterator(); it.hasNext();) {
 				Tag child = it.next();
-				s += child.getName() + ":";
+				s += printName(child.getName()) + ":";
 				if (prettyPrint)
 					s += " ";
 				s += printTag(child, indent + 1);

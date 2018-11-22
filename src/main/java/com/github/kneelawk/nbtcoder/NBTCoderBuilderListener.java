@@ -64,7 +64,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 	public void exitNbtFile(NbtFileContext ctx) {
 		root = tags.pop();
 		if (ctx.STRING() != null) {
-			root.setName(ctx.STRING().getText());
+			root.setName(unescapeString(ctx.STRING().getText()));
 		}
 	}
 
@@ -194,7 +194,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 	@Override
 	public void exitCompoundItem(CompoundItemContext ctx) {
 		AbstractTag tag = tags.pop();
-		tag.setName(ctx.STRING().getText());
+		tag.setName(unescapeString(ctx.STRING().getText()));
 		compoundItems.peek().add(tag);
 	}
 
@@ -270,7 +270,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 	private AbstractTag parseString(String str) throws TagParseException {
 		Matcher match = NUMBER.matcher(str);
 		if (str.startsWith("\"") && str.endsWith("\"")) {
-			return new TagString("", str.substring(1, str.length() - 1));
+			return new TagString("", str.substring(1, str.length() - 1).replace("\\\"", "\""));
 		} else if (match.matches()) {
 			char type = Character.toLowerCase(str.charAt(str.length() - 1));
 			if (Character.isDigit(type)) {
@@ -310,5 +310,12 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 		} else {
 			return new TagString("", str);
 		}
+	}
+
+	private String unescapeString(String input) {
+		if (input.startsWith("\"") && input.endsWith("\"")) {
+			input = input.substring(1, input.length() - 1).replace("\\\"", "\"");
+		}
+		return input;
 	}
 }
