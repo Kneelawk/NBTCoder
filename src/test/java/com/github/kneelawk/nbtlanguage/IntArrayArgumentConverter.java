@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtcoder;
+package com.github.kneelawk.nbtlanguage;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -7,16 +7,16 @@ import java.util.Arrays;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 
-public class LongArrayArgumentConverter extends SimpleArgumentConverter {
+public class IntArrayArgumentConverter extends SimpleArgumentConverter {
 	@Override
 	protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
-		assertEquals(long[].class, targetType);
+		assertEquals(int[].class, targetType);
 
 		String input = (String) source;
 		if (input.isEmpty()) {
-			return new long[0];
+			return new int[0];
 		}
 
-		return Arrays.stream(input.split(",")).mapToLong(s -> Long.parseLong(s.trim())).toArray();
+		return Arrays.stream(input.split(",")).mapToInt(s -> Integer.parseInt(s.trim())).toArray();
 	}
 }
