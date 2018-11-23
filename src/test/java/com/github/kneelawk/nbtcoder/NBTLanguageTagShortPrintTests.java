@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.TagShort;
+import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
 
 public class NBTLanguageTagShortPrintTests {
 	@ParameterizedTest

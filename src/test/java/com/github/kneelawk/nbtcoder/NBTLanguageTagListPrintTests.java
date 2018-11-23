@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagList;
+import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
 
 public class NBTLanguageTagListPrintTests {
 	@ParameterizedTest

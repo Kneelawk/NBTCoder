@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtcoder;
+package com.github.kneelawk.utils;
 
 public class StringUtils {
 	public static String tabs(int n) {

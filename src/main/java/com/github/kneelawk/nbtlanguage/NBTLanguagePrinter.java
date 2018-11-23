@@ -1,6 +1,6 @@
-package com.github.kneelawk.nbtcoder;
+package com.github.kneelawk.nbtlanguage;
 
-import static com.github.kneelawk.nbtcoder.StringUtils.*;
+import static com.github.kneelawk.utils.StringUtils.*;
 
 import java.util.Iterator;
 import java.util.regex.Matcher;

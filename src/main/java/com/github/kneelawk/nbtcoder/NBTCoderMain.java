@@ -7,6 +7,8 @@ import com.github.kneelawk.nbt.DefaultTagFactory;
 import com.github.kneelawk.nbt.NBTIO;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
+import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
+import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
 
 public class NBTCoderMain {
 	public static final String VERSION = "0.0.1-SNAPSHOT";

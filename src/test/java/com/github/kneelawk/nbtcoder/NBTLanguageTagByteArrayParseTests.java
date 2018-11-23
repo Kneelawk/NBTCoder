@@ -9,6 +9,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.TagByteArray;
+import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
 
 public class NBTLanguageTagByteArrayParseTests {
 	@ParameterizedTest

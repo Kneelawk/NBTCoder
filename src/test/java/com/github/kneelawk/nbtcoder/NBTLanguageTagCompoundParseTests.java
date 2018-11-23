@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagCompound;
+import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
 
 public class NBTLanguageTagCompoundParseTests {
 	@ParameterizedTest

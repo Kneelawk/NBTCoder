@@ -1,7 +1,7 @@
-grammar NBTCoder;
+grammar NBTLanguageSystem;
 
 @header {
-	package com.github.kneelawk.nbtcoder;
+	package com.github.kneelawk.nbtlanguage;
 }
 
 nbtFile

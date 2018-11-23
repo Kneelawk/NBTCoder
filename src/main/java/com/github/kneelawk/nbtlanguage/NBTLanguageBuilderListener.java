@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtcoder;
+package com.github.kneelawk.nbtlanguage;
 
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -26,17 +26,17 @@ import com.github.kneelawk.nbt.TagLong;
 import com.github.kneelawk.nbt.TagLongArray;
 import com.github.kneelawk.nbt.TagShort;
 import com.github.kneelawk.nbt.TagString;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.CompoundItemContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.ListItemContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.NbtFileContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.TagBodyContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.TagCompoundContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.TagListContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.TagStringContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.TagTypedArrayContext;
-import com.github.kneelawk.nbtcoder.NBTCoderParser.TypedArrayItemContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.CompoundItemContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.ListItemContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.NbtFileContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagBodyContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagCompoundContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagListContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagStringContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagTypedArrayContext;
+import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TypedArrayItemContext;
 
-public class NBTCoderBuilderListener extends NBTCoderBaseListener {
+public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
 	private static final Pattern NUMBER = Pattern.compile("-?([0-9]*\\.)?[0-9]+([eE]-?[0-9]+)?[a-zA-Z]?");
 	private static final BitSet STAGS = new BitSet();

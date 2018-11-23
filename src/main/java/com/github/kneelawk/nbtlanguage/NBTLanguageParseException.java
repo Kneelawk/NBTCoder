@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtcoder;
+package com.github.kneelawk.nbtlanguage;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;

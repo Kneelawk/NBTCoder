@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.TagInt;
+import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
 
 public class NBTLanguageTagIntParseTests {
 	@ParameterizedTest

@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtcoder;
+package com.github.kneelawk.nbtlanguage;
 
 public class IncompatibleTagTypeException extends Exception {
 
