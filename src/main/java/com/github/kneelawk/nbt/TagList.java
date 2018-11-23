@@ -54,7 +54,7 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 	public void write(DataOutput out) throws IOException {
 		byte elementType;
 		if (elements.size() == 0) {
-			elementType = 1;
+			elementType = 0;
 		} else {
 			elementType = elements.get(0).getId();
 		}

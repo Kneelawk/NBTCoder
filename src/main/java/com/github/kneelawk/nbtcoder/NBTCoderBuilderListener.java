@@ -104,7 +104,7 @@ public class NBTCoderBuilderListener extends NBTCoderBaseListener {
 	public void exitTagList(TagListContext ctx) {
 		TagList<Tag> list = new TagList<>();
 		List<AbstractTag> items = listItems.pop();
-		byte type = 1;
+		byte type = 0;
 		try {
 			type = determineListType(items);
 		} catch (IncompatibleTagTypeException e) {
