@@ -1,1 +1,68 @@
-A file like:
+A text file like:
+{
+	data: {
+		name: "Kneelawk",
+		location: [
+			1,
+			2,
+			3
+		]
+	}
+}
+would produce an NBT file like:
+TAG_Compound(None): 1 entry
+{
+	TAG_Compound('data'): 2 entries
+	{
+		TAG_String('name'): 'Kneelawk'
+		TAG_List('location'): 3 entries
+		{
+			TAG_Int(None): 1
+			TAG_Int(None): 2
+			TAG_Int(None): 3
+		}
+	}
+}
+
+A text file like:
+!filedata
+name=test.nbt
+type=compressed
+!data
+{
+	data: {
+		str: "Hello World!"
+	}
+}
+would be produced by a compressed NBT file called 'test.nbt' with contents:
+TAG_Compound(None): 1 entry
+{
+	TAG_Compound('data'): 1 entry
+	{
+		TAG_String('str'): 'Hello World!'
+	}
+}
+
+A text file like:
+!filedata
+name=r.-1.-2.mca
+type=anvil
+!chunk
+x=-41
+z=-52
+!data
+{
+	data: {
+		hello: "World!"
+	}
+}
+!chunk
+x=-41
+z=-53
+!data
+{
+	data: {
+		hello: "Kneelawk!"
+	}
+}
+would be produced by an anvil region file called 'r.-1.-2.mca' that contained the chunks at (-41,-52) and (-41,-53).
