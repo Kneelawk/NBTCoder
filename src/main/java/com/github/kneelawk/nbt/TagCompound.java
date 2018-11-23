@@ -60,7 +60,7 @@ public class TagCompound extends AbstractTag {
 	public TagCompound copy() {
 		TagCompound nmap = new TagCompound(getName());
 		for (Tag tag : elements.values()) {
-			nmap.add(tag.copy());
+			nmap.put(tag.copy());
 		}
 		return nmap;
 	}
@@ -85,7 +85,7 @@ public class TagCompound extends AbstractTag {
 		return elements.get(key);
 	}
 
-	public Tag add(Tag value) {
+	public Tag put(Tag value) {
 		return elements.put(value.getName(), value);
 	}
 
@@ -93,7 +93,7 @@ public class TagCompound extends AbstractTag {
 		return elements.remove(key);
 	}
 
-	public void addAll(Collection<? extends Tag> m) {
+	public void putAll(Collection<? extends Tag> m) {
 		for (Tag tag : m) {
 			elements.put(tag.getName(), tag);
 		}
@@ -153,7 +153,7 @@ public class TagCompound extends AbstractTag {
 		elements.replaceAll((name, tag) -> function.apply(tag));
 	}
 
-	public Tag addIfAbsent(Tag value) {
+	public Tag putIfAbsent(Tag value) {
 		return elements.putIfAbsent(value.getName(), value);
 	}
 
@@ -204,44 +204,44 @@ public class TagCompound extends AbstractTag {
 		});
 	}
 
-	public void addByte(String name, byte value) {
-		add(new TagByte(name, value));
+	public void putByte(String name, byte value) {
+		put(new TagByte(name, value));
 	}
 
-	public void addShort(String name, short value) {
-		add(new TagShort(name, value));
+	public void putShort(String name, short value) {
+		put(new TagShort(name, value));
 	}
 
-	public void addInt(String name, int value) {
-		add(new TagInt(name, value));
+	public void putInt(String name, int value) {
+		put(new TagInt(name, value));
 	}
 
-	public void addLong(String name, long value) {
-		add(new TagLong(name, value));
+	public void putLong(String name, long value) {
+		put(new TagLong(name, value));
 	}
 
-	public void addFloat(String name, float value) {
-		add(new TagFloat(name, value));
+	public void putFloat(String name, float value) {
+		put(new TagFloat(name, value));
 	}
 
-	public void addDouble(String name, double value) {
-		add(new TagDouble(name, value));
+	public void putDouble(String name, double value) {
+		put(new TagDouble(name, value));
 	}
 
-	public void addByteArray(String name, byte[] value) {
-		add(new TagByteArray(name, value));
+	public void putByteArray(String name, byte[] value) {
+		put(new TagByteArray(name, value));
 	}
 
-	public void addString(String name, String value) {
-		add(new TagString(name, value));
+	public void putString(String name, String value) {
+		put(new TagString(name, value));
 	}
 
-	public void addIntArray(String name, int[] value) {
-		add(new TagIntArray(name, value));
+	public void putIntArray(String name, int[] value) {
+		put(new TagIntArray(name, value));
 	}
 
-	public void addLongArray(String name, long[] value) {
-		add(new TagLongArray(name, value));
+	public void putLongArray(String name, long[] value) {
+		put(new TagLongArray(name, value));
 	}
 
 	public byte getByte(String key) {
