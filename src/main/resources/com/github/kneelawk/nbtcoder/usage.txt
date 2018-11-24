@@ -1,3 +1,4 @@
+NBTCoder version @APPLICATION_VERSION@
 Usage:
   NBTCoder --help
         Prints this help message.

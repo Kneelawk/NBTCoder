@@ -8,14 +8,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 
 public class NBTCoderArgs {
-	public static final String VERSION = "0.0.1-SNAPSHOT";
-	public static final String USAGE = getUsage();
+	public static final Properties APPLICATION_PROPERTIES = loadApplicationProperties();
+	public static final String VERSION = APPLICATION_PROPERTIES.getProperty("version");
+	public static final String USAGE = loadUsage();
 
-	private static String getUsage() {
+	private static Properties loadApplicationProperties() {
+		try {
+			Properties props = new Properties();
+			props.load(NBTCoderArgs.class.getResourceAsStream("application.properties"));
+			return props;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static String loadUsage() {
 		try {
 			return IOUtils.toString(NBTCoderArgs.class.getResource("usage.txt"), Charset.defaultCharset());
 		} catch (IOException e) {

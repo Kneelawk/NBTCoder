@@ -11,7 +11,6 @@ import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
 import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
 
 public class NBTCoderMain {
-	public static final String VERSION = "0.0.1-SNAPSHOT";
 
 	public static void main(String[] args) {
 		NBTCoderArgs argsObj = new NBTCoderArgs(args);
