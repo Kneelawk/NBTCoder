@@ -1,11 +1,13 @@
 package com.github.kneelawk.nbt;
 
+import java.io.IOException;
+
 public class DefaultTagFactory implements TagFactory {
 	public DefaultTagFactory() {
 	}
 
 	@Override
-	public Tag createTag(byte type, String name) {
+	public Tag createTag(byte type, String name) throws IOException {
 		switch (type) {
 		case NBTValues.TAG_BYTE:
 			return new TagByte(name);
@@ -32,7 +34,7 @@ public class DefaultTagFactory implements TagFactory {
 		case NBTValues.TAG_LONG_ARRAY:
 			return new TagLongArray(name);
 		default:
-			throw new IllegalArgumentException("Unknown tag type: " + type);
+			throw new IOException("Unknown tag type: " + type);
 		}
 	}
 }
