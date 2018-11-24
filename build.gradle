@@ -1,7 +1,19 @@
+buildscript {
+	repositories {
+		maven {
+			url "https://plugins.gradle.org/m2/"
+		}
+	}
+	dependencies {
+		classpath "gradle.plugin.com.palantir.graal:gradle-graal:0.2.0-4-g255fd1f"
+	}
+}
+
 apply plugin: 'java'
 apply plugin: 'antlr'
 apply plugin: 'eclipse'
 apply plugin: 'application'
+apply plugin: 'com.palantir.graal'
 
 sourceCompatibility = 1.8
 version = '0.0.3-SNAPSHOT'
@@ -26,4 +38,10 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+graal {
+	mainClass mainClassName
+	outputName 'NBTCoder'
+	graalVersion '1.0.0-rc9'
 }
