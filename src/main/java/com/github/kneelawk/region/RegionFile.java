@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,12 +18,12 @@ import com.github.kneelawk.nbt.TagFactory;
 
 public class RegionFile {
 	private Map<Integer, Chunk> chunks;
-	private List<Sector> sectors;
+	private List<Partition> partitions;
 	private int[] timestamps;
 
 	public RegionFile() {
 		chunks = new LinkedHashMap<>();
-		sectors = new ArrayList<>();
+		partitions = new ArrayList<>();
 		timestamps = new int[RegionValues.INTS_PER_SECTOR];
 	}
 
@@ -44,33 +43,28 @@ public class RegionFile {
 			}
 		}
 
-		sectors.add(new Sector(true));
-
 		for (int i = 0; i < RegionValues.INTS_PER_SECTOR; i++) {
 			timestamps[i] = input.readInt();
 		}
 
-		sectors.add(new Sector(true));
+		partitions.add(new Partition(PartitionType.RESERVED, 0, 2));
 
 		int sectorsRead = 2;
 		Iterator<Integer> it = offsetMap.keySet().iterator();
 		while (it.hasNext()) {
 			int sectorNum = it.next();
-			while (sectorsRead < sectorNum) {
-				System.err.println("Skipping sector: " + sectorsRead);
-				input.skipBytes(RegionValues.BYTES_PER_SECTOR);
-				sectorsRead++;
-				sectors.add(new Sector());
+
+			// skip to the correct sector
+			if (sectorsRead < sectorNum) {
+				input.skipBytes((sectorNum - sectorsRead) * RegionValues.BYTES_PER_SECTOR);
+				partitions.add(new Partition(PartitionType.EMPTY, sectorsRead, sectorNum - sectorsRead));
+				sectorsRead = sectorNum;
 			}
 
 			ChunkLoc loc = offsetMap.get(sectorNum);
 
-			System.err.println("Reading chunk: " + loc);
-
 			int length = input.readInt();
 			byte type = input.readByte();
-
-			System.err.println("Length: " + Math.ceil(((double) length) / ((double) RegionValues.BYTES_PER_SECTOR)));
 
 			byte[] data = new byte[length];
 			input.readFully(data);
@@ -91,6 +85,9 @@ public class RegionFile {
 				throw new IOException("Unknown chunk compression type: " + type);
 			}
 
+			// Align to the sector borders.
+			// The extra -5 is because of the 4 bytes of length data and 1 byte of
+			// compression data read beforehand
 			input.skipBytes(loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - length - 5);
 
 			sectorsRead += loc.getSectorCount();
@@ -98,11 +95,7 @@ public class RegionFile {
 			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ());
 			chunk.read(dis, factory);
 
-			ChunkData chunkData = new ChunkData(loc.getOffset(), loc.getLocation(), chunk);
-
-			for (int i = 0; i < loc.getSectorCount(); i++) {
-				sectors.add(new Sector(chunkData));
-			}
+			partitions.add(new Partition(PartitionType.CHUNK, chunk, loc.getSectorNumber(), loc.getSectorCount()));
 
 			chunks.put(loc.getLocation(), chunk);
 		}
@@ -116,12 +109,8 @@ public class RegionFile {
 		return chunks.get(x + z * 32);
 	}
 
-	public List<Sector> getSectors() {
-		return sectors;
-	}
-
-	public Collection<Chunk> getChunks() {
-		return chunks.values();
+	public List<Partition> getPartitions() {
+		return partitions;
 	}
 
 	private static class ChunkLoc {
