@@ -1,7 +1,6 @@
 package com.github.kneelawk.region;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.InflaterInputStream;
 
 import com.github.kneelawk.nbt.TagFactory;
 
@@ -59,6 +56,8 @@ public class RegionFile {
 				input.skipBytes((sectorNum - sectorsRead) * RegionValues.BYTES_PER_SECTOR);
 				partitions.add(new Partition(PartitionType.EMPTY, sectorsRead, sectorNum - sectorsRead));
 				sectorsRead = sectorNum;
+			} else if (sectorsRead > sectorNum) {
+				throw new IOException("Skipped sectors");
 			}
 
 			ChunkLoc loc = offsetMap.get(sectorNum);
@@ -69,21 +68,7 @@ public class RegionFile {
 			byte[] data = new byte[length];
 			input.readFully(data);
 
-			DataInputStream dis = null;
-
-			switch (type) {
-			case RegionValues.GZIP_COMPRESSION:
-				System.err.println("Type: gzip");
-				dis = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(data))));
-				break;
-			case RegionValues.DEFLATE_COMPRESSION:
-				System.err.println("Type: deflate");
-				dis = new DataInputStream(
-						new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(data))));
-				break;
-			default:
-				throw new IOException("Unknown chunk compression type: " + type);
-			}
+			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ(), data);
 
 			// Align to the sector borders.
 			// The extra -5 is because of the 4 bytes of length data and 1 byte of
@@ -91,9 +76,6 @@ public class RegionFile {
 			input.skipBytes(loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - length - 5);
 
 			sectorsRead += loc.getSectorCount();
-
-			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ());
-			chunk.read(dis, factory);
 
 			partitions.add(new Partition(PartitionType.CHUNK, chunk, loc.getSectorNumber(), loc.getSectorCount()));
 
