@@ -68,7 +68,7 @@ public class RegionFile {
 			byte[] data = new byte[length];
 			input.readFully(data);
 
-			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ(), data);
+			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ(), data, timestamps[sectorNum]);
 
 			// Align to the sector borders.
 			// The extra -5 is because of the 4 bytes of length data and 1 byte of

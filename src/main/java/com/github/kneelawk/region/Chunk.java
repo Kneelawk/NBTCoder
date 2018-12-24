@@ -16,35 +16,86 @@ import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
 
 public class Chunk {
+	public static class Builder {
+		private byte compressionType;
+		private int x;
+		private int z;
+		private byte[] data;
+		private int timestamp;
+
+		public Builder() {
+		}
+
+		public Builder(byte compressionType, int x, int z, byte[] data, int timestamp) {
+			this.compressionType = compressionType;
+			this.x = x;
+			this.z = z;
+			this.data = data;
+			this.timestamp = timestamp;
+		}
+
+		public Chunk build() {
+			return new Chunk(compressionType, x, z, data, timestamp);
+		}
+
+		public byte getCompressionType() {
+			return compressionType;
+		}
+
+		public Builder setCompressionType(byte compressionType) {
+			this.compressionType = compressionType;
+			return this;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public Builder setX(int x) {
+			this.x = x;
+			return this;
+		}
+
+		public int getZ() {
+			return z;
+		}
+
+		public Builder setZ(int z) {
+			this.z = z;
+			return this;
+		}
+
+		public byte[] getData() {
+			return data;
+		}
+
+		public Builder setData(byte[] data) {
+			this.data = data;
+			return this;
+		}
+
+		public int getTimestamp() {
+			return timestamp;
+		}
+
+		public Builder setTimestamp(int timestamp) {
+			this.timestamp = timestamp;
+			return this;
+		}
+	}
+
 	private byte compressionType;
 	private int x;
 	private int z;
 	private byte[] data;
+	private int timestamp;
 
-	public Chunk(int x, int z) {
-		this.x = x;
-		this.z = z;
-		data = new byte[0];
-	}
-
-	public Chunk(int x, int z, byte[] data) {
-		this.x = x;
-		this.z = z;
-		this.data = data;
-	}
-
-	public Chunk(byte compressionType, int x, int z) {
-		this.compressionType = compressionType;
-		this.x = x;
-		this.z = z;
-		data = new byte[0];
-	}
-
-	public Chunk(byte compressionType, int x, int z, byte[] data) {
+	public Chunk(byte compressionType, int x, int z, byte[] data, int timestamp) {
 		this.compressionType = compressionType;
 		this.x = x;
 		this.z = z;
 		this.data = data;
+		this.timestamp = timestamp;
 	}
 
 	public Tag readData(TagFactory factory) throws IOException {
@@ -114,5 +165,17 @@ public class Chunk {
 
 	public int size() {
 		return data.length;
+	}
+
+	public int getSectorCount() {
+		return (int) Math.ceil(((double) size()) / 4096d);
+	}
+
+	public int getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(int timestamp) {
+		this.timestamp = timestamp;
 	}
 }
