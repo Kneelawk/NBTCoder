@@ -168,7 +168,7 @@ public class Chunk {
 	}
 
 	public int getSectorCount() {
-		return (int) Math.ceil(((double) size()) / 4096d);
+		return (size() - 1) / RegionValues.BYTES_PER_SECTOR + 1;
 	}
 
 	public int getTimestamp() {
