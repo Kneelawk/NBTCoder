@@ -238,7 +238,7 @@ public class NBTLanguagePrinter {
 					sb.append(",");
 					if (prettyPrint) {
 						sb.append("\n");
-						tabs(indent + 1);
+						tabs(indent + 1, sb);
 					}
 				}
 			}
