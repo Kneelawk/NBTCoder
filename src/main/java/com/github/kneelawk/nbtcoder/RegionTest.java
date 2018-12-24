@@ -42,8 +42,10 @@ public class RegionTest {
 
 			if (type == PartitionType.EMPTY) {
 				out.println("type=empty");
+				out.println("size=" + part.getSectorCount());
 			} else if (type == PartitionType.RESERVED) {
 				out.println("type=reserved");
+				out.println("size=" + part.getSectorCount());
 			} else {
 				Chunk c = part.getChunk();
 				out.println("type=chunk");
