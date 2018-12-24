@@ -8,4 +8,10 @@ public class StringUtils {
 		}
 		return s;
 	}
+
+	public static void tabs(int n, StringBuilder sb) {
+		for (int i = 0; i < n; i++) {
+			sb.append("\t");
+		}
+	}
 }

@@ -70,203 +70,243 @@ public class NBTLanguagePrinter {
 
 	public String print(Tag tag) {
 		String name = tag.getName();
+		StringBuilder sb = new StringBuilder();
 		if (!printRootName || name.isEmpty()) {
-			return printTag(tag, 0);
+			printTag(tag, sb, 0);
 		} else {
-			String s = printName(name) + ":";
+			printName(name, sb);
+			sb.append(":");
 			if (prettyPrint)
-				s += " ";
-			s += printTag(tag, 0);
-			return s;
+				sb.append(" ");
+			printTag(tag, sb, 0);
 		}
+		return sb.toString();
 	}
 
 	@SuppressWarnings("unchecked")
-	protected String printTag(Tag tag, int indent) {
+	protected void printTag(Tag tag, StringBuilder sb, int indent) {
 		switch (tag.getId()) {
 		case NBTValues.TAG_BYTE:
-			return printByte((TagByte) tag, indent);
+			printByte((TagByte) tag, sb, indent);
+			break;
 		case NBTValues.TAG_SHORT:
-			return printShort((TagShort) tag, indent);
+			printShort((TagShort) tag, sb, indent);
+			break;
 		case NBTValues.TAG_INT:
-			return printInt((TagInt) tag, indent);
+			printInt((TagInt) tag, sb, indent);
+			break;
 		case NBTValues.TAG_LONG:
-			return printLong((TagLong) tag, indent);
+			printLong((TagLong) tag, sb, indent);
+			break;
 		case NBTValues.TAG_FLOAT:
-			return printFloat((TagFloat) tag, indent);
+			printFloat((TagFloat) tag, sb, indent);
+			break;
 		case NBTValues.TAG_DOUBLE:
-			return printDouble((TagDouble) tag, indent);
+			printDouble((TagDouble) tag, sb, indent);
+			break;
 		case NBTValues.TAG_BYTE_ARRAY:
-			return printByteArray((TagByteArray) tag, indent);
+			printByteArray((TagByteArray) tag, sb, indent);
+			break;
 		case NBTValues.TAG_STRING:
-			return printString((TagString) tag, indent);
+			printString((TagString) tag, sb, indent);
+			break;
 		case NBTValues.TAG_LIST:
-			return printList((TagList<Tag>) tag, indent);
+			printList((TagList<Tag>) tag, sb, indent);
+			break;
 		case NBTValues.TAG_COMPOUND:
-			return printCompound((TagCompound) tag, indent);
+			printCompound((TagCompound) tag, sb, indent);
+			break;
 		case NBTValues.TAG_INT_ARRAY:
-			return printIntArray((TagIntArray) tag, indent);
+			printIntArray((TagIntArray) tag, sb, indent);
+			break;
 		case NBTValues.TAG_LONG_ARRAY:
-			return printLongArray((TagLongArray) tag, indent);
+			printLongArray((TagLongArray) tag, sb, indent);
+			break;
 		default:
 			throw new IllegalArgumentException("Unknown tag type: " + tag.getId());
 		}
 	}
 
-	protected String printName(String name) {
+	protected void printName(String name, StringBuilder sb) {
 		Matcher match = LEGAL_STRING.matcher(name);
 		if (!match.matches()) {
-			return "\"" + name.replace("\"", "\\\"") + "\"";
+			sb.append("\"").append(name.replace("\"", "\\\"")).append("\"");
 		} else {
-			return name;
+			sb.append(name);
 		}
 	}
 
-	protected String printByte(TagByte tag, int indent) {
-		return String.valueOf(tag.getValue()) + "b";
+	protected void printByte(TagByte tag, StringBuilder sb, int indent) {
+		sb.append(tag.getValue()).append("b");
 	}
 
-	protected String printShort(TagShort tag, int indent) {
-		return String.valueOf(tag.getValue()) + "s";
+	protected void printShort(TagShort tag, StringBuilder sb, int indent) {
+		sb.append(tag.getValue()).append("s");
 	}
 
-	protected String printInt(TagInt tag, int indent) {
-		return String.valueOf(tag.getValue());
+	protected void printInt(TagInt tag, StringBuilder sb, int indent) {
+		sb.append(tag.getValue());
 	}
 
-	protected String printLong(TagLong tag, int indent) {
-		return String.valueOf(tag.getValue()) + "l";
+	protected void printLong(TagLong tag, StringBuilder sb, int indent) {
+		sb.append(tag.getValue()).append("l");
 	}
 
-	protected String printFloat(TagFloat tag, int indent) {
-		return String.valueOf(tag.getValue()) + "f";
+	protected void printFloat(TagFloat tag, StringBuilder sb, int indent) {
+		sb.append(tag.getValue()).append("f");
 	}
 
-	protected String printDouble(TagDouble tag, int indent) {
-		return String.valueOf(tag.getValue()) + "d";
+	protected void printDouble(TagDouble tag, StringBuilder sb, int indent) {
+		sb.append(tag.getValue()).append("d");
 	}
 
-	protected String printByteArray(TagByteArray tag, int indent) {
-		String s = "[B;";
+	protected void printByteArray(TagByteArray tag, StringBuilder sb, int indent) {
+		sb.append("[B;");
 		byte[] data = tag.getValue();
 		if (data.length > 0) {
-			if (prettyPrint)
-				s += "\n" + tabs(indent + 1);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent + 1, sb);
+			}
 			for (int i = 0; i < data.length; i++) {
-				if (prettyPrint)
-					s += String.format("%3d", data[i]);
-				else
-					s += String.valueOf(data[i]);
+				if (prettyPrint) {
+					sb.append(String.format("%3d", data[i]));
+				} else {
+					sb.append(data[i]);
+				}
 				if (i < data.length - 1) {
-					s += ",";
+					sb.append(",");
 					if (prettyPrint && i % BYTE_ARRAY_LINE_LENGTH == BYTE_ARRAY_LINE_LENGTH - 1) {
-						s += "\n" + tabs(indent + 1);
+						sb.append("\n");
+						tabs(indent + 1, sb);
 					}
 				}
 			}
-			if (prettyPrint)
-				s += "\n" + tabs(indent);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent, sb);
+			}
 		}
-		s += "]";
-		return s;
+		sb.append("]");
 	}
 
-	protected String printString(TagString tag, int indent) {
-		return "\"" + tag.getValue().replace("\"", "\\\"") + "\"";
+	protected void printString(TagString tag, StringBuilder sb, int indent) {
+		sb.append("\"").append(tag.getValue().replace("\"", "\\\"")).append("\"");
 	}
 
-	protected String printList(TagList<Tag> tag, int indent) {
-		String s = "[";
+	protected void printList(TagList<Tag> tag, StringBuilder sb, int indent) {
+		sb.append("[");
 		int size = tag.size();
 		if (size > 0) {
-			if (prettyPrint)
-				s += "\n" + tabs(indent + 1);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent + 1, sb);
+			}
 			for (int i = 0; i < size; i++) {
-				s += printTag(tag.get(i), indent + 1);
+				printTag(tag.get(i), sb, indent + 1);
 				if (i < size - 1) {
-					s += ",";
-					if (prettyPrint)
-						s += "\n" + tabs(indent + 1);
+					sb.append(",");
+					if (prettyPrint) {
+						sb.append("\n");
+						tabs(indent + 1, sb);
+					}
 				}
 			}
-			if (prettyPrint)
-				s += "\n" + tabs(indent);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent, sb);
+			}
 		}
-		s += "]";
-		return s;
+		sb.append("]");
 	}
 
-	protected String printCompound(TagCompound tag, int indent) {
-		String s = "{";
+	protected void printCompound(TagCompound tag, StringBuilder sb, int indent) {
+		sb.append("{");
 		if (!tag.isEmpty()) {
-			if (prettyPrint)
-				s += "\n" + tabs(indent + 1);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent + 1, sb);
+			}
 			for (Iterator<Tag> it = tag.tags().iterator(); it.hasNext();) {
 				Tag child = it.next();
-				s += printName(child.getName()) + ":";
+				printName(child.getName(), sb);
+				sb.append(":");
 				if (prettyPrint)
-					s += " ";
-				s += printTag(child, indent + 1);
+					sb.append(" ");
+				printTag(child, sb, indent + 1);
 				if (it.hasNext()) {
-					s += ",";
-					if (prettyPrint)
-						s += "\n" + tabs(indent + 1);
+					sb.append(",");
+					if (prettyPrint) {
+						sb.append("\n");
+						tabs(indent + 1);
+					}
 				}
 			}
-			if (prettyPrint)
-				s += "\n" + tabs(indent);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent, sb);
+			}
 		}
-		s += "}";
-		return s;
+		sb.append("}");
 	}
 
-	protected String printIntArray(TagIntArray tag, int indent) {
-		String s = "[I;";
+	protected void printIntArray(TagIntArray tag, StringBuilder sb, int indent) {
+		sb.append("[I;");
 		int[] data = tag.getValue();
 		if (data.length > 0) {
-			if (prettyPrint)
-				s += "\n" + tabs(indent + 1);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent + 1, sb);
+			}
 			for (int i = 0; i < data.length; i++) {
-				if (prettyPrint)
-					s += String.format("%3d", data[i]);
-				else
-					s += String.valueOf(data[i]);
+				if (prettyPrint) {
+					sb.append(String.format("%3d", data[i]));
+				} else {
+					sb.append(data[i]);
+				}
 				if (i < data.length - 1) {
-					s += ",";
+					sb.append(",");
 					if (prettyPrint && i % INT_ARRAY_LINE_LENGTH == INT_ARRAY_LINE_LENGTH - 1) {
-						s += "\n" + tabs(indent + 1);
+						sb.append("\n");
+						tabs(indent + 1, sb);
 					}
 				}
 			}
-			if (prettyPrint)
-				s += "\n" + tabs(indent);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent, sb);
+			}
 		}
-		s += "]";
-		return s;
+		sb.append("]");
 	}
 
-	protected String printLongArray(TagLongArray tag, int indent) {
-		String s = "[L;";
+	protected void printLongArray(TagLongArray tag, StringBuilder sb, int indent) {
+		sb.append("[L;");
 		long[] data = tag.getValue();
 		if (data.length > 0) {
-			if (prettyPrint)
-				s += "\n" + tabs(indent + 1);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent + 1, sb);
+			}
 			for (int i = 0; i < data.length; i++) {
-				if (prettyPrint)
-					s += String.format("%3d", data[i]);
-				else
-					s += String.valueOf(data[i]);
+				if (prettyPrint) {
+					sb.append(String.format("%3d", data[i]));
+				} else {
+					sb.append(data[i]);
+				}
 				if (i < data.length - 1) {
-					s += ",";
+					sb.append(",");
 					if (prettyPrint && i % LONG_ARRAY_LINE_LENGTH == LONG_ARRAY_LINE_LENGTH - 1) {
-						s += "\n" + tabs(indent + 1);
+						sb.append("\n");
+						tabs(indent + 1, sb);
 					}
 				}
 			}
-			if (prettyPrint)
-				s += "\n" + tabs(indent);
+			if (prettyPrint) {
+				sb.append("\n");
+				tabs(indent, sb);
+			}
 		}
-		s += "]";
-		return s;
+		sb.append("]");
 	}
 }
