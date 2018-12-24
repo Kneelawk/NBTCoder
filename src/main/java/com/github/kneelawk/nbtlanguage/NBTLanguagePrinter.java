@@ -47,16 +47,18 @@ public class NBTLanguagePrinter {
 			return prettyPrint;
 		}
 
-		public void setPrettyPrint(boolean prettyPrint) {
+		public Builder setPrettyPrint(boolean prettyPrint) {
 			this.prettyPrint = prettyPrint;
+			return this;
 		}
 
 		public boolean isPrintRootName() {
 			return printRootName;
 		}
 
-		public void setPrintRootName(boolean printRootName) {
+		public Builder setPrintRootName(boolean printRootName) {
 			this.printRootName = printRootName;
+			return this;
 		}
 	}
 
