@@ -10,9 +10,9 @@ import java.util.List;
 import com.github.kneelawk.nbt.DefaultTagFactory;
 import com.github.kneelawk.nbt.TagFactory;
 import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
-import com.github.kneelawk.region.Chunk;
+import com.github.kneelawk.region.ChunkPartition;
+import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
-import com.github.kneelawk.region.PartitionType;
 import com.github.kneelawk.region.RegionFileIO;
 import com.github.kneelawk.region.RegionValues;
 
@@ -40,28 +40,22 @@ public class RegionTest {
 
 			out.println("(partition");
 
-			PartitionType type = part.getType();
-
 			out.println("(properties");
-			if (type == PartitionType.EMPTY) {
+			if (part instanceof EmptyPartition) {
 				out.println("type=empty");
 				out.println("size=" + part.getSectorCount());
 				out.println(")");
-			} else if (type == PartitionType.RESERVED) {
-				out.println("type=reserved");
-				out.println("size=" + part.getSectorCount());
-				out.println(")");
 			} else {
-				Chunk c = part.getChunk();
+				ChunkPartition chunk = (ChunkPartition) part;
 				out.println("type=chunk");
-				out.println("timestamp=" + c.getTimestamp());
+				out.println("timestamp=" + chunk.getTimestamp());
 				out.println("compression="
-						+ (c.getCompressionType() == RegionValues.DEFLATE_COMPRESSION ? "deflate" : "gzip"));
-				out.println("x=" + c.getX());
-				out.println("z=" + c.getZ());
+						+ (chunk.getCompressionType() == RegionValues.DEFLATE_COMPRESSION ? "deflate" : "gzip"));
+				out.println("x=" + chunk.getX());
+				out.println("z=" + chunk.getZ());
 				out.println(")");
 				out.println("(data");
-				out.println(printer.print(c.readData(factory)));
+				out.println(printer.print(chunk.readData(factory)));
 				out.println(")");
 			}
 			out.println(")");

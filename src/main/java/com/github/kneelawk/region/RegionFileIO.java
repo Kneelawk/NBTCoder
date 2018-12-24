@@ -15,6 +15,10 @@ import java.util.TreeMap;
 import com.github.kneelawk.nbt.TagFactory;
 
 public class RegionFileIO {
+	private static final int PADDING_SIZE = 64;
+	private static final byte[] PADDING = new byte[PADDING_SIZE];
+	private static final byte[] EMPTY = new byte[RegionValues.BYTES_PER_SECTOR];
+
 	public static List<Partition> readRegionFile(InputStream is, TagFactory factory) throws IOException {
 		return readRegionFile(new DataInputStream(new BufferedInputStream(is)), factory);
 	}
@@ -46,7 +50,7 @@ public class RegionFileIO {
 			// skip to the correct sector
 			if (sectorsRead < sectorNum) {
 				input.skipBytes((sectorNum - sectorsRead) * RegionValues.BYTES_PER_SECTOR);
-				partitions.add(new Partition(PartitionType.EMPTY, sectorsRead, sectorNum - sectorsRead));
+				partitions.add(new EmptyPartition(sectorNum - sectorsRead));
 				sectorsRead = sectorNum;
 			} else if (sectorsRead > sectorNum) {
 				throw new IOException("Skipped sectors");
@@ -57,30 +61,82 @@ public class RegionFileIO {
 			int length = input.readInt();
 			byte type = input.readByte();
 
-			byte[] data = new byte[length];
+			if (length > RegionValues.BYTES_PER_SECTOR * loc.getSectorCount()) {
+				throw new IOException("Invalid chunk data length (is longer than its allocated sectors)");
+			}
+
+			// Mojang reads length - 1 bytes for some reason
+			byte[] data = new byte[length - 1];
 			input.readFully(data);
 
-			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ(), data, timestamps[sectorNum]);
+			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, timestamps[sectorNum]);
 
 			// Align to the sector borders.
 			// The extra -5 is because of the 4 bytes of length data and 1 byte of
 			// compression data read beforehand
-			input.skipBytes(loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - length - 5);
+			// The (length - 1) is because that's the actual amount of bytes read
+			input.skipBytes(loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - (length - 1) - 5);
 
 			sectorsRead += loc.getSectorCount();
 
-			partitions.add(new Partition(PartitionType.CHUNK, chunk, loc.getSectorNumber(), loc.getSectorCount()));
+			partitions.add(chunk);
 		}
 
 		return partitions;
 	}
 
-	public static void writeRegionFile(OutputStream os, List<Partition> partitions) {
+	public static void writeRegionFile(OutputStream os, List<Partition> partitions) throws IOException {
 		writeRegionFile(new DataOutputStream(os), partitions);
 	}
 
-	public static void writeRegionFile(DataOutputStream output, List<Partition> partitions) {
+	public static void writeRegionFile(DataOutputStream output, List<Partition> partitions) throws IOException {
+		int[] offsets = new int[RegionValues.INTS_PER_SECTOR];
+		int[] timestamps = new int[RegionValues.INTS_PER_SECTOR];
 
+		// start at sector 2 because the first two sectors are reserved
+		int sectorNum = 2;
+		for (Partition part : partitions) {
+			int sectorCount = part.getSectorCount();
+			if (part instanceof ChunkPartition) {
+				offsets[sectorNum] = ((sectorNum << 8) & 0xFFFFFF00) | (sectorCount & 0xFF);
+				timestamps[sectorNum] = ((ChunkPartition) part).getTimestamp();
+			}
+			sectorNum += sectorCount;
+		}
+
+		// write chunk offsets
+		for (int i = 0; i < RegionValues.INTS_PER_SECTOR; i++) {
+			output.writeInt(offsets[i]);
+		}
+
+		// write timestamps
+		for (int i = 0; i < RegionValues.INTS_PER_SECTOR; i++) {
+			output.writeInt(timestamps[i]);
+		}
+
+		for (Partition part : partitions) {
+			if (part instanceof ChunkPartition) {
+				ChunkPartition chunk = (ChunkPartition) part;
+				int length = chunk.size();
+				output.writeInt(length + 1);
+				output.writeByte(chunk.getCompressionType());
+				output.write(chunk.getData(), 0, length);
+
+				// pad the bytes to the nearest sector boundary
+				int remaining = RegionValues.BYTES_PER_SECTOR * chunk.getSectorCount() - length - 5;
+				for (; remaining > PADDING_SIZE; remaining -= PADDING_SIZE) {
+					output.write(PADDING);
+				}
+				for (; remaining > 0; remaining--) {
+					output.writeByte(0);
+				}
+			} else {
+				int sectors = part.getSectorCount();
+				for (int i = 0; i < sectors; i++) {
+					output.write(EMPTY);
+				}
+			}
+		}
 	}
 
 	private static class ChunkLoc {
@@ -97,7 +153,7 @@ public class RegionFileIO {
 		}
 
 		public int getSectorCount() {
-			return offset % 8;
+			return offset & 0xFF;
 		}
 
 		public int getX() {

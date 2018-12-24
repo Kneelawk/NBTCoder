@@ -15,7 +15,7 @@ import com.github.kneelawk.nbt.NBTIO;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
 
-public class Chunk {
+public class ChunkPartition implements Partition {
 	public static class Builder {
 		private byte compressionType;
 		private int x;
@@ -34,8 +34,8 @@ public class Chunk {
 			this.timestamp = timestamp;
 		}
 
-		public Chunk build() {
-			return new Chunk(compressionType, x, z, data, timestamp);
+		public ChunkPartition build() {
+			return new ChunkPartition(compressionType, x, z, data, timestamp);
 		}
 
 		public byte getCompressionType() {
@@ -90,7 +90,7 @@ public class Chunk {
 	private byte[] data;
 	private int timestamp;
 
-	public Chunk(byte compressionType, int x, int z, byte[] data, int timestamp) {
+	public ChunkPartition(byte compressionType, int x, int z, byte[] data, int timestamp) {
 		this.compressionType = compressionType;
 		this.x = x;
 		this.z = z;
@@ -167,6 +167,7 @@ public class Chunk {
 		return data.length;
 	}
 
+	@Override
 	public int getSectorCount() {
 		return (size() - 1) / RegionValues.BYTES_PER_SECTOR + 1;
 	}
