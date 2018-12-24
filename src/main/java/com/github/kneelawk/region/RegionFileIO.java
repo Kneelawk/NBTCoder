@@ -1,8 +1,11 @@
 package com.github.kneelawk.region;
 
+import java.io.BufferedInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +16,7 @@ import com.github.kneelawk.nbt.TagFactory;
 
 public class RegionFileIO {
 	public static List<Partition> readRegionFile(InputStream is, TagFactory factory) throws IOException {
-		return readRegionFile(new DataInputStream(is), factory);
+		return readRegionFile(new DataInputStream(new BufferedInputStream(is)), factory);
 	}
 
 	public static List<Partition> readRegionFile(DataInputStream input, TagFactory factory) throws IOException {
@@ -70,6 +73,14 @@ public class RegionFileIO {
 		}
 
 		return partitions;
+	}
+
+	public static void writeRegionFile(OutputStream os, List<Partition> partitions) {
+		writeRegionFile(new DataOutputStream(os), partitions);
+	}
+
+	public static void writeRegionFile(DataOutputStream output, List<Partition> partitions) {
+
 	}
 
 	private static class ChunkLoc {

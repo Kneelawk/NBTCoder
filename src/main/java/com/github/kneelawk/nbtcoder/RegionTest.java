@@ -22,9 +22,11 @@ public class RegionTest {
 		TagFactory factory = new DefaultTagFactory();
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
 		PrintStream out = new PrintStream(new FileOutputStream("../r.-1.-2.mca.txt"));
-		out.println("!file");
+		out.println("(file");
+		out.println("(properties");
 		out.println("name=r.-1.-2.mca");
 		out.println("type=region");
+		out.println(")");
 
 		System.out.println("Loading...");
 
@@ -36,28 +38,37 @@ public class RegionTest {
 		for (int i = 0; i < size; i++) {
 			Partition part = partitions.get(i);
 
-			out.println("!partition");
+			out.println("(partition");
 
 			PartitionType type = part.getType();
 
+			out.println("(properties");
 			if (type == PartitionType.EMPTY) {
 				out.println("type=empty");
 				out.println("size=" + part.getSectorCount());
+				out.println(")");
 			} else if (type == PartitionType.RESERVED) {
 				out.println("type=reserved");
 				out.println("size=" + part.getSectorCount());
+				out.println(")");
 			} else {
 				Chunk c = part.getChunk();
 				out.println("type=chunk");
+				out.println("timestamp=" + c.getTimestamp());
 				out.println("compression="
 						+ (c.getCompressionType() == RegionValues.DEFLATE_COMPRESSION ? "deflate" : "gzip"));
 				out.println("x=" + c.getX());
 				out.println("z=" + c.getZ());
-				out.println("!data");
+				out.println(")");
+				out.println("(data");
 				out.println(printer.print(c.readData(factory)));
+				out.println(")");
 			}
+			out.println(")");
 			System.out.println("Partition " + i + " / " + size);
 		}
+
+		out.println(")");
 
 		System.out.println("Done.");
 		out.close();
