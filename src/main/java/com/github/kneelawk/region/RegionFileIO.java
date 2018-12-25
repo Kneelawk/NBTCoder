@@ -15,9 +15,6 @@ import java.util.TreeMap;
 import com.github.kneelawk.nbt.TagFactory;
 
 public class RegionFileIO {
-	private static final int PADDING_SIZE = 64;
-	private static final byte[] PADDING = new byte[PADDING_SIZE];
-	private static final byte[] EMPTY = new byte[RegionValues.BYTES_PER_SECTOR];
 
 	public static List<Partition> readRegionFile(InputStream is, TagFactory factory) throws IOException {
 		return readRegionFile(new DataInputStream(new BufferedInputStream(is)), factory);
@@ -96,14 +93,8 @@ public class RegionFileIO {
 		// start at sector 2 because the first two sectors are reserved
 		int sectorNum = 2;
 		for (Partition part : partitions) {
-			int sectorCount = part.getSectorCount();
-			if (part instanceof ChunkPartition) {
-				ChunkPartition chunk = (ChunkPartition) part;
-				int location = chunk.getZ() * 32 + chunk.getX();
-				offsets[location] = ((sectorNum << 8) & 0xFFFFFF00) | (sectorCount & 0xFF);
-				timestamps[location] = chunk.getTimestamp();
-			}
-			sectorNum += sectorCount;
+			part.writeMetadata(sectorNum, offsets, timestamps);
+			sectorNum += part.getSectorCount();
 		}
 
 		// write chunk offsets
@@ -117,27 +108,7 @@ public class RegionFileIO {
 		}
 
 		for (Partition part : partitions) {
-			if (part instanceof ChunkPartition) {
-				ChunkPartition chunk = (ChunkPartition) part;
-				int length = chunk.size();
-				output.writeInt(length + 1);
-				output.writeByte(chunk.getCompressionType());
-				output.write(chunk.getData(), 0, length);
-
-				// pad the bytes to the nearest sector boundary
-				int remaining = RegionValues.BYTES_PER_SECTOR * chunk.getSectorCount() - length - 5;
-				for (; remaining > PADDING_SIZE; remaining -= PADDING_SIZE) {
-					output.write(PADDING);
-				}
-				for (; remaining > 0; remaining--) {
-					output.writeByte(0);
-				}
-			} else {
-				int sectors = part.getSectorCount();
-				for (int i = 0; i < sectors; i++) {
-					output.write(EMPTY);
-				}
-			}
+			part.writeData(output);
 		}
 	}
 

@@ -16,6 +16,9 @@ import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
 
 public class ChunkPartition implements Partition {
+	private static final int PADDING_SIZE = 64;
+	private static final byte[] PADDING = new byte[PADDING_SIZE];
+
 	public static class Builder {
 		private byte compressionType;
 		private int x;
@@ -135,6 +138,34 @@ public class ChunkPartition implements Partition {
 		data = arrayOut.toByteArray();
 	}
 
+	@Override
+	public int getSectorCount() {
+		return (size() - 1) / RegionValues.BYTES_PER_SECTOR + 1;
+	}
+
+	@Override
+	public void writeMetadata(int sectorNum, int[] offsets, int[] timestamps) {
+		int location = z * 32 + x;
+		offsets[location] = ((sectorNum << 8) & 0xFFFFFF00) | (getSectorCount() & 0xFF);
+		timestamps[location] = timestamp;
+	}
+
+	@Override
+	public void writeData(DataOutputStream output) throws IOException {
+		output.writeInt(data.length + 1);
+		output.writeByte(compressionType);
+		output.write(data);
+
+		// pad the bytes to the nearest sector boundary
+		int remaining = RegionValues.BYTES_PER_SECTOR * getSectorCount() - data.length - 5;
+		for (; remaining > PADDING_SIZE; remaining -= PADDING_SIZE) {
+			output.write(PADDING);
+		}
+		for (; remaining > 0; remaining--) {
+			output.writeByte(0);
+		}
+	}
+
 	public byte getCompressionType() {
 		return compressionType;
 	}
@@ -165,11 +196,6 @@ public class ChunkPartition implements Partition {
 
 	public int size() {
 		return data.length;
-	}
-
-	@Override
-	public int getSectorCount() {
-		return (size() - 1) / RegionValues.BYTES_PER_SECTOR + 1;
 	}
 
 	public int getTimestamp() {
