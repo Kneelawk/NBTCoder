@@ -98,8 +98,10 @@ public class RegionFileIO {
 		for (Partition part : partitions) {
 			int sectorCount = part.getSectorCount();
 			if (part instanceof ChunkPartition) {
-				offsets[sectorNum] = ((sectorNum << 8) & 0xFFFFFF00) | (sectorCount & 0xFF);
-				timestamps[sectorNum] = ((ChunkPartition) part).getTimestamp();
+				ChunkPartition chunk = (ChunkPartition) part;
+				int location = chunk.getZ() * 32 + chunk.getX();
+				offsets[location] = ((sectorNum << 8) & 0xFFFFFF00) | (sectorCount & 0xFF);
+				timestamps[location] = chunk.getTimestamp();
 			}
 			sectorNum += sectorCount;
 		}
