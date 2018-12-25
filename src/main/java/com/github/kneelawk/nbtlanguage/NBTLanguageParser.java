@@ -2,6 +2,7 @@ package com.github.kneelawk.nbtlanguage;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
@@ -14,6 +15,10 @@ import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.NbtFileContext;
 public class NBTLanguageParser {
 	public Tag parse(String str) throws IOException {
 		return parse(CharStreams.fromString(str));
+	}
+
+	public Tag parse(Reader reader) throws IOException {
+		return parse(CharStreams.fromReader(reader));
 	}
 
 	public Tag parse(InputStream is) throws IOException {
