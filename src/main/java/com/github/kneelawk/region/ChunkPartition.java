@@ -101,7 +101,7 @@ public class ChunkPartition implements Partition {
 		this.timestamp = timestamp;
 	}
 
-	public Tag readData(TagFactory factory) throws IOException {
+	public Tag readTag(TagFactory factory) throws IOException {
 		DataInputStream in = null;
 
 		switch (compressionType) {
@@ -118,7 +118,7 @@ public class ChunkPartition implements Partition {
 		return NBTIO.read(in, factory);
 	}
 
-	public void writeData(Tag tag) throws IOException {
+	public void writeTag(Tag tag) throws IOException {
 		ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
 		DataOutputStream out = null;
 

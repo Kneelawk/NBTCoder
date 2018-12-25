@@ -55,7 +55,7 @@ public class RegionTest {
 				out.println("z=" + chunk.getZ());
 				out.println(")");
 				out.println("(data");
-				out.println(printer.print(chunk.readData(factory)));
+				out.println(printer.print(chunk.readTag(factory)));
 				out.println(")");
 			}
 			out.println(")");
