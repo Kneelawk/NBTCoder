@@ -88,14 +88,14 @@ public class NBTFileParser {
 		String partType = partProps.getProperty("type");
 
 		if (partType.equals("chunk")) {
-			byte compressionType;
-			String compressionTypeProp = partProps.getProperty("compressionType");
-			if (compressionTypeProp.equals("deflate")) {
-				compressionType = RegionValues.DEFLATE_COMPRESSION;
-			} else if (compressionTypeProp.equals("gzip")) {
-				compressionType = RegionValues.GZIP_COMPRESSION;
+			byte compression;
+			String compressionProp = partProps.getProperty("compression");
+			if (compressionProp.equals("deflate")) {
+				compression = RegionValues.DEFLATE_COMPRESSION;
+			} else if (compressionProp.equals("gzip")) {
+				compression = RegionValues.GZIP_COMPRESSION;
 			} else {
-				throw new IOException("Unknown compression type: " + compressionTypeProp);
+				throw new IOException("Unknown compression type: " + compressionProp);
 			}
 
 			int x, z, timestamp;
@@ -109,8 +109,8 @@ public class NBTFileParser {
 
 			Tag data = parseData();
 
-			ChunkPartition chunk = new ChunkPartition.Builder().setCompressionType(compressionType)
-					.setTimestamp(timestamp).setX(x).setZ(z).build();
+			ChunkPartition chunk = new ChunkPartition.Builder().setCompressionType(compression).setTimestamp(timestamp)
+					.setX(x).setZ(z).build();
 			chunk.writeTag(data);
 
 			ParenthesisCloseToken parenCloseTok = lexer.readParenthesisClose();
