@@ -90,7 +90,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 		try {
 			tag = parseString(str);
 		} catch (TagParseException e) {
-			throw new NBTLanguageParseException(e, ctx);
+			throw new InternalParseException(e, ctx);
 		}
 		tags.push(tag);
 	}
@@ -108,13 +108,13 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 		try {
 			type = determineListType(items);
 		} catch (IncompatibleTagTypeException e) {
-			throw new NBTLanguageParseException(e, ctx);
+			throw new InternalParseException(e, ctx);
 		}
 		for (AbstractTag tag : items) {
 			try {
 				list.add(convertTag(tag, type));
 			} catch (IncompatibleTagTypeException e) {
-				throw new NBTLanguageParseException(e, ctx);
+				throw new InternalParseException(e, ctx);
 			}
 		}
 		tags.push(list);
@@ -157,10 +157,10 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 				array = new TagLongArray("", longs);
 				break;
 			default:
-				throw new NBTLanguageParseException("Unknown typed array type: " + arrayTypeStr, ctx);
+				throw new InternalParseException("Unknown typed array type: " + arrayTypeStr, ctx);
 			}
 		} catch (NumberFormatException e) {
-			throw new NBTLanguageParseException(e, ctx);
+			throw new InternalParseException(e, ctx);
 		}
 		typedArrayItems.clear();
 		tags.push(array);
@@ -205,7 +205,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
 	@Override
 	public void visitErrorNode(ErrorNode node) {
-		throw new NBTLanguageParseException("Error node", node);
+		throw new InternalParseException("Error node", node);
 	}
 
 	private byte determineListType(List<AbstractTag> list) throws IncompatibleTagTypeException {
