@@ -64,7 +64,8 @@ public class RegionFileIO {
 			byte[] data = new byte[length - 1];
 			input.readFully(data);
 
-			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, timestamps[sectorNum]);
+			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data,
+					timestamps[loc.getLocation()]);
 
 			// Align to the sector borders.
 			// The extra -5 is because of the 4 bytes of length data and 1 byte of
@@ -125,6 +126,10 @@ public class RegionFileIO {
 
 		public int getSectorCount() {
 			return offset & 0xFF;
+		}
+
+		public int getLocation() {
+			return location;
 		}
 
 		public int getX() {
