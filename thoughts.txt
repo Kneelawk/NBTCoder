@@ -25,15 +25,19 @@ TAG_Compound(None): 1 entry
 }
 
 A text file like:
-!file
+(file
+(properties
 name=test.nbt
 type=compressed
-!data
+)
+(data
 {
 	data: {
 		str: "Hello World!"
 	}
 }
+)
+)
 would be produced by a compressed NBT file called 'test.nbt' with contents:
 TAG_Compound(None): 1 entry
 {
@@ -44,25 +48,36 @@ TAG_Compound(None): 1 entry
 }
 
 A text file like:
-!file
+(file
+(properties
 name=r.-1.-2.mca
 type=anvil
-!chunk
+)
+(partition
+(properties
 x=-41
 z=-52
-!data
+)
+(data
 {
 	data: {
 		hello: "World!"
 	}
 }
-!chunk
+)
+)
+(partition
+(properties
 x=-41
 z=-53
-!data
+)
+(data
 {
 	data: {
 		hello: "Kneelawk!"
 	}
 }
+)
+)
+)
 would be produced by an anvil region file called 'r.-1.-2.mca' that contained the chunks at (-41,-52) and (-41,-53).
