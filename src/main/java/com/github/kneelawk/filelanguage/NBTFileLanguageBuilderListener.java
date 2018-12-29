@@ -8,6 +8,7 @@ import java.util.Properties;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.github.kneelawk.file.NBTFile;
@@ -77,14 +78,9 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 				throw new InternalParseException("Invalid compression type: " + compressionStr, propsContext);
 			}
 
-			int timestamp, x, z;
-			try {
-				timestamp = Integer.parseInt(partProps.getProperty("timestamp"));
-				x = Integer.parseInt(partProps.getProperty("x"));
-				z = Integer.parseInt(partProps.getProperty("z"));
-			} catch (NumberFormatException e) {
-				throw new InternalParseException(e, propsContext);
-			}
+			int timestamp = parseIntProperty(partProps, "timestamp", propsContext);
+			int x = parseIntProperty(partProps, "x", propsContext);
+			int z = parseIntProperty(partProps, "z", propsContext);
 
 			ChunkPartition part = new ChunkPartition.Builder().setCompressionType(compression).setTimestamp(timestamp)
 					.setX(x).setZ(z).build();
@@ -98,12 +94,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 
 			partitions.add(part);
 		} else if ("empty".equals(partType)) {
-			int size;
-			try {
-				size = Integer.parseInt(partProps.getProperty("size"));
-			} catch (NumberFormatException e) {
-				throw new InternalParseException(e, propsContext);
-			}
+			int size = parseIntProperty(partProps, "size", propsContext);
 
 			EmptyPartition part = new EmptyPartition(size);
 
@@ -140,4 +131,12 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		throw new InternalParseException("Error Node", node);
 	}
 
+	private int parseIntProperty(Properties props, String key, ParseTree tree) {
+		String prop = props.getProperty(key);
+		try {
+			return Integer.parseInt(prop);
+		} catch (Exception e) {
+			throw new InternalParseException("Unable to parse property: " + key + " with a value of: " + prop, e, tree);
+		}
+	}
 }
