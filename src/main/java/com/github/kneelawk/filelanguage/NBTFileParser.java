@@ -37,6 +37,7 @@ public class NBTFileParser {
 		}
 
 		Properties fileProps = parseProperties();
+		String filename = fileProps.getProperty("name");
 		String fileType = fileProps.getProperty("type");
 
 		switch (fileType) {
@@ -47,7 +48,7 @@ public class NBTFileParser {
 				partitions.add(part);
 			}
 
-			RegionNBTFile file = new RegionNBTFile(partitions);
+			RegionNBTFile file = new RegionNBTFile(filename, partitions);
 
 			ParenthesisCloseToken parenCloseTok = lexer.readParenthesisClose();
 			if (!parenCloseTok.isParenthesisClose()) {
@@ -60,7 +61,7 @@ public class NBTFileParser {
 		case "compressed": {
 			Tag data = parseData();
 
-			SimpleNBTFile file = new SimpleNBTFile(data, fileType.equals("compressed"));
+			SimpleNBTFile file = new SimpleNBTFile(filename, data, fileType.equals("compressed"));
 
 			ParenthesisCloseToken parenCloseTok = lexer.readParenthesisClose();
 			if (!parenCloseTok.isParenthesisClose()) {
