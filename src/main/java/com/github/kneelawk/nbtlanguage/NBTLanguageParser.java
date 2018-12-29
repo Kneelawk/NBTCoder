@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.NbtFileContext;
+import com.github.kneelawk.utils.InternalParseException;
 
 public class NBTLanguageParser {
 	public Tag parse(String str) throws IOException {
@@ -30,7 +31,12 @@ public class NBTLanguageParser {
 		NBTLanguageSystemParser parser = new NBTLanguageSystemParser(new BufferedTokenStream(lex));
 		NBTLanguageBuilderListener builder = new NBTLanguageBuilderListener();
 		NbtFileContext tree = parser.nbtFile();
-		ParseTreeWalker.DEFAULT.walk(builder, tree);
+
+		try {
+			ParseTreeWalker.DEFAULT.walk(builder, tree);
+		} catch (InternalParseException e) {
+			throw e.toLanguageParseException();
+		}
 
 		return builder.getRoot();
 	}

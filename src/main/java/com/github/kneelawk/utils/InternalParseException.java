@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtlanguage;
+package com.github.kneelawk.utils;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -62,5 +62,11 @@ public class InternalParseException extends RuntimeException {
 		String text = tree.getText();
 		str += "(" + (text.length() > 30 ? text.substring(0, 30) + "..." : text) + ")";
 		return str;
+	}
+
+	public LanguageParseException toLanguageParseException() {
+		LanguageParseException e = new LanguageParseException(getMessage(), getCause(), erroringRule);
+		e.setStackTrace(getStackTrace());
+		return e;
 	}
 }

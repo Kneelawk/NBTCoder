@@ -35,6 +35,7 @@ import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagListContext;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagStringContext;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagTypedArrayContext;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TypedArrayItemContext;
+import com.github.kneelawk.utils.InternalParseException;
 
 public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 

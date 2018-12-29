@@ -23,6 +23,7 @@ import com.github.kneelawk.region.ChunkPartition;
 import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionValues;
+import com.github.kneelawk.utils.InternalParseException;
 
 public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseListener {
 
