@@ -6,29 +6,29 @@ grammar NBTFileLanguageSystem;
 
 nbtFile
 :
-	NL* FILE_START NL+ properties NL+
+	FILE_START properties
 	(
 		partition
 		(
-			NL+ partition
+			partition
 		)*
 		| data
-	) NL+ SECTION_END NL*
+	) SECTION_END
 ;
 
 partition
 :
-	PARTITION_START NL+ properties NL+ data NL+ SECTION_END
+	PARTITION_START properties data SECTION_END
 ;
 
 properties
 :
-	PROPERTIES_START NL+ PROPERTIES_DATA NL+ SECTION_END
+	PROPERTIES_START PROPERTIES_DATA SECTION_END
 ;
 
 data
 :
-	DATA_START NL+ NBT_TAG NL+ SECTION_END
+	DATA_START NBT_TAG SECTION_END
 ;
 
 NBT_TAG
@@ -101,12 +101,7 @@ SECTION_END
 	')'
 ;
 
-NL
-:
-	[\r\n]
-;
-
 WS
 :
-	[ \t]
+	[ \t\n\r]+ -> skip
 ;
