@@ -23,6 +23,7 @@ public class RegionTranslateTest {
 		System.out.println("Loading...");
 		List<Partition> loadedPartitions = RegionFileIO.readRegionFile(new FileInputStream("../r.-1.-2.mca"));
 
+		System.out.println("Copying...");
 		List<Partition> newPartitions = new ArrayList<>();
 		for (Partition part : loadedPartitions) {
 			if (part instanceof ChunkPartition) {
@@ -45,7 +46,10 @@ public class RegionTranslateTest {
 			}
 		}
 
+		System.out.println("Writing...");
 		RegionFileIO.writeRegionFile(new FileOutputStream("../r.-1.-2.mca.3"), newPartitions);
+
+		System.out.println("Done.");
 	}
 
 }
