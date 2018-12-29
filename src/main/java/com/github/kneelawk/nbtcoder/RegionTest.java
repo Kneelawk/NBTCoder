@@ -30,7 +30,7 @@ public class RegionTest {
 
 		System.out.println("Loading...");
 
-		List<Partition> partitions = RegionFileIO.readRegionFile(new FileInputStream("../r.-1.-2.mca"), factory);
+		List<Partition> partitions = RegionFileIO.readRegionFile(new FileInputStream("../r.-1.-2.mca"));
 
 		System.out.println("Printing...");
 
