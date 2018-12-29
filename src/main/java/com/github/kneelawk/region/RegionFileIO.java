@@ -16,11 +16,11 @@ import com.github.kneelawk.nbt.TagFactory;
 
 public class RegionFileIO {
 
-	public static List<Partition> readRegionFile(InputStream is, TagFactory factory) throws IOException {
-		return readRegionFile(new DataInputStream(new BufferedInputStream(is)), factory);
+	public static List<Partition> readRegionFile(InputStream is) throws IOException {
+		return readRegionFile(new DataInputStream(new BufferedInputStream(is)));
 	}
 
-	public static List<Partition> readRegionFile(DataInputStream input, TagFactory factory) throws IOException {
+	public static List<Partition> readRegionFile(DataInputStream input) throws IOException {
 		// keys are stored in ascending order
 		Map<Integer, ChunkLoc> offsetMap = new TreeMap<>();
 
