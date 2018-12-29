@@ -135,6 +135,8 @@ public class ChunkPartition implements Partition {
 
 		NBTIO.write(tag, out);
 
+		out.close();
+
 		data = arrayOut.toByteArray();
 	}
 
