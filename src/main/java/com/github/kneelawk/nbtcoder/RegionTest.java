@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.List;
 
+import com.github.kneelawk.hexlanguage.HexLanguagePrinter;
 import com.github.kneelawk.nbt.DefaultTagFactory;
 import com.github.kneelawk.nbt.TagFactory;
 import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
@@ -15,13 +16,13 @@ import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionFileIO;
 import com.github.kneelawk.region.RegionValues;
-import com.github.kneelawk.utils.ByteArrayUtils;
 
 public class RegionTest {
 
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		TagFactory factory = new DefaultTagFactory();
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
+		HexLanguagePrinter hexPrinter = new HexLanguagePrinter.Builder().build();
 		PrintStream out = new PrintStream(new FileOutputStream("../r.0.0.mca.txt"));
 		out.println("(file");
 		out.println("(properties");
@@ -61,7 +62,7 @@ public class RegionTest {
 				if (chunk.hasPaddingData()) {
 					byte[] paddingData = chunk.getPaddingData();
 					out.println("(padding");
-					out.println(ByteArrayUtils.toHex(paddingData, chunk.size()));
+					out.println(hexPrinter.print(paddingData, chunk.size()));
 					out.println(")");
 				}
 			}
