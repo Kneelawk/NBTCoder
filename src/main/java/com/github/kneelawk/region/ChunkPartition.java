@@ -26,23 +26,23 @@ public class ChunkPartition implements Partition {
 		private int x;
 		private int z;
 		private byte[] data;
-		private byte[] extraData;
+		private byte[] paddingData;
 		private int timestamp;
 
 		public Builder() {
 		}
 
-		public Builder(byte compressionType, int x, int z, byte[] data, byte[] extraData, int timestamp) {
+		public Builder(byte compressionType, int x, int z, byte[] data, byte[] paddingData, int timestamp) {
 			this.compressionType = compressionType;
 			this.x = x;
 			this.z = z;
 			this.data = data;
-			this.extraData = extraData;
+			this.paddingData = paddingData;
 			this.timestamp = timestamp;
 		}
 
 		public ChunkPartition build() {
-			return new ChunkPartition(compressionType, x, z, data, extraData, timestamp);
+			return new ChunkPartition(compressionType, x, z, data, paddingData, timestamp);
 		}
 
 		public byte getCompressionType() {
@@ -81,12 +81,12 @@ public class ChunkPartition implements Partition {
 			return this;
 		}
 
-		public byte[] getExtraData() {
-			return extraData;
+		public byte[] getPaddingData() {
+			return paddingData;
 		}
 
-		public Builder setExtraData(byte[] extraData) {
-			this.extraData = extraData;
+		public Builder setPaddingData(byte[] paddingData) {
+			this.paddingData = paddingData;
 			return this;
 		}
 
@@ -104,15 +104,15 @@ public class ChunkPartition implements Partition {
 	private int x;
 	private int z;
 	private byte[] data = new byte[0];
-	private byte[] extraData;
+	private byte[] paddingData;
 	private int timestamp;
 
-	public ChunkPartition(byte compressionType, int x, int z, byte[] data, byte[] extraData, int timestamp) {
+	public ChunkPartition(byte compressionType, int x, int z, byte[] data, byte[] paddingData, int timestamp) {
 		this.compressionType = compressionType;
 		this.x = x;
 		this.z = z;
 		this.data = data;
-		this.extraData = extraData;
+		this.paddingData = paddingData;
 		this.timestamp = timestamp;
 	}
 
@@ -176,13 +176,13 @@ public class ChunkPartition implements Partition {
 		// pad the bytes to the nearest sector boundary
 		int remaining = RegionValues.BYTES_PER_SECTOR * getSectorCount() - data.length - 5;
 
-		// we start by writing the extra data
-		if (extraData != null && extraData.length > 0) {
-			if (extraData.length < remaining) {
-				remaining -= extraData.length;
-				output.write(extraData);
+		// we start by writing the padding data
+		if (paddingData != null && paddingData.length > 0) {
+			if (paddingData.length < remaining) {
+				remaining -= paddingData.length;
+				output.write(paddingData);
 			} else {
-				output.write(extraData, 0, remaining);
+				output.write(paddingData, 0, remaining);
 				return;
 			}
 		}
@@ -224,12 +224,12 @@ public class ChunkPartition implements Partition {
 		data = new byte[0];
 	}
 
-	public byte[] getExtraData() {
-		return extraData;
+	public byte[] getPaddingData() {
+		return paddingData;
 	}
 
-	public void setExtraData(byte[] extraData) {
-		this.extraData = extraData;
+	public void setPaddingData(byte[] paddingData) {
+		this.paddingData = paddingData;
 	}
 
 	public int size() {

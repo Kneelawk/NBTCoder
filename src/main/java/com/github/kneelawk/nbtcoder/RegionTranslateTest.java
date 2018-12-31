@@ -37,7 +37,7 @@ public class RegionTranslateTest {
 				Tag data = chunk.readTag(factory);
 
 				ChunkPartition newChunk = new ChunkPartition.Builder().setCompressionType(compression)
-						.setTimestamp(timestamp).setX(x).setZ(z).setExtraData(chunk.getExtraData()).build();
+						.setTimestamp(timestamp).setX(x).setZ(z).setPaddingData(chunk.getPaddingData()).build();
 				newChunk.writeTag(data);
 
 				newPartitions.add(newChunk);

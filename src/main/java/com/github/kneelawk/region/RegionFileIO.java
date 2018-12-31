@@ -71,15 +71,15 @@ public class RegionFileIO {
 			// compression data read beforehand
 			// The (length - 1) is because that's the actual amount of bytes read
 			// These may be garbage bytes but they're still important
-			byte[] extraData = new byte[loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - (length - 1) - 5];
-			input.readFully(extraData);
+			byte[] paddingData = new byte[loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - (length - 1) - 5];
+			input.readFully(paddingData);
 
 			// don't keep the extra data if its empty
-			if (ByteArrayUtils.isZeros(extraData)) {
-				extraData = null;
+			if (ByteArrayUtils.isZeros(paddingData)) {
+				paddingData = null;
 			}
 
-			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, extraData,
+			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, paddingData,
 					timestamps[loc.getLocation()]);
 
 			sectorsRead += loc.getSectorCount();
