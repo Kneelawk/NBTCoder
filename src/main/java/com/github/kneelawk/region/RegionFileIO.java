@@ -74,9 +74,17 @@ public class RegionFileIO {
 			byte[] paddingData = new byte[loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - (length - 1) - 5];
 			input.readFully(paddingData);
 
-			// don't keep the extra data if its empty
-			if (ByteArrayUtils.isZeros(paddingData)) {
+			// where is the data in this array
+			int lastPaddingByte = ByteArrayUtils.lastNonZeroByte(paddingData);
+			if (lastPaddingByte == -1) {
+				// don't keep the extra data if its empty
 				paddingData = null;
+			} else if (lastPaddingByte < paddingData.length - 1) {
+				// shrink the array to just the data because it will get padded with 0s when
+				// written again
+				byte[] newPaddingData = new byte[lastPaddingByte + 1];
+				System.arraycopy(paddingData, 0, newPaddingData, 0, lastPaddingByte + 1);
+				paddingData = newPaddingData;
 			}
 
 			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, paddingData,

@@ -12,19 +12,33 @@ public class ByteArrayUtils {
 		return true;
 	}
 
+	public static int lastNonZeroByte(byte[] data) {
+		for (int i = data.length - 1; i >= 0; i--) {
+			if (data[i] != 0) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	public static String toHex(byte[] data, int offset) {
 		StringBuilder sb = new StringBuilder();
-		spaces((offset % 0x10) * 3 + (offset % 0x10 <= 7 ? 0 : 1), sb);
+		int missing = offset % 0x10;
+		spaces(missing * 3 + (missing <= 7 ? 0 : 1), sb);
 		for (int i = 0; i < data.length; i++) {
 			int b = i + offset;
 			sb.append(String.format("%02x", data[i]));
-			
+
 			// add line indicators
+			int start = ((b & 0xfffffff0) > offset ? b & 0xfffffff0 : offset);
 			if (b % 0x10 == 0xf) {
-				sb.append("  # ").append(String.format("%08x", b - 0xf)).append('-')
-				.append(String.format("%08x", b));
+				sb.append(String.format("  # %08x-%08x", start, b));
+			} else if (i == data.length - 1) {
+				int remaining = 0xf - (b % 0x10);
+				spaces(remaining * 3 + (remaining <= 7 ? 0 : 1) + 2, sb);
+				sb.append(String.format("# %08x-%08x", start, b));
 			}
-			
+
 			// add formatting
 			if (i < data.length - 1) {
 				if (b % 0x10 == 0xf) {
