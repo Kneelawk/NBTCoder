@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.github.kneelawk.utils.ByteArrayUtils;
+
 public class RegionFileIO {
 
 	public static List<Partition> readRegionFile(InputStream is) throws IOException {
@@ -64,14 +66,21 @@ public class RegionFileIO {
 			byte[] data = new byte[length - 1];
 			input.readFully(data);
 
-			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data,
-					timestamps[loc.getLocation()]);
-
 			// Align to the sector borders.
 			// The extra -5 is because of the 4 bytes of length data and 1 byte of
 			// compression data read beforehand
 			// The (length - 1) is because that's the actual amount of bytes read
-			input.skipBytes(loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - (length - 1) - 5);
+			// These may be garbage bytes but they're still important
+			byte[] extraData = new byte[loc.getSectorCount() * RegionValues.BYTES_PER_SECTOR - (length - 1) - 5];
+			input.readFully(extraData);
+
+			// don't keep the extra data if its empty
+			if (ByteArrayUtils.isZeros(extraData)) {
+				extraData = null;
+			}
+
+			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, extraData,
+					timestamps[loc.getLocation()]);
 
 			sectorsRead += loc.getSectorCount();
 

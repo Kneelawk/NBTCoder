@@ -26,21 +26,23 @@ public class ChunkPartition implements Partition {
 		private int x;
 		private int z;
 		private byte[] data;
+		private byte[] extraData;
 		private int timestamp;
 
 		public Builder() {
 		}
 
-		public Builder(byte compressionType, int x, int z, byte[] data, int timestamp) {
+		public Builder(byte compressionType, int x, int z, byte[] data, byte[] extraData, int timestamp) {
 			this.compressionType = compressionType;
 			this.x = x;
 			this.z = z;
 			this.data = data;
+			this.extraData = extraData;
 			this.timestamp = timestamp;
 		}
 
 		public ChunkPartition build() {
-			return new ChunkPartition(compressionType, x, z, data, timestamp);
+			return new ChunkPartition(compressionType, x, z, data, extraData, timestamp);
 		}
 
 		public byte getCompressionType() {
@@ -79,6 +81,15 @@ public class ChunkPartition implements Partition {
 			return this;
 		}
 
+		public byte[] getExtraData() {
+			return extraData;
+		}
+
+		public Builder setExtraData(byte[] extraData) {
+			this.extraData = extraData;
+			return this;
+		}
+
 		public int getTimestamp() {
 			return timestamp;
 		}
@@ -92,14 +103,16 @@ public class ChunkPartition implements Partition {
 	private byte compressionType;
 	private int x;
 	private int z;
-	private byte[] data;
+	private byte[] data = new byte[0];
+	private byte[] extraData;
 	private int timestamp;
 
-	public ChunkPartition(byte compressionType, int x, int z, byte[] data, int timestamp) {
+	public ChunkPartition(byte compressionType, int x, int z, byte[] data, byte[] extraData, int timestamp) {
 		this.compressionType = compressionType;
 		this.x = x;
 		this.z = z;
 		this.data = data;
+		this.extraData = extraData;
 		this.timestamp = timestamp;
 	}
 
@@ -162,6 +175,18 @@ public class ChunkPartition implements Partition {
 
 		// pad the bytes to the nearest sector boundary
 		int remaining = RegionValues.BYTES_PER_SECTOR * getSectorCount() - data.length - 5;
+
+		// we start by writing the extra data
+		if (extraData != null && extraData.length > 0) {
+			if (extraData.length < remaining) {
+				remaining -= extraData.length;
+				output.write(extraData);
+			} else {
+				output.write(extraData, 0, remaining);
+			}
+		}
+
+		// finish padding by putting a bunch of 0s
 		for (; remaining > PADDING_SIZE; remaining -= PADDING_SIZE) {
 			output.write(PADDING);
 		}
@@ -196,6 +221,14 @@ public class ChunkPartition implements Partition {
 
 	public void clearData() {
 		data = new byte[0];
+	}
+
+	public byte[] getExtraData() {
+		return extraData;
+	}
+
+	public void setExtraData(byte[] extraData) {
+		this.extraData = extraData;
 	}
 
 	public int size() {
