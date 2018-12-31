@@ -1,6 +1,7 @@
 package com.github.kneelawk.region;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -125,10 +126,10 @@ public class ChunkPartition implements Partition {
 
 		switch (compressionType) {
 		case RegionValues.DEFLATE_COMPRESSION:
-			out = new DataOutputStream(new DeflaterOutputStream(arrayOut));
+			out = new DataOutputStream(new BufferedOutputStream(new DeflaterOutputStream(arrayOut)));
 			break;
 		case RegionValues.GZIP_COMPRESSION:
-			out = new DataOutputStream(new GZIPOutputStream(arrayOut));
+			out = new DataOutputStream(new BufferedOutputStream(new GZIPOutputStream(arrayOut)));
 			break;
 		default:
 			throw new IOException("Unknown chunk compression type: " + compressionType);
