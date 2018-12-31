@@ -18,7 +18,7 @@ nbtFile
 
 partition
 :
-	PARTITION_START properties data SECTION_END
+	PARTITION_START properties data padding? SECTION_END
 ;
 
 properties
@@ -29,6 +29,11 @@ properties
 data
 :
 	DATA_START NBT_TAG SECTION_END
+;
+
+padding
+:
+	PADDING_START PADDING_BYTE+ SECTION_END
 ;
 
 NBT_TAG
@@ -96,9 +101,24 @@ DATA_START
 	'(data'
 ;
 
+PADDING_START
+:
+	'(padding'
+;
+
 SECTION_END
 :
 	')'
+;
+
+PADDING_BYTE
+:
+	[0-9a-fA-F] [0-9a-fA-F]
+;
+
+COMMENT
+:
+	'#' ~[\n\r]* ([\n\r] | EOF) -> skip
 ;
 
 WS

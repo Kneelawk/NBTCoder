@@ -16,6 +16,7 @@ import com.github.kneelawk.file.RegionNBTFile;
 import com.github.kneelawk.file.SimpleNBTFile;
 import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.DataContext;
 import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.NbtFileContext;
+import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.PaddingContext;
 import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.PartitionContext;
 import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.PropertiesContext;
 import com.github.kneelawk.nbt.Tag;
@@ -25,6 +26,7 @@ import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionValues;
 import com.github.kneelawk.utils.InternalParseException;
+import com.google.common.primitives.UnsignedBytes;
 
 public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseListener {
 
@@ -34,6 +36,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 	private Stack<Properties> propertieses = new Stack<>();
 	private List<Partition> partitions = new ArrayList<>();
 	private Tag tag;
+	private byte[] padding;
 
 	public NBTFileLanguageBuilderListener(NBTLanguageParser nbtParser) {
 		this.nbtParser = nbtParser;
@@ -83,7 +86,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 			int z = parseIntProperty(partProps, "z", propsContext);
 
 			ChunkPartition part = new ChunkPartition.Builder().setCompressionType(compression).setTimestamp(timestamp)
-					.setX(x).setZ(z).build();
+					.setX(x).setZ(z).setPaddingData(padding).build();
 			try {
 				part.writeTag(tag);
 			} catch (IOException e) {
@@ -91,6 +94,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 			}
 
 			tag = null;
+			padding = null;
 
 			partitions.add(part);
 		} else if ("empty".equals(partType)) {
@@ -123,6 +127,22 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 			tag = nbtParser.parse(nbtData.getText());
 		} catch (IOException e) {
 			throw new InternalParseException(e, nbtData);
+		}
+	}
+
+	@Override
+	public void exitPadding(PaddingContext ctx) {
+		List<TerminalNode> paddingBytes = ctx.PADDING_BYTE();
+		int paddingLen = paddingBytes.size();
+		padding = new byte[paddingLen];
+
+		for (int i = 0; i < paddingLen; i++) {
+			TerminalNode paddingByte = paddingBytes.get(i);
+			try {
+				padding[i] = UnsignedBytes.parseUnsignedByte(paddingByte.getText(), 16);
+			} catch (NumberFormatException e) {
+				throw new InternalParseException(e, paddingByte);
+			}
 		}
 	}
 
