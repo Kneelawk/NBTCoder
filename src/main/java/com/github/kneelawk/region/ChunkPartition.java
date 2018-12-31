@@ -16,6 +16,7 @@ import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
 
 public class ChunkPartition implements Partition {
+	public static final int CHUNK_HEADER_SIZE = 5;
 	private static final int PADDING_SIZE = 64;
 	private static final byte[] PADDING = new byte[PADDING_SIZE];
 
@@ -142,7 +143,7 @@ public class ChunkPartition implements Partition {
 
 	@Override
 	public int getSectorCount() {
-		return (size() - 1) / RegionValues.BYTES_PER_SECTOR + 1;
+		return size() / RegionValues.BYTES_PER_SECTOR + 1;
 	}
 
 	@Override
@@ -197,7 +198,7 @@ public class ChunkPartition implements Partition {
 	}
 
 	public int size() {
-		return data.length;
+		return data.length + CHUNK_HEADER_SIZE;
 	}
 
 	public int getTimestamp() {
