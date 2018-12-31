@@ -228,6 +228,10 @@ public class ChunkPartition implements Partition {
 		return paddingData;
 	}
 
+	public boolean hasPaddingData() {
+		return paddingData != null && paddingData.length > 0;
+	}
+
 	public void setPaddingData(byte[] paddingData) {
 		this.paddingData = paddingData;
 	}

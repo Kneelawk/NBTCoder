@@ -15,6 +15,7 @@ import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionFileIO;
 import com.github.kneelawk.region.RegionValues;
+import com.github.kneelawk.utils.ByteArrayUtils;
 
 public class RegionTest {
 
@@ -57,6 +58,12 @@ public class RegionTest {
 				out.println("(data");
 				out.println(printer.print(chunk.readTag(factory)));
 				out.println(")");
+				if (chunk.hasPaddingData()) {
+					byte[] paddingData = chunk.getPaddingData();
+					out.println("(padding");
+					out.println(ByteArrayUtils.toHex(paddingData, chunk.size()));
+					out.println(")");
+				}
 			}
 			out.println(")");
 			System.out.println("Partition " + i + " / " + size);
