@@ -183,6 +183,7 @@ public class ChunkPartition implements Partition {
 				output.write(extraData);
 			} else {
 				output.write(extraData, 0, remaining);
+				return;
 			}
 		}
 
