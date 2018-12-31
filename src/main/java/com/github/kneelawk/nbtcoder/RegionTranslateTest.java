@@ -21,7 +21,7 @@ public class RegionTranslateTest {
 		TagFactory factory = new DefaultTagFactory();
 
 		System.out.println("Loading...");
-		List<Partition> loadedPartitions = RegionFileIO.readRegionFile(new FileInputStream("../r.-1.-2.mca"));
+		List<Partition> loadedPartitions = RegionFileIO.readRegionFile(new FileInputStream("../r.0.0.mca"));
 
 		System.out.println("Copying...");
 		List<Partition> newPartitions = new ArrayList<>();
@@ -47,7 +47,7 @@ public class RegionTranslateTest {
 		}
 
 		System.out.println("Writing...");
-		RegionFileIO.writeRegionFile(new FileOutputStream("../r.-1.-2.mca.3"), newPartitions);
+		RegionFileIO.writeRegionFile(new FileOutputStream("../r.0.0.mca.1"), newPartitions);
 
 		System.out.println("Done.");
 	}

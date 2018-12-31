@@ -21,16 +21,16 @@ public class RegionTest {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		TagFactory factory = new DefaultTagFactory();
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
-		PrintStream out = new PrintStream(new FileOutputStream("../r.-1.-2.mca.txt"));
+		PrintStream out = new PrintStream(new FileOutputStream("../r.0.0.mca.txt"));
 		out.println("(file");
 		out.println("(properties");
-		out.println("name=r.-1.-2.mca");
+		out.println("name=r.0.0.mca");
 		out.println("type=region");
 		out.println(")");
 
 		System.out.println("Loading...");
 
-		List<Partition> partitions = RegionFileIO.readRegionFile(new FileInputStream("../r.-1.-2.mca"));
+		List<Partition> partitions = RegionFileIO.readRegionFile(new FileInputStream("../r.0.0.mca"));
 
 		System.out.println("Printing...");
 
