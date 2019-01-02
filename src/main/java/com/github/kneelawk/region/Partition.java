@@ -9,6 +9,6 @@ public interface Partition {
 	public void writeMetadata(int sectorNum, int[] offsets, int[] timestamps);
 
 	public void writeData(DataOutputStream output) throws IOException;
-	
+
 	public String getPartitionType();
 }
