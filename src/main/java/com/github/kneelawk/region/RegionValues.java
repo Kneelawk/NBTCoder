@@ -9,4 +9,7 @@ public class RegionValues {
 
 	public static final String CHUNK_PARTITION_TYPE_STRING = "chunk";
 	public static final String EMPTY_PARTITION_TYPE_STRING = "empty";
+
+	public static final String GZIP_COMPRESSION_STRING = "gzip";
+	public static final String DEFLATE_COMPRESSION_STRING = "deflate";
 }

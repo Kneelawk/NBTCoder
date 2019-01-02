@@ -48,7 +48,11 @@ public class HexLanguagePrinter {
 
 	public String print(byte[] data, int offset) {
 		StringBuilder sb = new StringBuilder();
+		print(data, offset, sb);
+		return sb.toString();
+	}
 
+	public void print(byte[] data, int offset, StringBuilder sb) {
 		if (applyOffset) {
 			int missing = offset % 0x10;
 			spaces(missing * 3 + (missing <= 7 ? 0 : 1), sb);
@@ -85,6 +89,5 @@ public class HexLanguagePrinter {
 				}
 			}
 		}
-		return sb.toString();
 	}
 }

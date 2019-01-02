@@ -74,9 +74,9 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		if (RegionValues.CHUNK_PARTITION_TYPE_STRING.equals(partType)) {
 			byte compression;
 			String compressionStr = partProps.getProperty("compression");
-			if ("deflate".equals(compressionStr)) {
+			if (RegionValues.DEFLATE_COMPRESSION_STRING.equals(compressionStr)) {
 				compression = RegionValues.DEFLATE_COMPRESSION;
-			} else if ("gzip".equals(compressionStr)) {
+			} else if (RegionValues.GZIP_COMPRESSION_STRING.equals(compressionStr)) {
 				compression = RegionValues.GZIP_COMPRESSION;
 			} else {
 				throw new InternalParseException("Invalid compression type: " + compressionStr, propsContext);

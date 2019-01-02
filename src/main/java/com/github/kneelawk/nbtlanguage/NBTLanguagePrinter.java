@@ -71,8 +71,13 @@ public class NBTLanguagePrinter {
 	}
 
 	public String print(Tag tag) {
-		String name = tag.getName();
 		StringBuilder sb = new StringBuilder();
+		print(tag, sb);
+		return sb.toString();
+	}
+
+	public void print(Tag tag, StringBuilder sb) {
+		String name = tag.getName();
 		if (!printRootName || name.isEmpty()) {
 			printTag(tag, sb, 0);
 		} else {
@@ -82,7 +87,6 @@ public class NBTLanguagePrinter {
 				sb.append(" ");
 			printTag(tag, sb, 0);
 		}
-		return sb.toString();
 	}
 
 	@SuppressWarnings("unchecked")
