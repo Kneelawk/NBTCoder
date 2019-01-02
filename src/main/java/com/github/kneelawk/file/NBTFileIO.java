@@ -86,11 +86,11 @@ public class NBTFileIO {
 		} catch (IOException e) {
 			try {
 				bis.reset();
-				return readSimpleNBTStream(filename, bis, false, factory);
+				return readRegionNBTStream(filename, bis);
 			} catch (IOException e1) {
 				try {
 					bis.reset();
-					return readRegionNBTStream(filename, bis);
+					return readSimpleNBTStream(filename, bis, false, factory);
 				} catch (IOException e2) {
 					throw new IOException("Unable to detect NBT file type");
 				}
