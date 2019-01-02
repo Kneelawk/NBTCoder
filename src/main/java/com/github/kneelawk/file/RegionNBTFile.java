@@ -10,8 +10,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 public class RegionNBTFile implements NBTFile, RegionFile {
-	public static final String REGION_FILE_TYPE_STRING = "region";
-
 	private String filename;
 	private List<Partition> partitions = Lists.newArrayList();
 	private Map<Integer, ChunkPartition> chunks = Maps.newHashMap();
@@ -35,7 +33,7 @@ public class RegionNBTFile implements NBTFile, RegionFile {
 
 	@Override
 	public String getFileType() {
-		return REGION_FILE_TYPE_STRING;
+		return NBTFileValues.REGION_FILE_TYPE_STRING;
 	}
 
 	@Override

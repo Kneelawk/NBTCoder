@@ -11,6 +11,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import com.github.kneelawk.file.NBTFile;
+import com.github.kneelawk.file.NBTFileValues;
 import com.github.kneelawk.file.RegionNBTFile;
 import com.github.kneelawk.file.SimpleNBTFile;
 import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.DataContext;
@@ -53,12 +54,12 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		String fileType = fileProps.getProperty("type");
 
 		switch (fileType) {
-		case "region":
+		case NBTFileValues.REGION_FILE_TYPE_STRING:
 			file = new RegionNBTFile(filename, partitions);
 			break;
-		case "uncompressed":
-		case "compressed":
-			file = new SimpleNBTFile(filename, tag, "compressed".equals(fileType));
+		case NBTFileValues.UNCOMPRESSED_FILE_TYPE_STRING:
+		case NBTFileValues.COMPRESSED_FILE_TYPE_STRING:
+			file = new SimpleNBTFile(filename, tag, NBTFileValues.COMPRESSED_FILE_TYPE_STRING.equals(fileType));
 			break;
 		default:
 			throw new InternalParseException("Invalid NBT file type: " + fileType, ctx.properties());
@@ -70,7 +71,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		Properties partProps = propertieses.pop();
 		String partType = partProps.getProperty("type");
 		PropertiesContext propsContext = ctx.properties();
-		if ("chunk".equals(partType)) {
+		if (RegionValues.CHUNK_PARTITION_TYPE_STRING.equals(partType)) {
 			byte compression;
 			String compressionStr = partProps.getProperty("compression");
 			if ("deflate".equals(compressionStr)) {
@@ -85,8 +86,8 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 			int x = parseIntProperty(partProps, "x", propsContext);
 			int z = parseIntProperty(partProps, "z", propsContext);
 
-			Chunk part = new Chunk.Builder().setCompressionType(compression).setTimestamp(timestamp)
-					.setX(x).setZ(z).setPaddingData(padding).build();
+			Chunk part = new Chunk.Builder().setCompressionType(compression).setTimestamp(timestamp).setX(x).setZ(z)
+					.setPaddingData(padding).build();
 			try {
 				part.writeTag(tag);
 			} catch (IOException e) {
@@ -97,7 +98,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 			padding = null;
 
 			partitions.add(part);
-		} else if ("empty".equals(partType)) {
+		} else if (RegionValues.EMPTY_PARTITION_TYPE_STRING.equals(partType)) {
 			int size = parseIntProperty(partProps, "size", propsContext);
 
 			EmptyPartition part = new EmptyPartition(size);

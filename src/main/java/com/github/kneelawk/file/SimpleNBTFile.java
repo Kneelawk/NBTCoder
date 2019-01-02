@@ -3,9 +3,6 @@ package com.github.kneelawk.file;
 import com.github.kneelawk.nbt.Tag;
 
 public class SimpleNBTFile implements NBTFile, SimpleFile {
-	public static final String COMPRESSED_FILE_TYPE_STRING = "compressed";
-	public static final String UNCOMPRESSED_FILE_TYPE_STRING = "uncompressed";
-
 	private String filename;
 	private Tag data;
 	private boolean compressed;
@@ -23,7 +20,7 @@ public class SimpleNBTFile implements NBTFile, SimpleFile {
 
 	@Override
 	public String getFileType() {
-		return compressed ? COMPRESSED_FILE_TYPE_STRING : UNCOMPRESSED_FILE_TYPE_STRING;
+		return compressed ? NBTFileValues.COMPRESSED_FILE_TYPE_STRING : NBTFileValues.UNCOMPRESSED_FILE_TYPE_STRING;
 	}
 
 	@Override
