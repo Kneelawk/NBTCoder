@@ -6,13 +6,13 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.github.kneelawk.utils.ByteArrayUtils;
+import com.google.common.collect.Lists;
 
 public class RegionFileIO {
 
@@ -37,7 +37,7 @@ public class RegionFileIO {
 			timestamps[i] = input.readInt();
 		}
 
-		List<Partition> partitions = new ArrayList<>();
+		List<Partition> partitions = Lists.newArrayList();
 
 		int sectorsRead = 2;
 		Iterator<Integer> it = offsetMap.keySet().iterator();

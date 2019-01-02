@@ -1,6 +1,5 @@
 package com.github.kneelawk.nbtlanguage;
 
-import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 import java.util.Stack;
@@ -36,6 +35,7 @@ import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagStringContext;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagTypedArrayContext;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TypedArrayItemContext;
 import com.github.kneelawk.utils.InternalParseException;
+import com.google.common.collect.Lists;
 
 public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
@@ -51,7 +51,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
 	private Stack<List<AbstractTag>> listItems = new Stack<>();
 	private Stack<List<AbstractTag>> compoundItems = new Stack<>();
-	private List<String> typedArrayItems = new ArrayList<>();
+	private List<String> typedArrayItems = Lists.newArrayList();
 
 	public Tag getRoot() {
 		return root;
@@ -98,7 +98,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
 	@Override
 	public void enterTagList(TagListContext ctx) {
-		listItems.push(new ArrayList<>());
+		listItems.push(Lists.newArrayList());
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
 	@Override
 	public void enterTagCompound(TagCompoundContext ctx) {
-		compoundItems.add(new ArrayList<>());
+		compoundItems.add(Lists.newArrayList());
 	}
 
 	@Override

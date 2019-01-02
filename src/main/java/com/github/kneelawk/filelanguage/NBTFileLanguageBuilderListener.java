@@ -2,7 +2,6 @@ package com.github.kneelawk.filelanguage;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
@@ -26,6 +25,7 @@ import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionValues;
 import com.github.kneelawk.utils.InternalParseException;
+import com.google.common.collect.Lists;
 import com.google.common.primitives.UnsignedBytes;
 
 public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseListener {
@@ -34,7 +34,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 
 	private NBTFile file;
 	private Stack<Properties> propertieses = new Stack<>();
-	private List<Partition> partitions = new ArrayList<>();
+	private List<Partition> partitions = Lists.newArrayList();
 	private Tag tag;
 	private byte[] padding;
 

@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.kneelawk.nbt.DefaultTagFactory;
@@ -14,6 +13,7 @@ import com.github.kneelawk.region.ChunkPartition;
 import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionFileIO;
+import com.google.common.collect.Lists;
 
 public class RegionTranslateTest {
 
@@ -24,7 +24,7 @@ public class RegionTranslateTest {
 		List<Partition> loadedPartitions = RegionFileIO.readRegionFile(new FileInputStream("../r.0.0.mca"));
 
 		System.out.println("Copying...");
-		List<Partition> newPartitions = new ArrayList<>();
+		List<Partition> newPartitions = Lists.newArrayList();
 		for (Partition part : loadedPartitions) {
 			if (part instanceof ChunkPartition) {
 				ChunkPartition chunk = (ChunkPartition) part;

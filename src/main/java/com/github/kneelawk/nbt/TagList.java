@@ -3,7 +3,6 @@ package com.github.kneelawk.nbt;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -15,9 +14,11 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import com.google.common.collect.Lists;
+
 public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
-	private List<E> elements = new ArrayList<>();
+	private List<E> elements = Lists.newArrayList();
 
 	public TagList() {
 	}
@@ -162,7 +163,7 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
 	@Override
 	public void replaceAll(UnaryOperator<E> operator) {
-		List<E> nelements = new ArrayList<>(elements);
+		List<E> nelements = Lists.newArrayList(elements);
 		nelements.replaceAll(operator);
 		checkTagTypes(nelements);
 		elements.clear();
