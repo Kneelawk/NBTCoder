@@ -156,6 +156,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 					hexBytes[i] = UnsignedBytes.parseUnsignedByte(typedArrayItems.get(i), 16);
 				}
 				array = new TagByteArray("", hexBytes);
+				break;
 			case "i":
 				int[] ints = typedArrayItems.stream().mapToInt(o -> Integer.parseInt(o)).toArray();
 				array = new TagIntArray("", ints);
