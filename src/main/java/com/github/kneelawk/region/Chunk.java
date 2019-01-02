@@ -117,6 +117,11 @@ public class Chunk implements Partition, ChunkPartition {
 	}
 
 	@Override
+	public String getPartitionType() {
+		return RegionValues.CHUNK_PARTITION_TYPE_STRING;
+	}
+
+	@Override
 	public Tag readTag(TagFactory factory) throws IOException {
 		DataInputStream in = null;
 

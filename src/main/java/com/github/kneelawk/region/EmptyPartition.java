@@ -28,4 +28,9 @@ public class EmptyPartition implements Partition {
 		}
 	}
 
+	@Override
+	public String getPartitionType() {
+		return RegionValues.EMPTY_PARTITION_TYPE_STRING;
+	}
+
 }
