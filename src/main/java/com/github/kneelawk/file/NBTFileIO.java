@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import com.github.kneelawk.nbt.NBTIO;
+import com.github.kneelawk.nbt.NBTValues;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
 import com.github.kneelawk.region.RegionFileIO;
@@ -80,20 +81,33 @@ public class NBTFileIO {
 	public static NBTFile readAutomaticDetectedStream(String filename, InputStream is, TagFactory factory)
 			throws IOException {
 		BufferedInputStream bis = new BufferedInputStream(is);
-		bis.mark(3072);
+		bis.mark(4096);
 		try {
 			return readSimpleNBTStream(filename, bis, true, factory);
 		} catch (IOException e) {
+			bis.reset();
+			SimpleNBTFile file;
 			try {
-				bis.reset();
-				return readRegionNBTStream(filename, bis);
+				file = readSimpleNBTStream(filename, bis, false, factory);
 			} catch (IOException e1) {
+				bis.reset();
 				try {
-					bis.reset();
-					return readSimpleNBTStream(filename, bis, false, factory);
+					return readRegionNBTStream(filename, bis);
 				} catch (IOException e2) {
 					throw new IOException("Unable to detect NBT file type");
 				}
+			}
+			
+			// A valid file shouldn't consist entirely of a TAG_END
+			if (file.getData().getId() == NBTValues.TAG_END) {
+				bis.reset();
+				try {
+					return readRegionNBTStream(filename, bis);
+				} catch (IOException e2) {
+					throw new IOException("Unable to detect NBT file type");
+				}
+			} else {
+				return file;
 			}
 		}
 	}
