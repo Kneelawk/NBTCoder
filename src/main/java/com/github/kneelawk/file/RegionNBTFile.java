@@ -1,16 +1,29 @@
 package com.github.kneelawk.file;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
+import com.github.kneelawk.region.ChunkPartition;
 import com.github.kneelawk.region.Partition;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
-public class RegionNBTFile implements NBTFile {
+public class RegionNBTFile implements NBTFile, RegionFile {
 	private String filename;
-	private List<Partition> partitions;
+	private List<Partition> partitions = Lists.newArrayList();
+	private Map<Integer, ChunkPartition> chunks = Maps.newHashMap();
 
-	public RegionNBTFile(String filename, List<Partition> partitions) {
+	public RegionNBTFile(String filename, Collection<Partition> partitions) {
 		this.filename = filename;
-		this.partitions = partitions;
+		this.partitions.addAll(partitions);
+
+		for (Partition part : partitions) {
+			if (part instanceof ChunkPartition) {
+				ChunkPartition chunk = (ChunkPartition) part;
+				chunks.put(chunk.getX() + chunk.getZ() * 32, chunk);
+			}
+		}
 	}
 
 	@Override
@@ -18,15 +31,22 @@ public class RegionNBTFile implements NBTFile {
 		return filename;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
+	@Override
 	public List<Partition> getPartitions() {
 		return partitions;
 	}
 
-	public void setPartitions(List<Partition> partitions) {
-		this.partitions = partitions;
+	@Override
+	public ChunkPartition getChunk(int x, int z) {
+		return chunks.get(x + z * 32);
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public void setPartitions(Collection<Partition> partitions) {
+		this.partitions.clear();
+		this.partitions.addAll(partitions);
 	}
 }

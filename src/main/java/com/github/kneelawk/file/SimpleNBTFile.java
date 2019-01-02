@@ -2,7 +2,7 @@ package com.github.kneelawk.file;
 
 import com.github.kneelawk.nbt.Tag;
 
-public class SimpleNBTFile implements NBTFile {
+public class SimpleNBTFile implements NBTFile, SimpleFile {
 	private String filename;
 	private Tag data;
 	private boolean compressed;
@@ -18,20 +18,22 @@ public class SimpleNBTFile implements NBTFile {
 		return filename;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
+	@Override
 	public Tag getData() {
 		return data;
 	}
 
-	public void setData(Tag data) {
-		this.data = data;
-	}
-
+	@Override
 	public boolean isCompressed() {
 		return compressed;
+	}
+
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	public void setData(Tag data) {
+		this.data = data;
 	}
 
 	public void setCompressed(boolean compressed) {
