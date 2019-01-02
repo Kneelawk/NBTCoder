@@ -16,7 +16,11 @@ BYTE
 
 COMMENT
 :
-	'#' ~[\n\r]* ([\n\r] | EOF) -> skip
+	'#' ~[\n\r]*
+	(
+		[\n\r]
+		| EOF
+	) -> skip
 ;
 
 WS
