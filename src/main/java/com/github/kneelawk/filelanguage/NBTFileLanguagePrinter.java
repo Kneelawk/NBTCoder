@@ -2,8 +2,9 @@ package com.github.kneelawk.filelanguage;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.output.StringBuilderWriter;
 
 import com.github.kneelawk.file.NBTFile;
@@ -40,7 +41,7 @@ public class NBTFileLanguagePrinter {
 	private void printNBTFile(NBTFile file, TagFactory factory, StringBuilder sb) throws IOException {
 		sb.append("(file\n");
 
-		Properties fileProps = new Properties();
+		PropertiesConfiguration fileProps = new PropertiesConfiguration();
 		fileProps.setProperty("name", file.getFilename());
 		fileProps.setProperty("type", file.getFileType());
 		printProperties(fileProps, sb);
@@ -69,7 +70,7 @@ public class NBTFileLanguagePrinter {
 	private void printPartition(Partition part, TagFactory factory, StringBuilder sb) throws IOException {
 		sb.append("(partition\n");
 
-		Properties partProps = new Properties();
+		PropertiesConfiguration partProps = new PropertiesConfiguration();
 		partProps.setProperty("type", part.getPartitionType());
 
 		if (part instanceof EmptyPartition) {
@@ -100,13 +101,17 @@ public class NBTFileLanguagePrinter {
 		sb.append("\n)");
 	}
 
-	private void printProperties(Properties props, StringBuilder sb) throws IOException {
+	private void printProperties(PropertiesConfiguration props, StringBuilder sb) throws IOException {
 		sb.append("(properties\n");
 
 		StringBuilderWriter writer = new StringBuilderWriter(sb);
-		props.store(writer, null);
+		try {
+			props.write(writer);
+		} catch (ConfigurationException e) {
+			throw new IOException(e);
+		}
 
-		sb.append("\n)");
+		sb.append(')');
 	}
 
 	private void printData(Tag data, StringBuilder sb) {

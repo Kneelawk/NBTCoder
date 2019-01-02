@@ -3,12 +3,13 @@ package com.github.kneelawk.filelanguage;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.List;
-import java.util.Properties;
 import java.util.Stack;
 
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import com.github.kneelawk.file.NBTFile;
 import com.github.kneelawk.file.NBTFileValues;
@@ -34,7 +35,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 	private NBTLanguageParser nbtParser;
 
 	private NBTFile file;
-	private Stack<Properties> propertieses = new Stack<>();
+	private Stack<PropertiesConfiguration> propertieses = new Stack<>();
 	private List<Partition> partitions = Lists.newArrayList();
 	private Tag tag;
 	private byte[] padding;
@@ -49,9 +50,9 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 
 	@Override
 	public void exitNbtFile(NbtFileContext ctx) {
-		Properties fileProps = propertieses.pop();
-		String filename = fileProps.getProperty("name");
-		String fileType = fileProps.getProperty("type");
+		PropertiesConfiguration fileProps = propertieses.pop();
+		String filename = fileProps.getString("name");
+		String fileType = fileProps.getString("type");
 
 		switch (fileType) {
 		case NBTFileValues.REGION_FILE_TYPE_STRING:
@@ -68,12 +69,12 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 
 	@Override
 	public void exitPartition(PartitionContext ctx) {
-		Properties partProps = propertieses.pop();
-		String partType = partProps.getProperty("type");
+		PropertiesConfiguration partProps = propertieses.pop();
+		String partType = partProps.getString("type");
 		PropertiesContext propsContext = ctx.properties();
 		if (RegionValues.CHUNK_PARTITION_TYPE_STRING.equals(partType)) {
 			byte compression;
-			String compressionStr = partProps.getProperty("compression");
+			String compressionStr = partProps.getString("compression");
 			if (RegionValues.DEFLATE_COMPRESSION_STRING.equals(compressionStr)) {
 				compression = RegionValues.DEFLATE_COMPRESSION;
 			} else if (RegionValues.GZIP_COMPRESSION_STRING.equals(compressionStr)) {
@@ -111,11 +112,14 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 
 	@Override
 	public void exitProperties(PropertiesContext ctx) {
-		Properties props = new Properties();
+		PropertiesConfiguration props = new PropertiesConfiguration();
+		props.setIncludesAllowed(false);
 		TerminalNode propsData = ctx.PROPERTIES_DATA();
 		try {
-			props.load(new StringReader(propsData.getText()));
+			props.read(new StringReader(propsData.getText()));
 		} catch (IOException e) {
+			throw new InternalParseException(e, propsData);
+		} catch (ConfigurationException e) {
 			throw new InternalParseException(e, propsData);
 		}
 		propertieses.add(props);
@@ -152,12 +156,11 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		throw new InternalParseException("Error Node", node);
 	}
 
-	private int parseIntProperty(Properties props, String key, ParseTree tree) {
-		String prop = props.getProperty(key);
+	private int parseIntProperty(PropertiesConfiguration props, String key, ParseTree tree) {
 		try {
-			return Integer.parseInt(prop);
+			return props.getInt(key);
 		} catch (Exception e) {
-			throw new InternalParseException("Unable to parse property: " + key + " with a value of: " + prop, e, tree);
+			throw new InternalParseException(e, tree);
 		}
 	}
 }
