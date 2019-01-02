@@ -9,6 +9,7 @@ import java.util.List;
 import com.github.kneelawk.nbt.DefaultTagFactory;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
+import com.github.kneelawk.region.Chunk;
 import com.github.kneelawk.region.ChunkPartition;
 import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
@@ -36,7 +37,7 @@ public class RegionTranslateTest {
 
 				Tag data = chunk.readTag(factory);
 
-				ChunkPartition newChunk = new ChunkPartition.Builder().setCompressionType(compression)
+				Chunk newChunk = new Chunk.Builder().setCompressionType(compression)
 						.setTimestamp(timestamp).setX(x).setZ(z).setPaddingData(chunk.getPaddingData()).build();
 				newChunk.writeTag(data);
 

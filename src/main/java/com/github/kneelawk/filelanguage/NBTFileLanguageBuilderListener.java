@@ -20,7 +20,7 @@ import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.PartitionCon
 import com.github.kneelawk.filelanguage.NBTFileLanguageSystemParser.PropertiesContext;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
-import com.github.kneelawk.region.ChunkPartition;
+import com.github.kneelawk.region.Chunk;
 import com.github.kneelawk.region.EmptyPartition;
 import com.github.kneelawk.region.Partition;
 import com.github.kneelawk.region.RegionValues;
@@ -85,7 +85,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 			int x = parseIntProperty(partProps, "x", propsContext);
 			int z = parseIntProperty(partProps, "z", propsContext);
 
-			ChunkPartition part = new ChunkPartition.Builder().setCompressionType(compression).setTimestamp(timestamp)
+			Chunk part = new Chunk.Builder().setCompressionType(compression).setTimestamp(timestamp)
 					.setX(x).setZ(z).setPaddingData(padding).build();
 			try {
 				part.writeTag(tag);

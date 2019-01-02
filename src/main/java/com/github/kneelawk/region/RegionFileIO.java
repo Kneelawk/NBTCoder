@@ -87,7 +87,7 @@ public class RegionFileIO {
 				paddingData = newPaddingData;
 			}
 
-			ChunkPartition chunk = new ChunkPartition(type, loc.getX(), loc.getZ(), data, paddingData,
+			Chunk chunk = new Chunk(type, loc.getX(), loc.getZ(), data, paddingData,
 					timestamps[loc.getLocation()]);
 
 			sectorsRead += loc.getSectorCount();
