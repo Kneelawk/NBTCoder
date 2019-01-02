@@ -11,7 +11,7 @@ public class NBTLanguageTagLongPrintTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagLongWithName.csv" })
 	public void prettyPrintTagLongWithName(String name, long value, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, false).build();
 		TagLong b = new TagLong(name, value);
 
 		String out = printer.print(b);
@@ -22,7 +22,7 @@ public class NBTLanguageTagLongPrintTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagLongWithoutName.csv" })
 	public void prettyPrintTagLongWithoutName(String name, long value, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false, false).build();
 		TagLong b = new TagLong(name, value);
 
 		String out = printer.print(b);
@@ -33,7 +33,7 @@ public class NBTLanguageTagLongPrintTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "simplePrintTagLongWithName.csv" })
 	public void simplePrintTagLongWithName(String name, long value, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, false).build();
 		TagLong b = new TagLong(name, value);
 
 		String out = printer.print(b);
@@ -44,7 +44,7 @@ public class NBTLanguageTagLongPrintTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "simplePrintTagLongWithoutName.csv" })
 	public void simplePrintTagLongWithoutName(String name, long value, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false, false).build();
 		TagLong b = new TagLong(name, value);
 
 		String out = printer.print(b);

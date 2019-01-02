@@ -36,6 +36,7 @@ import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TagTypedArrayCont
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.TypedArrayItemContext;
 import com.github.kneelawk.utils.InternalParseException;
 import com.google.common.collect.Lists;
+import com.google.common.primitives.UnsignedBytes;
 
 public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
@@ -149,13 +150,27 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 				}
 				array = new TagByteArray("", bytes);
 				break;
+			case "bx":
+				byte[] hexBytes = new byte[typedArrayItems.size()];
+				for (int i = 0; i < typedArrayItems.size(); i++) {
+					hexBytes[i] = UnsignedBytes.parseUnsignedByte(typedArrayItems.get(i), 16);
+				}
+				array = new TagByteArray("", hexBytes);
 			case "i":
 				int[] ints = typedArrayItems.stream().mapToInt(o -> Integer.parseInt(o)).toArray();
 				array = new TagIntArray("", ints);
 				break;
+			case "ix":
+				int[] hexInts = typedArrayItems.stream().mapToInt(o -> Integer.parseUnsignedInt(o, 16)).toArray();
+				array = new TagIntArray("", hexInts);
+				break;
 			case "l":
 				long[] longs = typedArrayItems.stream().mapToLong(o -> Long.parseLong(o)).toArray();
 				array = new TagLongArray("", longs);
+				break;
+			case "lx":
+				long[] hexLongs = typedArrayItems.stream().mapToLong(o -> Long.parseUnsignedLong(o, 16)).toArray();
+				array = new TagLongArray("", hexLongs);
 				break;
 			default:
 				throw new InternalParseException("Unknown typed array type: " + arrayTypeStr, ctx);

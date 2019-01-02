@@ -13,7 +13,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithName.csv" })
 	public void prettyPrintTagByteArrayWithName(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
 			String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, false).build();
 		TagByteArray tag = new TagByteArray(name, data);
 
 		String out = printer.print(tag);
@@ -25,7 +25,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithoutName.csv" })
 	public void prettyPrintTagByteArrayWithoutName(String name,
 			@ConvertWith(ByteArrayArgumentConverter.class) byte[] data, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false, false).build();
 		TagByteArray tag = new TagByteArray(name, data);
 
 		String out = printer.print(tag);
@@ -37,7 +37,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 	@CsvFileSource(resources = { "simplePrintTagByteArrayWithName.csv" })
 	public void simplePrintTagByteArrayWithName(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
 			String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, false).build();
 		TagByteArray tag = new TagByteArray(name, data);
 
 		String out = printer.print(tag);
@@ -49,7 +49,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 	@CsvFileSource(resources = { "simplePrintTagByteArrayWithoutName.csv" })
 	public void simplePrintTagByteArrayWithoutName(String name,
 			@ConvertWith(ByteArrayArgumentConverter.class) byte[] data, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false, false).build();
 		TagByteArray tag = new TagByteArray(name, data);
 
 		String out = printer.print(tag);

@@ -30,17 +30,19 @@ public class NBTLanguagePrinter {
 	public static class Builder {
 		private boolean prettyPrint = true;
 		private boolean printRootName = true;
+		private boolean arraysInHex = true;
 
 		public Builder() {
 		}
 
-		public Builder(boolean prettyPrint, boolean printRootName) {
+		public Builder(boolean prettyPrint, boolean printRootName, boolean arraysInHex) {
 			this.prettyPrint = prettyPrint;
 			this.printRootName = printRootName;
+			this.arraysInHex = arraysInHex;
 		}
 
 		public NBTLanguagePrinter build() {
-			return new NBTLanguagePrinter(prettyPrint, printRootName);
+			return new NBTLanguagePrinter(prettyPrint, printRootName, arraysInHex);
 		}
 
 		public boolean isPrettyPrint() {
@@ -60,14 +62,25 @@ public class NBTLanguagePrinter {
 			this.printRootName = printRootName;
 			return this;
 		}
+
+		public boolean isArraysInHex() {
+			return arraysInHex;
+		}
+
+		public Builder setArraysInHex(boolean arraysInHex) {
+			this.arraysInHex = arraysInHex;
+			return this;
+		}
 	}
 
 	private final boolean prettyPrint;
 	private final boolean printRootName;
+	private final boolean arraysInHex;
 
-	public NBTLanguagePrinter(boolean prettyPrint, boolean printRootName) {
+	public NBTLanguagePrinter(boolean prettyPrint, boolean printRootName, boolean arraysInHex) {
 		this.prettyPrint = prettyPrint;
 		this.printRootName = printRootName;
+		this.arraysInHex = arraysInHex;
 	}
 
 	public String print(Tag tag) {
@@ -167,7 +180,11 @@ public class NBTLanguagePrinter {
 	}
 
 	protected void printByteArray(TagByteArray tag, StringBuilder sb, int indent) {
-		sb.append("[B;");
+		if (arraysInHex) {
+			sb.append("[BX;");
+		} else {
+			sb.append("[B;");
+		}
 		byte[] data = tag.getValue();
 		if (data.length > 0) {
 			if (prettyPrint) {
@@ -176,9 +193,17 @@ public class NBTLanguagePrinter {
 			}
 			for (int i = 0; i < data.length; i++) {
 				if (prettyPrint) {
-					sb.append(String.format("%3d", data[i]));
+					if (arraysInHex) {
+						sb.append(String.format(" %02x", data[i]));
+					} else {
+						sb.append(String.format("%3d", data[i]));
+					}
 				} else {
-					sb.append(data[i]);
+					if (arraysInHex) {
+						sb.append(String.format("%x", data[i]));
+					} else {
+						sb.append(data[i]);
+					}
 				}
 				if (i < data.length - 1) {
 					sb.append(",");
@@ -257,7 +282,11 @@ public class NBTLanguagePrinter {
 	}
 
 	protected void printIntArray(TagIntArray tag, StringBuilder sb, int indent) {
-		sb.append("[I;");
+		if (arraysInHex) {
+			sb.append("[IX;");
+		} else {
+			sb.append("[I;");
+		}
 		int[] data = tag.getValue();
 		if (data.length > 0) {
 			if (prettyPrint) {
@@ -266,9 +295,17 @@ public class NBTLanguagePrinter {
 			}
 			for (int i = 0; i < data.length; i++) {
 				if (prettyPrint) {
-					sb.append(String.format("%3d", data[i]));
+					if (arraysInHex) {
+						sb.append(String.format(" %08x", data[i]));
+					} else {
+						sb.append(String.format("%3d", data[i]));
+					}
 				} else {
-					sb.append(data[i]);
+					if (arraysInHex) {
+						sb.append(String.format("%x", data[i]));
+					} else {
+						sb.append(data[i]);
+					}
 				}
 				if (i < data.length - 1) {
 					sb.append(",");
@@ -287,7 +324,11 @@ public class NBTLanguagePrinter {
 	}
 
 	protected void printLongArray(TagLongArray tag, StringBuilder sb, int indent) {
-		sb.append("[L;");
+		if (arraysInHex) {
+			sb.append("[LX;");
+		} else {
+			sb.append("[L;");
+		}
 		long[] data = tag.getValue();
 		if (data.length > 0) {
 			if (prettyPrint) {
@@ -296,9 +337,17 @@ public class NBTLanguagePrinter {
 			}
 			for (int i = 0; i < data.length; i++) {
 				if (prettyPrint) {
-					sb.append(String.format("%3d", data[i]));
+					if (arraysInHex) {
+						sb.append(String.format(" %016x", data[i]));
+					} else {
+						sb.append(String.format("%3d", data[i]));
+					}
 				} else {
-					sb.append(data[i]);
+					if (arraysInHex) {
+						sb.append(String.format("%x", data[i]));
+					} else {
+						sb.append(data[i]);
+					}
 				}
 				if (i < data.length - 1) {
 					sb.append(",");

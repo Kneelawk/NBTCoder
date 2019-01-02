@@ -16,7 +16,7 @@ public class NBTLanguageTagCompoundPrintTests {
 	@CsvFileSource(resources = { "prettyPrintTagCompoundWithName.csv" })
 	public void prettyPrintTagCompoundWithName(String name, @ConvertWith(TagListArgumentConverter.class) List<Tag> data,
 			String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, false).build();
 		TagCompound tag = new TagCompound(name, data);
 
 		String out = printer.print(tag);
@@ -28,7 +28,7 @@ public class NBTLanguageTagCompoundPrintTests {
 	@CsvFileSource(resources = { "prettyPrintTagCompoundWithoutName.csv" })
 	public void prettyPrintTagCompoundWithoutName(String name,
 			@ConvertWith(TagListArgumentConverter.class) List<Tag> data, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false, false).build();
 		TagCompound tag = new TagCompound(name, data);
 
 		String out = printer.print(tag);
@@ -40,7 +40,7 @@ public class NBTLanguageTagCompoundPrintTests {
 	@CsvFileSource(resources = { "simplePrintTagCompoundWithName.csv" })
 	public void simplePrintTagCompoundWithName(String name, @ConvertWith(TagListArgumentConverter.class) List<Tag> data,
 			String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, false).build();
 		TagCompound tag = new TagCompound(name, data);
 
 		String out = printer.print(tag);
@@ -52,7 +52,7 @@ public class NBTLanguageTagCompoundPrintTests {
 	@CsvFileSource(resources = { "simplePrintTagCompoundWithoutName.csv" })
 	public void simplePrintTagCompoundWithoutName(String name,
 			@ConvertWith(TagListArgumentConverter.class) List<Tag> data, String expected) {
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false).build();
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false, false).build();
 		TagCompound tag = new TagCompound(name, data);
 
 		String out = printer.print(tag);
