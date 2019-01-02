@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
 
-public interface ChunkPartition {
+public interface ChunkPartition extends Partition {
 
 	Tag readTag(TagFactory factory) throws IOException;
 
