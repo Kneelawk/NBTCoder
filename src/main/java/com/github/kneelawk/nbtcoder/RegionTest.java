@@ -5,72 +5,34 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.util.List;
 
+import com.github.kneelawk.file.NBTFile;
+import com.github.kneelawk.file.NBTFileIO;
+import com.github.kneelawk.filelanguage.NBTFileLanguagePrinter;
 import com.github.kneelawk.hexlanguage.HexLanguagePrinter;
 import com.github.kneelawk.nbt.DefaultTagFactory;
 import com.github.kneelawk.nbt.TagFactory;
 import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
-import com.github.kneelawk.region.ChunkPartition;
-import com.github.kneelawk.region.EmptyPartition;
-import com.github.kneelawk.region.Partition;
-import com.github.kneelawk.region.RegionFileIO;
-import com.github.kneelawk.region.RegionValues;
 
 public class RegionTest {
 
+	public static final String FILENAME = "r.0.0.mca";
+	public static final String IN_FILE = "../" + FILENAME;
+	public static final String OUT_FILE = "../" + FILENAME + ".txt";
+
 	public static void main(String[] args) throws FileNotFoundException, IOException {
 		TagFactory factory = new DefaultTagFactory();
-		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
+		NBTLanguagePrinter nbtPrinter = new NBTLanguagePrinter.Builder().build();
 		HexLanguagePrinter hexPrinter = new HexLanguagePrinter.Builder().build();
-		PrintStream out = new PrintStream(new FileOutputStream("../r.0.0.mca.txt"));
-		out.println("(file");
-		out.println("(properties");
-		out.println("name=r.0.0.mca");
-		out.println("type=region");
-		out.println(")");
+		NBTFileLanguagePrinter printer = new NBTFileLanguagePrinter(nbtPrinter, hexPrinter);
 
 		System.out.println("Loading...");
+		NBTFile nbtFile = NBTFileIO.readAutomaticDetectedStream(FILENAME, new FileInputStream(IN_FILE), factory);
 
-		List<Partition> partitions = RegionFileIO.readRegionFile(new FileInputStream("../r.0.0.mca"));
+		PrintStream out = new PrintStream(new FileOutputStream(OUT_FILE));
 
 		System.out.println("Printing...");
-
-		int size = partitions.size();
-		for (int i = 0; i < size; i++) {
-			Partition part = partitions.get(i);
-
-			out.println("(partition");
-
-			out.println("(properties");
-			if (part instanceof EmptyPartition) {
-				out.println("type=empty");
-				out.println("size=" + part.getSectorCount());
-				out.println(")");
-			} else {
-				ChunkPartition chunk = (ChunkPartition) part;
-				out.println("type=chunk");
-				out.println("timestamp=" + chunk.getTimestamp());
-				out.println("compression="
-						+ (chunk.getCompressionType() == RegionValues.DEFLATE_COMPRESSION ? "deflate" : "gzip"));
-				out.println("x=" + chunk.getX());
-				out.println("z=" + chunk.getZ());
-				out.println(")");
-				out.println("(data");
-				out.println(printer.print(chunk.readTag(factory)));
-				out.println(")");
-				if (chunk.hasPaddingData()) {
-					byte[] paddingData = chunk.getPaddingData();
-					out.println("(padding");
-					out.println(hexPrinter.print(paddingData, chunk.size()));
-					out.println(")");
-				}
-			}
-			out.println(")");
-			System.out.println("Partition " + i + " / " + size);
-		}
-
-		out.println(")");
+		out.println(printer.print(nbtFile, factory));
 
 		System.out.println("Done.");
 		out.close();
