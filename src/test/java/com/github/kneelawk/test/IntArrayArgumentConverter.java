@@ -1,4 +1,4 @@
-package com.github.kneelawk.nbtlanguage;
+package com.github.kneelawk.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 

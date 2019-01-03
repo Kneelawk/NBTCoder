@@ -9,6 +9,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.TagLongArray;
+import com.github.kneelawk.test.LongArrayArgumentConverter;
 
 public class NBTLanguageTagLongArrayParseTests {
 	@ParameterizedTest

@@ -7,6 +7,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
 import com.github.kneelawk.nbt.TagIntArray;
+import com.github.kneelawk.test.IntArrayArgumentConverter;
 
 public class NBTLanguageTagIntArrayPrintTests {
 	@ParameterizedTest
