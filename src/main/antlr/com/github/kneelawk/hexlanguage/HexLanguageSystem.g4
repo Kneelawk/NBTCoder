@@ -6,7 +6,7 @@ grammar HexLanguageSystem;
 
 data
 :
-	BYTE+
+	BYTE*
 ;
 
 BYTE
