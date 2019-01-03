@@ -12,7 +12,8 @@ import com.github.kneelawk.nbt.TagLongArray;
 
 public class NBTLanguageTagLongArrayParseTests {
 	@ParameterizedTest
-	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithName.csv", "simplePrintTagLongArrayWithName.csv" })
+	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithName.csv", "simplePrintTagLongArrayWithName.csv",
+			"prettyPrintTagLongArrayWithNameWithHexArrays.csv", "simplePrintTagLongArrayWithNameWithHexArrays.csv" })
 	public void parseTagLongArrayWithName(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
 			String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
@@ -23,7 +24,9 @@ public class NBTLanguageTagLongArrayParseTests {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithoutName.csv", "simplePrintTagLongArrayWithoutName.csv" })
+	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithoutName.csv", "simplePrintTagLongArrayWithoutName.csv",
+			"prettyPrintTagLongArrayWithoutNameWithHexArrays.csv",
+			"simplePrintTagLongArrayWithoutNameWithHexArrays.csv" })
 	public void parseTagLongArrayWithoutName(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
 			String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();

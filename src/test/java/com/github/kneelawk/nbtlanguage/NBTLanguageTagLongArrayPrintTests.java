@@ -10,6 +10,54 @@ import com.github.kneelawk.nbt.TagLongArray;
 
 public class NBTLanguageTagLongArrayPrintTests {
 	@ParameterizedTest
+	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithNameWithHexArrays.csv" })
+	public void prettyPrintTagLongArrayWithNameWithHexArrays(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
+			String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, true).build();
+		TagLongArray tag = new TagLongArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithoutNameWithHexArrays.csv" })
+	public void prettyPrintTagLongArrayWithoutNameWithHexArrays(String name,
+			@ConvertWith(LongArrayArgumentConverter.class) long[] data, String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false, true).build();
+		TagLongArray tag = new TagLongArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "simplePrintTagLongArrayWithNameWithHexArrays.csv" })
+	public void simplePrintTagLongArrayWithNameWithHexArrays(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
+			String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, true).build();
+		TagLongArray tag = new TagLongArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "simplePrintTagLongArrayWithoutNameWithHexArrays.csv" })
+	public void simplePrintTagLongArrayWithoutNameWithHexArrays(String name,
+			@ConvertWith(LongArrayArgumentConverter.class) long[] data, String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false, true).build();
+		TagLongArray tag = new TagLongArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithName.csv" })
 	public void prettyPrintTagLongArrayWithName(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
 			String expected) {

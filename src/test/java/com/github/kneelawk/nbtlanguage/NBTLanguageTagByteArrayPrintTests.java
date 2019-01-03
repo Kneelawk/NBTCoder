@@ -10,6 +10,54 @@ import com.github.kneelawk.nbt.TagByteArray;
 
 public class NBTLanguageTagByteArrayPrintTests {
 	@ParameterizedTest
+	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithNameWithHexArrays.csv" })
+	public void prettyPrintTagByteArrayWithNameWithHexArrays(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
+			String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, true).build();
+		TagByteArray tag = new TagByteArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithoutNameWithHexArrays.csv" })
+	public void prettyPrintTagByteArrayWithoutNameWithHexArrays(String name,
+			@ConvertWith(ByteArrayArgumentConverter.class) byte[] data, String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, false, true).build();
+		TagByteArray tag = new TagByteArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "simplePrintTagByteArrayWithNameWithHexArrays.csv" })
+	public void simplePrintTagByteArrayWithNameWithHexArrays(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
+			String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, true).build();
+		TagByteArray tag = new TagByteArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+
+	@ParameterizedTest
+	@CsvFileSource(resources = { "simplePrintTagByteArrayWithoutNameWithHexArrays.csv" })
+	public void simplePrintTagByteArrayWithoutNameWithHexArrays(String name,
+			@ConvertWith(ByteArrayArgumentConverter.class) byte[] data, String expected) {
+		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, false, true).build();
+		TagByteArray tag = new TagByteArray(name, data);
+
+		String out = printer.print(tag);
+
+		assertEquals(expected, out);
+	}
+	
+	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithName.csv" })
 	public void prettyPrintTagByteArrayWithName(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
 			String expected) {
