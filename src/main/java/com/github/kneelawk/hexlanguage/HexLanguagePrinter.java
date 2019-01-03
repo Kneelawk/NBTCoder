@@ -68,7 +68,8 @@ public class HexLanguagePrinter {
 
 			// add line indicators
 			if (printLineNumbers) {
-				int start = ((b & 0xfffffff0) > offset ? b & 0xfffffff0 : offset);
+				int base = applyOffset ? offset : 0;
+				int start = ((b & 0xfffffff0) >= base ? b & 0xfffffff0 : base);
 				if (b % 0x10 == 0xf) {
 					sb.append(String.format("  # %08x-%08x", start, b));
 				} else if (i == data.length - 1) {
