@@ -96,19 +96,17 @@ public class NBTCoderArgs {
 		recursive = state.recursive;
 		stripped = state.stripped;
 
-		if (Booleans.countTrue(state.auto, state.autoDetectNoSuffix, state.compressed, state.region,
+		if (Booleans.countTrue(state.auto, state.compressed, state.region,
 				state.uncompressed) > 1) {
 			System.err.println("Only one of -a, -A, -c, -r, or -u may be specified.");
 			System.err.println(USAGE);
 			System.exit(-1);
-		} else if (Booleans.countTrue(state.auto, state.autoDetectNoSuffix, state.compressed, state.region,
+		} else if (Booleans.countTrue(state.auto, state.compressed, state.region,
 				state.uncompressed) < 1) {
 			nbtType = NBTType.AUTO;
 		} else {
 			if (state.auto) {
 				nbtType = NBTType.AUTO;
-			} else if (state.autoDetectNoSuffix) {
-				nbtType = NBTType.AUTO_DETECT_NO_SUFFIX;
 			} else if (state.compressed) {
 				nbtType = NBTType.COMPRESSED;
 			} else if (state.region) {
@@ -188,7 +186,6 @@ public class NBTCoderArgs {
 		boolean humanReadable = false;
 		boolean nbt = false;
 		boolean auto = false;
-		boolean autoDetectNoSuffix = false;
 		boolean compressed = false;
 		boolean region = false;
 		boolean uncompressed = false;
@@ -236,9 +233,6 @@ public class NBTCoderArgs {
 							break;
 						case "--auto":
 							auto = true;
-							break;
-						case "--auto-detect-no-suffix":
-							autoDetectNoSuffix = true;
 							break;
 						case "--compressed":
 							compressed = true;
@@ -299,9 +293,6 @@ public class NBTCoderArgs {
 				case 'a':
 					auto = true;
 					break;
-				case 'A':
-					autoDetectNoSuffix = true;
-					break;
 				case 'c':
 					compressed = true;
 					break;
@@ -342,6 +333,6 @@ public class NBTCoderArgs {
 	}
 
 	public static enum NBTType {
-		AUTO, AUTO_DETECT_NO_SUFFIX, COMPRESSED, REGION, UNCOMPRESSED
+		AUTO, COMPRESSED, REGION, UNCOMPRESSED
 	}
 }
