@@ -97,7 +97,7 @@ public class NBTFileIO {
 					throw new IOException("Unable to detect NBT file type");
 				}
 			}
-			
+
 			// A valid file shouldn't consist entirely of a TAG_END
 			if (file.getData().getId() == NBTValues.TAG_END) {
 				bis.reset();
@@ -113,7 +113,19 @@ public class NBTFileIO {
 	}
 
 	public static NBTFile readAutomaticDetectedFile(String filename, File file, TagFactory factory) throws IOException {
-		return readAutomaticDetectedStream(filename, new FileInputStream(file), factory);
+		try {
+			return readSimpleNBTFile(filename, file, true, factory);
+		} catch (IOException e) {
+			try {
+				return readRegionNBTFile(filename, file);
+			} catch (IOException e1) {
+				try {
+					return readSimpleNBTFile(filename, file, false, factory);
+				} catch (IOException e2) {
+					throw new IOException("Unable to detect NBT file type");
+				}
+			}
+		}
 	}
 
 	public static NBTFile readAutomaticDetectedFile(File file, TagFactory factory) throws IOException {
