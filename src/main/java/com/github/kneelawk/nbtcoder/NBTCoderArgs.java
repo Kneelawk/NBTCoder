@@ -9,12 +9,6 @@ import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
 
-import com.github.kneelawk.io.DataSink;
-import com.github.kneelawk.io.DataSource;
-import com.github.kneelawk.io.FileSink;
-import com.github.kneelawk.io.FileSource;
-import com.github.kneelawk.io.InputStreamSource;
-import com.github.kneelawk.io.OutputStreamSink;
 import com.google.common.primitives.Booleans;
 
 public class NBTCoderArgs {
@@ -48,8 +42,8 @@ public class NBTCoderArgs {
 	private boolean recursive;
 	private boolean stripped;
 	private NBTType nbtType;
-	private DataSource input;
-	private DataSink output;
+	private String input;
+	private String output;
 
 	public NBTCoderArgs(String[] args) {
 		this.args = args;
@@ -131,10 +125,10 @@ public class NBTCoderArgs {
 		}
 
 		if (state.input == null) {
-			input = new InputStreamSource(System.in);
+			input = "-";
 		} else {
 			if ("-".equals(state.input)) {
-				input = new InputStreamSource(System.in);
+				input = state.input;
 			} else {
 				Path inputPath = Paths.get(state.input).toAbsolutePath();
 				if (!Files.exists(inputPath)) {
@@ -147,21 +141,17 @@ public class NBTCoderArgs {
 								"Recursive option is specified but file: " + state.input + " is not a directory.");
 						System.exit(-1);
 					}
-					input = new FileSource(inputPath, inputPath);
+					input = state.input;
 				} else {
-					input = new FileSource(inputPath.getParent(), inputPath);
+					input = state.input;
 				}
 			}
 		}
 
 		if (state.output == null) {
-			output = new OutputStreamSink(System.out);
+			output = "-";
 		} else {
-			if ("-".equals(state.output)) {
-				output = new OutputStreamSink(System.out);
-			} else {
-				output = new FileSink(Paths.get(state.output));
-			}
+			output = state.output;
 		}
 	}
 
@@ -181,11 +171,11 @@ public class NBTCoderArgs {
 		return nbtType;
 	}
 
-	public DataSource getInput() {
+	public String getInput() {
 		return input;
 	}
 
-	public DataSink getOutput() {
+	public String getOutput() {
 		return output;
 	}
 
