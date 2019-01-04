@@ -1,12 +1,16 @@
 package com.github.kneelawk.nbtcoder;
 
 import java.io.IOException;
-import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
+import com.github.kneelawk.filelanguage.NBTFileLanguageParser;
+import com.github.kneelawk.filelanguage.NBTFileLanguagePrinter;
+import com.github.kneelawk.hexlanguage.HexLanguagePrinter;
 import com.github.kneelawk.nbt.DefaultTagFactory;
-import com.github.kneelawk.nbt.NBTIO;
-import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbt.TagFactory;
+import com.github.kneelawk.nbtcoder.NBTCoderArgs.OperationMode;
 import com.github.kneelawk.nbtlanguage.NBTLanguageParser;
 import com.github.kneelawk.nbtlanguage.NBTLanguagePrinter;
 
@@ -18,64 +22,19 @@ public class NBTCoderMain {
 
 		TagFactory factory = new DefaultTagFactory();
 
-		switch (argsObj.getMode()) {
-		case NBT_TO_HUMAN: {
-			Tag tag = null;
-			if (argsObj.isCompressed()) {
-				try {
-					tag = NBTIO.readCompressedStream(argsObj.getInput(), factory);
-				} catch (IOException e) {
-					System.err.println("Unable to parse this NBT file.");
-					e.printStackTrace();
-					System.exit(-1);
-				}
-			} else {
-				try {
-					tag = NBTIO.readStream(argsObj.getInput(), factory);
-				} catch (IOException e) {
-					System.err.println("Unable to parse this NBT file.");
-					e.printStackTrace();
-					System.exit(-1);
-				}
-			}
+		NBTLanguagePrinter nbtPrinter = new NBTLanguagePrinter.Builder().build();
+		HexLanguagePrinter hexPrinter = new HexLanguagePrinter.Builder().build();
+		NBTFileLanguagePrinter filePrinter = new NBTFileLanguagePrinter(nbtPrinter, hexPrinter);
 
-			NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder().build();
-			String str = printer.print(tag);
+		NBTLanguageParser nbtParser = new NBTLanguageParser();
+		NBTFileLanguageParser fileParser = new NBTFileLanguageParser(nbtParser);
 
-			PrintStream out = new PrintStream(argsObj.getOutput());
-			out.println(str);
-			out.close();
-			break;
-		}
-		case HUMAN_TO_NBT:
-			NBTLanguageParser parser = new NBTLanguageParser();
-			Tag tag = null;
-			try {
-				tag = parser.parse(argsObj.getInput());
-			} catch (IOException e) {
-				System.err.println("Unable to parse.");
-				e.printStackTrace();
-				System.exit(-1);
-			}
+	}
 
-			if (argsObj.isCompressed()) {
-				try {
-					NBTIO.writeCompressedStream(tag, argsObj.getOutput());
-				} catch (IOException e) {
-					System.err.println("Unable to write this NBT file.");
-					e.printStackTrace();
-					System.exit(-1);
-				}
-			} else {
-				try {
-					NBTIO.writeStream(tag, argsObj.getOutput());
-				} catch (IOException e) {
-					System.err.println("Unable to write this NBT file.");
-					e.printStackTrace();
-					System.exit(-1);
-				}
-			}
-			break;
-		}
+	private static void convertDirectory(Path baseIn, Path baseOut, OperationMode mode,
+			NBTFileLanguagePrinter filePrinter, NBTFileLanguageParser fileParser, TagFactory factory)
+			throws IOException {
+		Stream<Path> walk = Files.walk(baseIn);
+		long count = walk.count();
 	}
 }
