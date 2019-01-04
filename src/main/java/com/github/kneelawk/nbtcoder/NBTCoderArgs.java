@@ -1,16 +1,21 @@
 package com.github.kneelawk.nbtcoder;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+
+import com.github.kneelawk.io.DataSink;
+import com.github.kneelawk.io.DataSource;
+import com.github.kneelawk.io.FileSink;
+import com.github.kneelawk.io.FileSource;
+import com.github.kneelawk.io.InputStreamSource;
+import com.github.kneelawk.io.OutputStreamSink;
+import com.google.common.primitives.Booleans;
 
 public class NBTCoderArgs {
 	public static final Properties APPLICATION_PROPERTIES = loadApplicationProperties();
@@ -40,9 +45,11 @@ public class NBTCoderArgs {
 	private String[] args;
 
 	private OperationMode mode;
-	private boolean compressed;
-	private InputStream input;
-	private OutputStream output;
+	private boolean recursive;
+	private boolean stripped;
+	private NBTType nbtType;
+	private DataSource input;
+	private DataSink output;
 
 	public NBTCoderArgs(String[] args) {
 		this.args = args;
@@ -67,49 +74,87 @@ public class NBTCoderArgs {
 			System.exit(-1);
 		}
 
+		if (state.recursive && state.stripped) {
+			System.err.println("-s and -r are not compatible with each other.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
+		if (state.recursive
+				&& Booleans.countTrue(state.compressed, state.region, state.stripped, state.uncompressed) > 0) {
+			System.err.println("-R is not compatible with -c, -r, -s, or -u.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
+		if (isStream(state.input) && Booleans.countTrue(state.auto, state.recursive) > 0) {
+			System.err.println("Stream input is not compatible with the -a or -R option.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
+		recursive = state.recursive;
+		stripped = state.stripped;
+
+		if (Booleans.countTrue(state.auto, state.autoDetectNoSuffix, state.compressed, state.region,
+				state.uncompressed) > 1) {
+			System.err.println("Only one of -a, -A, -c, -r, or -u may be specified.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		} else if (Booleans.countTrue(state.auto, state.autoDetectNoSuffix, state.compressed, state.region,
+				state.uncompressed) < 1) {
+			nbtType = NBTType.AUTO;
+		} else {
+			if (state.auto) {
+				nbtType = NBTType.AUTO;
+			} else if (state.autoDetectNoSuffix) {
+				nbtType = NBTType.AUTO_DETECT_NO_SUFFIX;
+			} else if (state.compressed) {
+				nbtType = NBTType.COMPRESSED;
+			} else if (state.region) {
+				nbtType = NBTType.REGION;
+			} else if (state.uncompressed) {
+				nbtType = NBTType.UNCOMPRESSED;
+			}
+		}
+
 		if (state.humanReadable) {
 			mode = OperationMode.HUMAN_TO_NBT;
 		} else if (state.nbt) {
 			mode = OperationMode.NBT_TO_HUMAN;
 		}
 
-		compressed = state.compressed;
-
 		if (state.input == null) {
-			input = System.in;
+			input = new InputStreamSource(System.in);
 		} else {
 			if ("-".equals(state.input)) {
-				input = System.in;
+				input = new InputStreamSource(System.in);
 			} else {
-				File inputFile = new File(state.input);
-				if (!inputFile.exists()) {
+				Path inputPath = Paths.get(state.input).toAbsolutePath();
+				if (!Files.exists(inputPath)) {
 					System.err.println("Input file: " + state.input + " does not exist.");
 					System.exit(-1);
 				}
-				try {
-					input = new FileInputStream(inputFile);
-				} catch (FileNotFoundException e) {
-					System.err.println("Error opening input file: " + state.input);
-					e.printStackTrace();
-					System.exit(-1);
+				if (state.recursive) {
+					if (!Files.isDirectory(inputPath)) {
+						System.err.println(
+								"Recursive option is specified but file: " + state.input + " is not a directory.");
+						System.exit(-1);
+					}
+					input = new FileSource(inputPath, inputPath);
+				} else {
+					input = new FileSource(inputPath.getParent(), inputPath);
 				}
 			}
 		}
 
 		if (state.output == null) {
-			output = System.out;
+			output = new OutputStreamSink(System.out);
 		} else {
 			if ("-".equals(state.output)) {
-				output = System.out;
+				output = new OutputStreamSink(System.out);
 			} else {
-				try {
-					output = new FileOutputStream(new File(state.output));
-				} catch (FileNotFoundException e) {
-					System.err.println("Error opening output file: " + state.output);
-					System.err.println("It is likely that a parent directory for this file does not exist.");
-					e.printStackTrace();
-					System.exit(-1);
-				}
+				output = new FileSink(Paths.get(state.output));
 			}
 		}
 	}
@@ -118,15 +163,23 @@ public class NBTCoderArgs {
 		return mode;
 	}
 
-	public boolean isCompressed() {
-		return compressed;
+	public boolean isRecursive() {
+		return recursive;
 	}
 
-	public InputStream getInput() {
+	public boolean isStripped() {
+		return stripped;
+	}
+
+	public NBTType getNbtType() {
+		return nbtType;
+	}
+
+	public DataSource getInput() {
 		return input;
 	}
 
-	public OutputStream getOutput() {
+	public DataSink getOutput() {
 		return output;
 	}
 
@@ -134,9 +187,15 @@ public class NBTCoderArgs {
 		boolean error = false;
 		boolean help = false;
 		boolean version = false;
+		boolean recursive = false;
+		boolean stripped = false;
 		boolean humanReadable = false;
 		boolean nbt = false;
+		boolean auto = false;
+		boolean autoDetectNoSuffix = false;
 		boolean compressed = false;
+		boolean region = false;
+		boolean uncompressed = false;
 		String input = null;
 		boolean parsingInput = false;
 		String output = null;
@@ -155,6 +214,11 @@ public class NBTCoderArgs {
 					parsingOutput = false;
 				} else if (currentArg.startsWith("-")) {
 					if (currentArg.startsWith("--")) {
+						String argValue = null;
+						if (currentArg.contains("=")) {
+							argValue = currentArg.substring(currentArg.indexOf('=') + 1);
+							currentArg = currentArg.substring(0, currentArg.indexOf('='));
+						}
 						switch (currentArg) {
 						case "--help":
 							help = true;
@@ -162,20 +226,46 @@ public class NBTCoderArgs {
 						case "--version":
 							version = true;
 							break;
+						case "--recursive":
+							recursive = true;
+							break;
+						case "--stripped":
+							stripped = true;
+							break;
 						case "--human-readable":
 							humanReadable = true;
 							break;
 						case "--nbt":
 							nbt = true;
 							break;
+						case "--auto":
+							auto = true;
+							break;
+						case "--auto-detect-no-suffix":
+							autoDetectNoSuffix = true;
+							break;
 						case "--compressed":
 							compressed = true;
 							break;
+						case "--region":
+							region = true;
+							break;
+						case "--uncompressed":
+							uncompressed = true;
+							break;
 						case "--input":
-							parsingInput = true;
+							if (argValue != null) {
+								input = argValue;
+							} else {
+								parsingInput = true;
+							}
 							break;
 						case "--output":
-							parsingOutput = true;
+							if (argValue != null) {
+								output = argValue;
+							} else {
+								parsingOutput = true;
+							}
 							break;
 						default:
 							System.err.println("Unrecognized option: " + currentArg);
@@ -198,14 +288,32 @@ public class NBTCoderArgs {
 				currentArg = currentArg.substring(1);
 
 				switch (flag) {
+				case 'R':
+					recursive = true;
+					break;
+				case 's':
+					stripped = true;
+					break;
 				case 'h':
 					humanReadable = true;
 					break;
 				case 'n':
 					nbt = true;
 					break;
+				case 'a':
+					auto = true;
+					break;
+				case 'A':
+					autoDetectNoSuffix = true;
+					break;
 				case 'c':
 					compressed = true;
+					break;
+				case 'r':
+					region = true;
+					break;
+				case 'u':
+					uncompressed = true;
 					break;
 				case 'i':
 					if (currentArg.isEmpty()) {
@@ -229,7 +337,15 @@ public class NBTCoderArgs {
 		}
 	}
 
+	private boolean isStream(String str) {
+		return str == null || "-".equals(str);
+	}
+
 	public static enum OperationMode {
 		NBT_TO_HUMAN, HUMAN_TO_NBT
+	}
+
+	public static enum NBTType {
+		AUTO, AUTO_DETECT_NO_SUFFIX, COMPRESSED, REGION, UNCOMPRESSED
 	}
 }

@@ -12,6 +12,7 @@ Usage:
 
 Options:
     -a, --auto                        Auto detect/select NBT file(s) format. (default).
+                                        (Not compatible with stdin input).
 
     -A, --auto-detect-no-suffix       Auto detect NBT file(s) format without the use of
                                         file suffixes.
@@ -36,7 +37,7 @@ Options:
                                         to be recursively converted.
 
     -s, --stripped                    Human-readable file is stripped of file metadata.
-                                        (NBT data only). (Not compatible with -R). (If -h
+                                        (NBT data only). (Not compatible with -r, -R). (If -h
                                         is specified, then an NBT file type must be
                                         specified (either -c or -u)).
 
