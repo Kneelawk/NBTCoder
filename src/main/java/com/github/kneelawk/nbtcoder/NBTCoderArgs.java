@@ -93,6 +93,12 @@ public class NBTCoderArgs {
 			System.exit(-1);
 		}
 
+		if (isStream(state.output) && state.recursive) {
+			System.err.println("Stream output is not compatible with the -R option.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
 		recursive = state.recursive;
 		stripped = state.stripped;
 

@@ -34,7 +34,8 @@ Options:
                                         with -s, -R).
 
     -R, --recursive                   Treat in-file and out-file arguments as directories
-                                        to be recursively converted.
+                                        to be recursively converted. (Not compatible with
+                                        stdin input or stdout output).
 
     -s, --stripped                    Human-readable file is stripped of file metadata.
                                         (NBT data only). (Not compatible with -r, -R). (If -h
