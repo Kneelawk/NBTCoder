@@ -41,3 +41,6 @@ Options:
 
     -u, --uncompressed                NBT file is in uncompressed format. (Not compatible
                                         with -R).
+
+    -v, --verbose                     Prints status information to stdout, or stdout is used
+                                        as the out file, to stderr.

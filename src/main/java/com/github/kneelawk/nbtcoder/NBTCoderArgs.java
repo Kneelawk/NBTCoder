@@ -1,6 +1,7 @@
 package com.github.kneelawk.nbtcoder;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.NullOutputStream;
 
 import com.google.common.primitives.Booleans;
 
@@ -44,6 +46,7 @@ public class NBTCoderArgs {
 	private NBTType nbtType;
 	private String input;
 	private String output;
+	private PrintStream verboseStream;
 
 	public NBTCoderArgs(String[] args) {
 		this.args = args;
@@ -96,13 +99,21 @@ public class NBTCoderArgs {
 		recursive = state.recursive;
 		stripped = state.stripped;
 
-		if (Booleans.countTrue(state.auto, state.compressed, state.region,
-				state.uncompressed) > 1) {
+		if (state.verbose) {
+			if (isStream(state.output)) {
+				verboseStream = System.err;
+			} else {
+				verboseStream = System.out;
+			}
+		} else {
+			verboseStream = new PrintStream(new NullOutputStream());
+		}
+
+		if (Booleans.countTrue(state.auto, state.compressed, state.region, state.uncompressed) > 1) {
 			System.err.println("Only one of -a, -A, -c, -r, or -u may be specified.");
 			System.err.println(USAGE);
 			System.exit(-1);
-		} else if (Booleans.countTrue(state.auto, state.compressed, state.region,
-				state.uncompressed) < 1) {
+		} else if (Booleans.countTrue(state.auto, state.compressed, state.region, state.uncompressed) < 1) {
 			nbtType = NBTType.AUTO;
 		} else {
 			if (state.auto) {
@@ -177,6 +188,10 @@ public class NBTCoderArgs {
 		return output;
 	}
 
+	public PrintStream getVerboseStream() {
+		return verboseStream;
+	}
+
 	private class ParsingState {
 		boolean error = false;
 		boolean help = false;
@@ -189,6 +204,7 @@ public class NBTCoderArgs {
 		boolean compressed = false;
 		boolean region = false;
 		boolean uncompressed = false;
+		boolean verbose = false;
 		String input = null;
 		boolean parsingInput = false;
 		String output = null;
@@ -257,6 +273,9 @@ public class NBTCoderArgs {
 								parsingOutput = true;
 							}
 							break;
+						case "--verbose":
+							verbose = true;
+							break;
 						default:
 							System.err.println("Unrecognized option: " + currentArg);
 							error = true;
@@ -316,6 +335,9 @@ public class NBTCoderArgs {
 						output = currentArg;
 					}
 					return;
+				case 'v':
+					verbose = true;
+					break;
 				default:
 					System.err.println("Unrecognized option: -" + flag);
 					error = true;
