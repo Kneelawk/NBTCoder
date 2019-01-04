@@ -4,14 +4,41 @@ Usage:
         Prints this help message.
   NBTCoder --version
         Prints this program's version.
-  NBTCoder (-h | -n) [-c] [-i <input>] [-o <output>]
-        Converts between the NBT format and a human-readable text format.
+  NBTCoder (-h | -n) ([-a] | -A | -c | -r | -u) [-s] [-i <input>] [-o <output>]
+        Converts a single file between human-readable format and NBT format.
+  NBTCoder -R (-h | -n) ([-a] | -A) -i <input> -o <output>
+        Recursively converts a directory of files between human-readable format and NBT
+          format.
 
 Options:
-    -h, --human-readable    Input file is in human-readable format.
-    -n, --nbt               Input file is in NBT format.
-    -c, --compressed        Read/Write compressed NBT files.
-    -i, --in-file=<input>   Input file or '-' for stdin.
-    -o, --out-file=<output> Output file or '-' for stdout.
-        --help              Prints this help message.
-        --version           Prints this program's version.
+    -a, --auto                        Auto detect/select NBT file(s) format. (default).
+
+    -A, --auto-detect-no-suffix       Auto detect NBT file(s) format without the use of
+                                        file suffixes.
+
+    -c, --compressed                  NBT file is in compressed format. (Not compatible
+                                        with -R).
+
+    -h, --human-readable              Input file(s) are in human-readable format.
+
+    -i, --in-file=<input>             Input file or '-' for stdin. (Must be a directory
+                                        if -R is specified).
+
+    -n, --nbt                         Input file(s) are in nbt format.
+
+    -o, --out-file=<output>           Output file or '-' for stdout. (Will be a directory
+                                        if -R is specified).
+
+    -r, --region                      Binary file is in region format. (Not compatible
+                                        with -s, -R).
+
+    -R, --recursive                   Treat in-file and out-file arguments as directories
+                                        to be recursively converted.
+
+    -s, --stripped                    Human-readable file is stripped of file metadata.
+                                        (NBT data only). (Not compatible with -R). (If -h
+                                        is specified, then an NBT file type must be
+                                        specified (either -c or -u)).
+
+    -u, --uncompressed                NBT file is in uncompressed format. (Not compatible
+                                        with -R).

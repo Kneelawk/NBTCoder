@@ -1,0 +1,17 @@
+NBTCoder version @APPLICATION_VERSION@
+Usage:
+  NBTCoder --help
+        Prints this help message.
+  NBTCoder --version
+        Prints this program's version.
+  NBTCoder (-h | -n) [-c] [-i <input>] [-o <output>]
+        Converts between the NBT format and a human-readable text format.
+
+Options:
+    -h, --human-readable    Input file is in human-readable format.
+    -n, --nbt               Input file is in NBT format.
+    -c, --compressed        Read/Write compressed NBT files.
+    -i, --in-file=<input>   Input file or '-' for stdin.
+    -o, --out-file=<output> Output file or '-' for stdout.
+        --help              Prints this help message.
+        --version           Prints this program's version.
