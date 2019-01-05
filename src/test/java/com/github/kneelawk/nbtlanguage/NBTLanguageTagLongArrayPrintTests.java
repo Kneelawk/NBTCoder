@@ -12,8 +12,8 @@ import com.github.kneelawk.test.LongArrayArgumentConverter;
 public class NBTLanguageTagLongArrayPrintTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithNameWithHexArrays.csv" })
-	public void prettyPrintTagLongArrayWithNameWithHexArrays(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
-			String expected) {
+	public void prettyPrintTagLongArrayWithNameWithHexArrays(String name,
+			@ConvertWith(LongArrayArgumentConverter.class) long[] data, String expected) {
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, true).build();
 		TagLongArray tag = new TagLongArray(name, data);
 
@@ -36,8 +36,8 @@ public class NBTLanguageTagLongArrayPrintTests {
 
 	@ParameterizedTest
 	@CsvFileSource(resources = { "simplePrintTagLongArrayWithNameWithHexArrays.csv" })
-	public void simplePrintTagLongArrayWithNameWithHexArrays(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
-			String expected) {
+	public void simplePrintTagLongArrayWithNameWithHexArrays(String name,
+			@ConvertWith(LongArrayArgumentConverter.class) long[] data, String expected) {
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, true).build();
 		TagLongArray tag = new TagLongArray(name, data);
 

@@ -12,8 +12,8 @@ import com.github.kneelawk.test.ByteArrayArgumentConverter;
 public class NBTLanguageTagByteArrayPrintTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithNameWithHexArrays.csv" })
-	public void prettyPrintTagByteArrayWithNameWithHexArrays(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
-			String expected) {
+	public void prettyPrintTagByteArrayWithNameWithHexArrays(String name,
+			@ConvertWith(ByteArrayArgumentConverter.class) byte[] data, String expected) {
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(true, true, true).build();
 		TagByteArray tag = new TagByteArray(name, data);
 
@@ -36,8 +36,8 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 	@ParameterizedTest
 	@CsvFileSource(resources = { "simplePrintTagByteArrayWithNameWithHexArrays.csv" })
-	public void simplePrintTagByteArrayWithNameWithHexArrays(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
-			String expected) {
+	public void simplePrintTagByteArrayWithNameWithHexArrays(String name,
+			@ConvertWith(ByteArrayArgumentConverter.class) byte[] data, String expected) {
 		NBTLanguagePrinter printer = new NBTLanguagePrinter.Builder(false, true, true).build();
 		TagByteArray tag = new TagByteArray(name, data);
 
@@ -57,7 +57,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		assertEquals(expected, out);
 	}
-	
+
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagByteArrayWithName.csv" })
 	public void prettyPrintTagByteArrayWithName(String name, @ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
