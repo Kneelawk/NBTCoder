@@ -120,7 +120,11 @@ public class NBTFileIO {
 				return readRegionNBTFile(filename, file);
 			} catch (IOException e1) {
 				try {
-					return readSimpleNBTFile(filename, file, false, factory);
+					SimpleFile nbtFile = readSimpleNBTFile(filename, file, false, factory);
+					if (nbtFile.getData().getId() == NBTValues.TAG_END) {
+						throw new IOException("File consists of a single TAG_END");
+					}
+					return nbtFile;
 				} catch (IOException e2) {
 					throw new IOException("Unable to detect NBT file type");
 				}
