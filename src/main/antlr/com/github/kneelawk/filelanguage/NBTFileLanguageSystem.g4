@@ -8,10 +8,7 @@ nbtFile
 :
 	FILE_START properties
 	(
-		partition
-		(
-			partition
-		)*
+		partition*
 		| data
 	) SECTION_END
 ;
