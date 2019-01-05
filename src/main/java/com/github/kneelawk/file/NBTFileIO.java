@@ -136,6 +136,47 @@ public class NBTFileIO {
 		return readAutomaticDetectedFile(file.getName(), file, factory);
 	}
 
+	public static SimpleNBTFile readAutomaticDetectedSimpleNBTStream(String filename, InputStream is,
+			TagFactory factory) throws IOException {
+		BufferedInputStream bis = new BufferedInputStream(is);
+		bis.mark(1024);
+		try {
+			return readSimpleNBTStream(filename, bis, true, factory);
+		} catch (IOException e) {
+			bis.reset();
+			try {
+				SimpleNBTFile nbtFile = readSimpleNBTStream(filename, bis, false, factory);
+				if (nbtFile.getData().getId() == NBTValues.TAG_END) {
+					throw new IOException("File consists of a single TAG_END");
+				}
+				return nbtFile;
+			} catch (IOException e1) {
+				throw new IOException("Unable to detect NBT file type");
+			}
+		}
+	}
+
+	public static SimpleNBTFile readAutomaticDetectedSimpleNBTFile(String filename, File file, TagFactory factory)
+			throws IOException {
+		try {
+			return readSimpleNBTFile(filename, file, true, factory);
+		} catch (IOException e) {
+			try {
+				SimpleNBTFile nbtFile = readSimpleNBTFile(filename, file, false, factory);
+				if (nbtFile.getData().getId() == NBTValues.TAG_END) {
+					throw new IOException("File consists of a single TAG_END");
+				}
+				return nbtFile;
+			} catch (IOException e1) {
+				throw new IOException("Unable to detect NBT file type");
+			}
+		}
+	}
+
+	public static SimpleNBTFile readAutomaticDetectedSimpleNBTFile(File file, TagFactory factory) throws IOException {
+		return readAutomaticDetectedSimpleNBTFile(file.getName(), file, factory);
+	}
+
 	public static void writeNBTStream(NBTFile nbtFile, OutputStream os) throws IOException {
 		if (nbtFile instanceof SimpleFile) {
 			writeSimpleNBTStream((SimpleFile) nbtFile, os);
