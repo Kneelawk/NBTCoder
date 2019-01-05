@@ -2,34 +2,32 @@ package com.github.kneelawk.utils;
 
 import java.io.IOException;
 
-import org.antlr.v4.runtime.tree.ParseTree;
-
 public class LanguageParseException extends IOException {
 	private static final long serialVersionUID = -6169973718483952732L;
 
-	private ParseTree erroringRule;
+	private TextLocation erroringLocation;
 
-	public LanguageParseException(ParseTree erroringRule) {
-		this.erroringRule = erroringRule;
+	public LanguageParseException(TextLocation erroringRule) {
+		this.erroringLocation = erroringRule;
 	}
 
-	public LanguageParseException(String message, ParseTree erroringRule) {
+	public LanguageParseException(String message, TextLocation erroringRule) {
 		super(message);
-		this.erroringRule = erroringRule;
+		this.erroringLocation = erroringRule;
 	}
 
-	public LanguageParseException(Throwable cause, ParseTree erroringRule) {
+	public LanguageParseException(Throwable cause, TextLocation erroringRule) {
 		super(cause);
-		this.erroringRule = erroringRule;
+		this.erroringLocation = erroringRule;
 	}
 
-	public LanguageParseException(String message, Throwable cause, ParseTree erroringRule) {
+	public LanguageParseException(String message, Throwable cause, TextLocation erroringRule) {
 		super(message, cause);
-		this.erroringRule = erroringRule;
+		this.erroringLocation = erroringRule;
 	}
 
-	public ParseTree getErroringRule() {
-		return erroringRule;
+	public TextLocation getErroringLocation() {
+		return erroringLocation;
 	}
 
 }

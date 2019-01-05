@@ -11,7 +11,9 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import com.github.kneelawk.nbt.Tag;
 import com.github.kneelawk.nbtlanguage.NBTLanguageSystemParser.NbtFileContext;
+import com.github.kneelawk.utils.InternalExceptionErrorStrategy;
 import com.github.kneelawk.utils.InternalParseException;
+import com.github.kneelawk.utils.LanguageParseException;
 
 public class NBTLanguageParser {
 	public Tag parse(String str) throws IOException {
@@ -27,17 +29,22 @@ public class NBTLanguageParser {
 	}
 
 	public Tag parse(CharStream cs) throws IOException {
-		NBTLanguageSystemLexer lex = new NBTLanguageSystemLexer(cs);
-		NBTLanguageSystemParser parser = new NBTLanguageSystemParser(new BufferedTokenStream(lex));
-		NBTLanguageBuilderListener builder = new NBTLanguageBuilderListener();
-		NbtFileContext tree = parser.nbtFile();
-
 		try {
+			NBTLanguageSystemLexer lex = new NBTLanguageSystemLexer(cs);
+			lex.removeErrorListeners();
+			NBTLanguageSystemParser parser = new NBTLanguageSystemParser(new BufferedTokenStream(lex));
+			parser.removeErrorListeners();
+			parser.setErrorHandler(new InternalExceptionErrorStrategy());
+			NBTLanguageBuilderListener builder = new NBTLanguageBuilderListener();
+			NbtFileContext tree = parser.nbtFile();
+
 			ParseTreeWalker.DEFAULT.walk(builder, tree);
+
+			return builder.getRoot();
 		} catch (InternalParseException e) {
 			throw e.toLanguageParseException();
+		} catch (IllegalStateException e) {
+			throw new LanguageParseException(e, null);
 		}
-
-		return builder.getRoot();
 	}
 }

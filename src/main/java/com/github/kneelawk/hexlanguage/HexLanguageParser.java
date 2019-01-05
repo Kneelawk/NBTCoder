@@ -10,7 +10,9 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import com.github.kneelawk.hexlanguage.HexLanguageSystemParser.DataContext;
+import com.github.kneelawk.utils.InternalExceptionErrorStrategy;
 import com.github.kneelawk.utils.InternalParseException;
+import com.github.kneelawk.utils.LanguageParseException;
 
 public class HexLanguageParser {
 	public byte[] parse(String string) throws IOException {
@@ -26,17 +28,22 @@ public class HexLanguageParser {
 	}
 
 	public byte[] parse(CharStream stream) throws IOException {
-		HexLanguageSystemLexer lexer = new HexLanguageSystemLexer(stream);
-		HexLanguageSystemParser parser = new HexLanguageSystemParser(new BufferedTokenStream(lexer));
-		HexLanguageBuilderListener builder = new HexLanguageBuilderListener();
-		DataContext ctx = parser.data();
-
 		try {
+			HexLanguageSystemLexer lexer = new HexLanguageSystemLexer(stream);
+			lexer.removeErrorListeners();
+			HexLanguageSystemParser parser = new HexLanguageSystemParser(new BufferedTokenStream(lexer));
+			parser.removeErrorListeners();
+			parser.setErrorHandler(new InternalExceptionErrorStrategy());
+			HexLanguageBuilderListener builder = new HexLanguageBuilderListener();
+			DataContext ctx = parser.data();
+
 			ParseTreeWalker.DEFAULT.walk(builder, ctx);
+
+			return builder.getData();
 		} catch (InternalParseException e) {
 			throw e.toLanguageParseException();
+		} catch (IllegalStateException e) {
+			throw new LanguageParseException(e, null);
 		}
-
-		return builder.getData();
 	}
 }
