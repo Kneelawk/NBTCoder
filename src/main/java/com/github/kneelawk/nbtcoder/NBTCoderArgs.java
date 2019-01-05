@@ -72,7 +72,19 @@ public class NBTCoderArgs {
 		}
 
 		if (state.recursive && state.stripped) {
+			System.err.println("-s and -R are not compatible with each other.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
+		if (state.region && state.stripped) {
 			System.err.println("-s and -r are not compatible with each other.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
+		if (state.humanReadable && state.stripped && state.auto) {
+			System.err.println("Auto detection is not possible with stripped human-readable input.");
 			System.err.println(USAGE);
 			System.exit(-1);
 		}
@@ -110,7 +122,7 @@ public class NBTCoderArgs {
 		}
 
 		if (Booleans.countTrue(state.auto, state.compressed, state.region, state.uncompressed) > 1) {
-			System.err.println("Only one of -a, -A, -c, -r, or -u may be specified.");
+			System.err.println("Only one of -a, -c, -r, or -u may be specified.");
 			System.err.println(USAGE);
 			System.exit(-1);
 		} else if (Booleans.countTrue(state.auto, state.compressed, state.region, state.uncompressed) < 1) {
