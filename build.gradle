@@ -18,7 +18,7 @@ apply plugin: 'application'
 apply plugin: 'com.palantir.graal'
 
 sourceCompatibility = 1.8
-version = '0.0.3-SNAPSHOT'
+version = '0.0.4-SNAPSHOT'
 
 mainClassName = 'com.github.kneelawk.nbtcoder.NBTCoderMain'
 
