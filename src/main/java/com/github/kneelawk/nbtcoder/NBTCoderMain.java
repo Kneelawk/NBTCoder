@@ -60,16 +60,19 @@ public class NBTCoderMain {
 				// initialize the input stream
 				in = getInputStream(argsObj);
 
-				// initialize the output stream
-				out = getOutputStream(argsObj);
-
 				// convert the data
 				if (OperationMode.HUMAN_TO_NBT.equals(argsObj.getMode())) {
 					if (argsObj.isStripped()) {
 						Tag tag = nbtParser.parse(in);
 						if (NBTType.COMPRESSED.equals(argsObj.getNbtType())) {
+							// initialize the output stream
+							out = getOutputStream(argsObj);
+
 							NBTIO.writeCompressedStream(tag, out);
 						} else if (NBTType.UNCOMPRESSED.equals(argsObj.getNbtType())) {
+							// initialize the output stream
+							out = getOutputStream(argsObj);
+
 							NBTIO.writeStream(tag, out);
 						} else {
 							System.err.println(
@@ -79,9 +82,15 @@ public class NBTCoderMain {
 					} else {
 						NBTFile file = fileParser.parse(in);
 						if (NBTType.AUTO.equals(argsObj.getNbtType())) {
+							// initialize the output stream
+							out = getOutputStream(argsObj);
+
 							NBTFileIO.writeNBTStream(file, out);
 						} else if (file instanceof RegionFile) {
 							if (NBTType.REGION.equals(argsObj.getNbtType())) {
+								// initialize the output stream
+								out = getOutputStream(argsObj);
+
 								NBTFileIO.writeRegionNBTStream((RegionFile) file, out);
 							} else {
 								System.err.println("It is not possible to convert a region file to a non-region file.");
@@ -92,8 +101,14 @@ public class NBTCoderMain {
 								System.err.println("It is not possible to convert a non-region file to a region file.");
 								exitCode = -1;
 							} else if (NBTType.COMPRESSED.equals(argsObj.getNbtType())) {
+								// initialize the output stream
+								out = getOutputStream(argsObj);
+
 								NBTIO.writeCompressedStream(((SimpleFile) file).getData(), out);
 							} else if (NBTType.UNCOMPRESSED.equals(argsObj.getNbtType())) {
+								// initialize the output stream
+								out = getOutputStream(argsObj);
+
 								NBTIO.writeStream(((SimpleFile) file).getData(), out);
 							}
 						}
@@ -118,6 +133,9 @@ public class NBTCoderMain {
 					} else {
 						if (argsObj.isStripped()) {
 							if (file instanceof SimpleFile) {
+								// initialize the output stream
+								out = getOutputStream(argsObj);
+
 								PrintStream ps = new PrintStream(out);
 								ps.print(nbtPrinter.print(((SimpleFile) file).getData()));
 								ps.close();
@@ -127,6 +145,9 @@ public class NBTCoderMain {
 								exitCode = -1;
 							}
 						} else {
+							// initialize the output stream
+							out = getOutputStream(argsObj);
+
 							PrintStream ps = new PrintStream(out);
 							ps.print(filePrinter.print(file, factory));
 							ps.close();
