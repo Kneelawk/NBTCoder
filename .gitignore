@@ -1,10 +1,15 @@
 /.gradle/
+/.idea/
 /.settings/
 /bin/
 /build/
+/out/
 /target/
 /.classpath
 /.project
+
+/*.iml
+/*.ipr
 
 *.kate-swp
 *.swp
