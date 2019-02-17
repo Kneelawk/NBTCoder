@@ -5,7 +5,7 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "gradle.plugin.com.palantir.graal:gradle-graal:0.2.0-4-g255fd1f"
+		classpath "gradle.plugin.com.palantir.graal:gradle-graal:0.2.0-24-g27b929a"
 	}
 }
 
@@ -27,17 +27,17 @@ repositories {
 }
 
 dependencies {
-	implementation 'com.google.guava:guava:27.0-jre'
+	implementation 'com.google.guava:guava:27.0.1-jre'
 	implementation 'commons-io:commons-io:2.6'
 	implementation 'org.apache.commons:commons-compress:1.18'
 	implementation 'org.apache.commons:commons-lang3:3.8.1'
 	implementation 'org.apache.commons:commons-configuration2:2.4'
 	
-	antlr 'org.antlr:antlr4:4.7.1'
+	antlr 'org.antlr:antlr4:4.7.2'
 	
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.3.1'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
 }
 
 eclipse {
@@ -60,5 +60,5 @@ test {
 graal {
 	mainClass mainClassName
 	outputName 'NBTCoder'
-	graalVersion '1.0.0-rc9'
+	graalVersion '1.0.0-rc12'
 }
