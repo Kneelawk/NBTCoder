@@ -1,42 +1,18 @@
 package com.github.kneelawk.nbtcoder.nbtlanguage;
 
+import com.github.kneelawk.nbtcoder.nbt.*;
+import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.*;
+import com.github.kneelawk.nbtcoder.utils.InternalParseException;
+import com.google.common.collect.Lists;
+import com.google.common.primitives.UnsignedBytes;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 import java.util.BitSet;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
-
-import com.github.kneelawk.nbtcoder.nbt.AbstractTag;
-import com.github.kneelawk.nbtcoder.nbt.NBTUtils;
-import com.github.kneelawk.nbtcoder.nbt.NBTValues;
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.github.kneelawk.nbtcoder.nbt.TagByte;
-import com.github.kneelawk.nbtcoder.nbt.TagByteArray;
-import com.github.kneelawk.nbtcoder.nbt.TagCompound;
-import com.github.kneelawk.nbtcoder.nbt.TagDouble;
-import com.github.kneelawk.nbtcoder.nbt.TagFloat;
-import com.github.kneelawk.nbtcoder.nbt.TagInt;
-import com.github.kneelawk.nbtcoder.nbt.TagIntArray;
-import com.github.kneelawk.nbtcoder.nbt.TagList;
-import com.github.kneelawk.nbtcoder.nbt.TagLong;
-import com.github.kneelawk.nbtcoder.nbt.TagLongArray;
-import com.github.kneelawk.nbtcoder.nbt.TagShort;
-import com.github.kneelawk.nbtcoder.nbt.TagString;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.CompoundItemContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.ListItemContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.NbtFileContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.TagBodyContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.TagCompoundContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.TagListContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.TagStringContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.TagTypedArrayContext;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageSystemParser.TypedArrayItemContext;
-import com.github.kneelawk.nbtcoder.utils.InternalParseException;
-import com.google.common.collect.Lists;
-import com.google.common.primitives.UnsignedBytes;
 
 public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 

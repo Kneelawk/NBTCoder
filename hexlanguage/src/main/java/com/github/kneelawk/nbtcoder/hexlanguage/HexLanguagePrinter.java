@@ -1,6 +1,6 @@
 package com.github.kneelawk.nbtcoder.hexlanguage;
 
-import static com.github.kneelawk.nbtcoder.utils.StringUtils.*;
+import static com.github.kneelawk.nbtcoder.utils.StringUtils.spaces;
 
 public class HexLanguagePrinter {
 	public static class Builder {

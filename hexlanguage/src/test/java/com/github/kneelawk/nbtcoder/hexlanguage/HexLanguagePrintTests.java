@@ -1,12 +1,11 @@
 package com.github.kneelawk.nbtcoder.hexlanguage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.github.kneelawk.nbtcoder.test.utils.ByteArrayArgumentConverter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import com.github.kneelawk.nbtcoder.test.utils.ByteArrayArgumentConverter;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HexLanguagePrintTests {
 	@ParameterizedTest

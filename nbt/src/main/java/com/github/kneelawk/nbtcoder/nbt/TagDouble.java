@@ -69,9 +69,7 @@ public class TagDouble extends AbstractTag {
 		if (getClass() != obj.getClass())
 			return false;
 		TagDouble other = (TagDouble) obj;
-		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
-			return false;
-		return true;
+		return Double.doubleToLongBits(value) == Double.doubleToLongBits(other.value);
 	}
 
 	@Override

@@ -1,13 +1,13 @@
 package com.github.kneelawk.nbtcoder.file;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import com.github.kneelawk.nbtcoder.region.ChunkPartition;
 import com.github.kneelawk.nbtcoder.region.Partition;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class RegionNBTFile implements NBTFile, RegionFile {
 	private String filename;

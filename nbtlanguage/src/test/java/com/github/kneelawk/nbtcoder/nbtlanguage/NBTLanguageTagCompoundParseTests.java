@@ -1,17 +1,17 @@
 package com.github.kneelawk.nbtcoder.nbtlanguage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-import java.util.List;
-
+import com.github.kneelawk.nbtcoder.nbt.Tag;
+import com.github.kneelawk.nbtcoder.nbt.TagCompound;
 import com.github.kneelawk.nbtcoder.test.nbtlanguage.TagListArgumentConverter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.github.kneelawk.nbtcoder.nbt.TagCompound;
+import java.io.IOException;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 public class NBTLanguageTagCompoundParseTests {
 	@ParameterizedTest

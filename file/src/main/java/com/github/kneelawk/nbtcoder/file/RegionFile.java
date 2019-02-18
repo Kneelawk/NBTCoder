@@ -1,12 +1,12 @@
 package com.github.kneelawk.nbtcoder.file;
 
-import java.util.List;
-
 import com.github.kneelawk.nbtcoder.region.ChunkPartition;
 import com.github.kneelawk.nbtcoder.region.Partition;
 
-public interface RegionFile extends NBTFile {
-	public List<Partition> getPartitions();
+import java.util.List;
 
-	public ChunkPartition getChunk(int x, int z);
+public interface RegionFile extends NBTFile {
+	List<Partition> getPartitions();
+
+	ChunkPartition getChunk(int x, int z);
 }

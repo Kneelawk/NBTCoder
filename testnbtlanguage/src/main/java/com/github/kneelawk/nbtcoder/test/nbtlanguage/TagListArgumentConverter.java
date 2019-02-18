@@ -1,18 +1,17 @@
 package com.github.kneelawk.nbtcoder.test.nbtlanguage;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.github.kneelawk.nbtcoder.nbt.Tag;
+import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
+import com.google.common.collect.ImmutableList;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
-import org.junit.jupiter.params.converter.ArgumentConversionException;
-import org.junit.jupiter.params.converter.SimpleArgumentConverter;
-
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.google.common.collect.ImmutableList;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TagListArgumentConverter extends SimpleArgumentConverter {
 	@Override

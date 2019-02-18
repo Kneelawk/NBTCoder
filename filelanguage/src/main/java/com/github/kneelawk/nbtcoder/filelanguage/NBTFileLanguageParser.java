@@ -1,20 +1,19 @@
 package com.github.kneelawk.nbtcoder.filelanguage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-
-import org.antlr.v4.runtime.BufferedTokenStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-
 import com.github.kneelawk.nbtcoder.file.NBTFile;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.NbtFileContext;
 import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
 import com.github.kneelawk.nbtcoder.utils.InternalExceptionErrorStrategy;
 import com.github.kneelawk.nbtcoder.utils.InternalParseException;
 import com.github.kneelawk.nbtcoder.utils.LanguageParseException;
+import org.antlr.v4.runtime.BufferedTokenStream;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
 public class NBTFileLanguageParser {
 	private NBTLanguageParser nbtParser;

@@ -78,9 +78,7 @@ public class TagIntArray extends AbstractTag {
 		if (getClass() != obj.getClass())
 			return false;
 		TagIntArray other = (TagIntArray) obj;
-		if (!Arrays.equals(value, other.value))
-			return false;
-		return true;
+		return Arrays.equals(value, other.value);
 	}
 
 	@Override

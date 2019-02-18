@@ -1,5 +1,7 @@
 package com.github.kneelawk.nbtcoder.nbt;
 
+import com.google.common.collect.Maps;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
@@ -10,8 +12,6 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-
-import com.google.common.collect.Maps;
 
 public class TagCompound extends AbstractTag {
 
@@ -130,11 +130,8 @@ public class TagCompound extends AbstractTag {
 			return false;
 		TagCompound other = (TagCompound) obj;
 		if (elements == null) {
-			if (other.elements != null)
-				return false;
-		} else if (!elements.equals(other.elements))
-			return false;
-		return true;
+			return other.elements == null;
+		} else return elements.equals(other.elements);
 	}
 
 	@Override

@@ -5,13 +5,13 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 public interface Tag {
-	public abstract void read(DataInput in, TagFactory factory) throws IOException;
+	void read(DataInput in, TagFactory factory) throws IOException;
 
-	public abstract void write(DataOutput out) throws IOException;
+	void write(DataOutput out) throws IOException;
 
-	public abstract String getName();
+	String getName();
 
-	public abstract byte getId();
+	byte getId();
 
-	public abstract Tag copy();
+	Tag copy();
 }

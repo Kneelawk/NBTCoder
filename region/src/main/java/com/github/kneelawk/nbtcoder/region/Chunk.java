@@ -1,20 +1,14 @@
 package com.github.kneelawk.nbtcoder.region;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import com.github.kneelawk.nbtcoder.nbt.NBTIO;
+import com.github.kneelawk.nbtcoder.nbt.Tag;
+import com.github.kneelawk.nbtcoder.nbt.TagFactory;
+
+import java.io.*;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
-
-import com.github.kneelawk.nbtcoder.nbt.NBTIO;
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.github.kneelawk.nbtcoder.nbt.TagFactory;
 
 public class Chunk implements Partition, ChunkPartition {
 	public static final int CHUNK_HEADER_SIZE = 5;

@@ -1,5 +1,9 @@
 package com.github.kneelawk.nbtcoder.main;
 
+import com.google.common.primitives.Booleans;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.NullOutputStream;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
@@ -7,11 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.NullOutputStream;
-
-import com.google.common.primitives.Booleans;
 
 public class NBTCoderArgs {
 	public static final Properties APPLICATION_PROPERTIES = loadApplicationProperties();
@@ -362,11 +361,11 @@ public class NBTCoderArgs {
 		return str == null || "-".equals(str);
 	}
 
-	public static enum OperationMode {
+	public enum OperationMode {
 		NBT_TO_HUMAN, HUMAN_TO_NBT
 	}
 
-	public static enum NBTType {
+	public enum NBTType {
 		AUTO, COMPRESSED, REGION, UNCOMPRESSED
 	}
 }

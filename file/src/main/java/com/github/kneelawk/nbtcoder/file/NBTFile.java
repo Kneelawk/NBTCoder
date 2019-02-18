@@ -1,7 +1,7 @@
 package com.github.kneelawk.nbtcoder.file;
 
 public interface NBTFile {
-	public String getFilename();
+	String getFilename();
 
-	public String getFileType();
+	String getFileType();
 }

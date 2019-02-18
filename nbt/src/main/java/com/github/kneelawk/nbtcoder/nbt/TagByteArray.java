@@ -73,9 +73,7 @@ public class TagByteArray extends AbstractTag {
 		if (getClass() != obj.getClass())
 			return false;
 		TagByteArray other = (TagByteArray) obj;
-		if (!Arrays.equals(value, other.value))
-			return false;
-		return true;
+		return Arrays.equals(value, other.value);
 	}
 
 	@Override

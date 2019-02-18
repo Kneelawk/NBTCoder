@@ -1,9 +1,9 @@
 package com.github.kneelawk.nbtcoder.test.utils;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ByteArrayArgumentConverter extends SimpleArgumentConverter {
 	@Override

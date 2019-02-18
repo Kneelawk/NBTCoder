@@ -1,12 +1,12 @@
 package com.github.kneelawk.nbtcoder.test.hexlanguage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-
 import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguageParser;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HexArgumentConverter extends SimpleArgumentConverter {
 

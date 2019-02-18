@@ -1,25 +1,10 @@
 package com.github.kneelawk.nbtcoder.filelanguage;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.List;
-import java.util.Stack;
-
-import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-
 import com.github.kneelawk.nbtcoder.file.NBTFile;
 import com.github.kneelawk.nbtcoder.file.NBTFileValues;
 import com.github.kneelawk.nbtcoder.file.RegionNBTFile;
 import com.github.kneelawk.nbtcoder.file.SimpleNBTFile;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.DataContext;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.NbtFileContext;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.PaddingContext;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.PartitionContext;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.PropertiesContext;
+import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.*;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
 import com.github.kneelawk.nbtcoder.region.Chunk;
@@ -29,6 +14,16 @@ import com.github.kneelawk.nbtcoder.region.RegionValues;
 import com.github.kneelawk.nbtcoder.utils.InternalParseException;
 import com.google.common.collect.Lists;
 import com.google.common.primitives.UnsignedBytes;
+import org.antlr.v4.runtime.tree.ErrorNode;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.List;
+import java.util.Stack;
 
 public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseListener {
 

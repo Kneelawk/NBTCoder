@@ -1,24 +1,19 @@
 package com.github.kneelawk.nbtcoder.main;
 
+import com.github.kneelawk.nbtcoder.nbt.DefaultTagFactory;
+import com.github.kneelawk.nbtcoder.nbt.Tag;
+import com.github.kneelawk.nbtcoder.nbt.TagFactory;
+import com.github.kneelawk.nbtcoder.region.*;
+import com.google.common.collect.Lists;
+
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
-import com.github.kneelawk.nbtcoder.nbt.DefaultTagFactory;
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.github.kneelawk.nbtcoder.nbt.TagFactory;
-import com.github.kneelawk.nbtcoder.region.Chunk;
-import com.github.kneelawk.nbtcoder.region.ChunkPartition;
-import com.github.kneelawk.nbtcoder.region.EmptyPartition;
-import com.github.kneelawk.nbtcoder.region.Partition;
-import com.github.kneelawk.nbtcoder.region.RegionFileIO;
-import com.google.common.collect.Lists;
-
 public class RegionTranslateTest {
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
+	public static void main(String[] args) throws IOException {
 		TagFactory factory = new DefaultTagFactory();
 
 		System.out.println("Loading...");

@@ -1,9 +1,9 @@
 package com.github.kneelawk.nbtcoder.region;
 
-import java.io.IOException;
-
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbt.TagFactory;
+
+import java.io.IOException;
 
 public interface ChunkPartition extends Partition {
 

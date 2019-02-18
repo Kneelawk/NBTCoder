@@ -1,5 +1,18 @@
 package com.github.kneelawk.nbtcoder.main;
 
+import com.github.kneelawk.nbtcoder.file.NBTFile;
+import com.github.kneelawk.nbtcoder.file.NBTFileIO;
+import com.github.kneelawk.nbtcoder.file.RegionFile;
+import com.github.kneelawk.nbtcoder.file.SimpleFile;
+import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageParser;
+import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguagePrinter;
+import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguagePrinter;
+import com.github.kneelawk.nbtcoder.main.NBTCoderArgs.NBTType;
+import com.github.kneelawk.nbtcoder.main.NBTCoderArgs.OperationMode;
+import com.github.kneelawk.nbtcoder.nbt.*;
+import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
+import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguagePrinter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,23 +23,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
 import java.util.stream.Stream;
-
-import com.github.kneelawk.nbtcoder.file.NBTFile;
-import com.github.kneelawk.nbtcoder.file.NBTFileIO;
-import com.github.kneelawk.nbtcoder.file.RegionFile;
-import com.github.kneelawk.nbtcoder.file.SimpleFile;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageParser;
-import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguagePrinter;
-import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguagePrinter;
-import com.github.kneelawk.nbtcoder.nbt.DefaultTagFactory;
-import com.github.kneelawk.nbtcoder.nbt.NBTIO;
-import com.github.kneelawk.nbtcoder.nbt.NBTValues;
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.github.kneelawk.nbtcoder.nbt.TagFactory;
-import com.github.kneelawk.nbtcoder.main.NBTCoderArgs.NBTType;
-import com.github.kneelawk.nbtcoder.main.NBTCoderArgs.OperationMode;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
-import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguagePrinter;
 
 public class NBTCoderMain {
 

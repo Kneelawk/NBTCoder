@@ -1,25 +1,12 @@
 package com.github.kneelawk.nbtcoder.nbtlanguage;
 
-import static com.github.kneelawk.nbtcoder.utils.StringUtils.*;
+import com.github.kneelawk.nbtcoder.nbt.*;
 
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.kneelawk.nbtcoder.nbt.NBTValues;
-import com.github.kneelawk.nbtcoder.nbt.Tag;
-import com.github.kneelawk.nbtcoder.nbt.TagByte;
-import com.github.kneelawk.nbtcoder.nbt.TagByteArray;
-import com.github.kneelawk.nbtcoder.nbt.TagCompound;
-import com.github.kneelawk.nbtcoder.nbt.TagDouble;
-import com.github.kneelawk.nbtcoder.nbt.TagFloat;
-import com.github.kneelawk.nbtcoder.nbt.TagInt;
-import com.github.kneelawk.nbtcoder.nbt.TagIntArray;
-import com.github.kneelawk.nbtcoder.nbt.TagList;
-import com.github.kneelawk.nbtcoder.nbt.TagLong;
-import com.github.kneelawk.nbtcoder.nbt.TagLongArray;
-import com.github.kneelawk.nbtcoder.nbt.TagShort;
-import com.github.kneelawk.nbtcoder.nbt.TagString;
+import static com.github.kneelawk.nbtcoder.utils.StringUtils.tabs;
 
 public class NBTLanguagePrinter {
 	private static final int BYTE_ARRAY_LINE_LENGTH = 16;

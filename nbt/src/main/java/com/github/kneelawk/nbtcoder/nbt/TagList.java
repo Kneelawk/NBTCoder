@@ -1,20 +1,15 @@
 package com.github.kneelawk.nbtcoder.nbt;
 
+import com.google.common.collect.Lists;
+
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Spliterator;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
-
-import com.google.common.collect.Lists;
 
 public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 
@@ -196,11 +191,8 @@ public class TagList<E extends Tag> extends AbstractTag implements List<E> {
 		@SuppressWarnings("rawtypes")
 		TagList other = (TagList) obj;
 		if (elements == null) {
-			if (other.elements != null)
-				return false;
-		} else if (!elements.equals(other.elements))
-			return false;
-		return true;
+			return other.elements == null;
+		} else return elements.equals(other.elements);
 	}
 
 	@Override

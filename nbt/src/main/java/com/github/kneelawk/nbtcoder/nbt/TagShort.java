@@ -68,9 +68,7 @@ public class TagShort extends AbstractTag {
 		if (getClass() != obj.getClass())
 			return false;
 		TagShort other = (TagShort) obj;
-		if (value != other.value)
-			return false;
-		return true;
+		return value == other.value;
 	}
 
 	@Override

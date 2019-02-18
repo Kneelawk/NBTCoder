@@ -1,14 +1,13 @@
 package com.github.kneelawk.nbtcoder.test.nbtlanguage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.io.IOException;
-
+import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 
-import com.github.kneelawk.nbtcoder.nbt.Tag;
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NBTTagArgumentConverter extends SimpleArgumentConverter {
 

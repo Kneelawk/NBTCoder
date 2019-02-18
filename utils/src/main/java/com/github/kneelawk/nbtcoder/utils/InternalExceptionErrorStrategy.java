@@ -1,14 +1,6 @@
 package com.github.kneelawk.nbtcoder.utils;
 
-import org.antlr.v4.runtime.DefaultErrorStrategy;
-import org.antlr.v4.runtime.FailedPredicateException;
-import org.antlr.v4.runtime.InputMismatchException;
-import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.*;
 
 public class InternalExceptionErrorStrategy extends DefaultErrorStrategy {
 	@Override

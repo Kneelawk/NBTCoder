@@ -1,18 +1,17 @@
 package com.github.kneelawk.nbtcoder.hexlanguage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-
+import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguageSystemParser.DataContext;
+import com.github.kneelawk.nbtcoder.utils.InternalExceptionErrorStrategy;
+import com.github.kneelawk.nbtcoder.utils.InternalParseException;
+import com.github.kneelawk.nbtcoder.utils.LanguageParseException;
 import org.antlr.v4.runtime.BufferedTokenStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
-import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguageSystemParser.DataContext;
-import com.github.kneelawk.nbtcoder.utils.InternalExceptionErrorStrategy;
-import com.github.kneelawk.nbtcoder.utils.InternalParseException;
-import com.github.kneelawk.nbtcoder.utils.LanguageParseException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
 public class HexLanguageParser {
 	public byte[] parse(String string) throws IOException {

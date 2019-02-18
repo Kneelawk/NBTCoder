@@ -1,12 +1,5 @@
 package com.github.kneelawk.nbtcoder.filelanguage;
 
-import java.io.IOException;
-import java.util.List;
-
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.ex.ConfigurationException;
-import org.apache.commons.io.output.StringBuilderWriter;
-
 import com.github.kneelawk.nbtcoder.file.NBTFile;
 import com.github.kneelawk.nbtcoder.file.RegionFile;
 import com.github.kneelawk.nbtcoder.file.SimpleFile;
@@ -18,6 +11,12 @@ import com.github.kneelawk.nbtcoder.region.ChunkPartition;
 import com.github.kneelawk.nbtcoder.region.EmptyPartition;
 import com.github.kneelawk.nbtcoder.region.Partition;
 import com.github.kneelawk.nbtcoder.region.RegionValues;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.io.output.StringBuilderWriter;
+
+import java.io.IOException;
+import java.util.List;
 
 public class NBTFileLanguagePrinter {
 	private NBTLanguagePrinter nbtPrinter;

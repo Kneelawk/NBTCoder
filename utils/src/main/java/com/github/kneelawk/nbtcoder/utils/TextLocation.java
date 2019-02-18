@@ -82,7 +82,7 @@ public class TextLocation {
 		if (text != null && !"".equals(text)) {
 			sb.append('(');
 			if (text.length() > 30) {
-				sb.append(text.substring(0, 30)).append("...");
+				sb.append(text, 0, 30).append("...");
 			} else {
 				sb.append(text);
 			}

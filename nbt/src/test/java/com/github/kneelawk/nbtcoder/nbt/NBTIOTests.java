@@ -1,17 +1,17 @@
 package com.github.kneelawk.nbtcoder.nbt;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.github.kneelawk.nbtcoder.test.hexlanguage.HexArgumentConverter;
+import com.github.kneelawk.nbtcoder.test.nbtlanguage.NBTTagArgumentConverter;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.converter.ConvertWith;
-import org.junit.jupiter.params.provider.CsvFileSource;
-
-import com.github.kneelawk.nbtcoder.test.hexlanguage.HexArgumentConverter;
-import com.github.kneelawk.nbtcoder.test.nbtlanguage.NBTTagArgumentConverter;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NBTIOTests {
 	@ParameterizedTest

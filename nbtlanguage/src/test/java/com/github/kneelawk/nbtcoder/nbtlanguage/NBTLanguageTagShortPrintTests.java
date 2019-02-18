@@ -1,11 +1,10 @@
 package com.github.kneelawk.nbtcoder.nbtlanguage;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+import com.github.kneelawk.nbtcoder.nbt.TagShort;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
-import com.github.kneelawk.nbtcoder.nbt.TagShort;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NBTLanguageTagShortPrintTests {
 	@ParameterizedTest

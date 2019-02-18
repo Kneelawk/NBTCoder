@@ -1,13 +1,13 @@
 package com.github.kneelawk.nbtcoder.main;
 
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-
 import com.github.kneelawk.nbtcoder.file.NBTFile;
 import com.github.kneelawk.nbtcoder.file.NBTFileIO;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageParser;
 import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
+
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class RegionLoaderTest {
 

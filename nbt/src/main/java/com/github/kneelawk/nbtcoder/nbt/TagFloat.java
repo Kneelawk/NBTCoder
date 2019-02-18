@@ -67,9 +67,7 @@ public class TagFloat extends AbstractTag {
 		if (getClass() != obj.getClass())
 			return false;
 		TagFloat other = (TagFloat) obj;
-		if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value))
-			return false;
-		return true;
+		return Float.floatToIntBits(value) == Float.floatToIntBits(other.value);
 	}
 
 	@Override

@@ -1,18 +1,12 @@
 package com.github.kneelawk.nbtcoder.file;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import com.github.kneelawk.nbtcoder.nbt.NBTIO;
 import com.github.kneelawk.nbtcoder.nbt.NBTValues;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbt.TagFactory;
 import com.github.kneelawk.nbtcoder.region.RegionFileIO;
+
+import java.io.*;
 
 public class NBTFileIO {
 	public static SimpleNBTFile readSimpleNBTStream(String filename, InputStream is, boolean compressed,
