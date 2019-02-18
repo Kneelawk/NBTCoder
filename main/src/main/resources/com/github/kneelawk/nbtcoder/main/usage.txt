@@ -4,9 +4,9 @@ Usage:
         Prints this help message.
   NBTCoder --version
         Prints this program's version.
-  NBTCoder (-h | -n) ([-a] | -A | -c | -r | -u) [-s] [-i <input>] [-o <output>]
+  NBTCoder (-h | -n) ([-a] | -c | -r | -u) [-s] [-i <input>] [-o <output>]
         Converts a single file between human-readable format and NBT format.
-  NBTCoder -R (-h | -n) ([-a] | -A) -i <input> -o <output>
+  NBTCoder -R (-h | -n) [-a] -i <input> -o <output>
         Recursively converts a directory of files between human-readable format and NBT
           format.
 
