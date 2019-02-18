@@ -15,5 +15,7 @@ jlink {
 	options = ['--compress', '2', '--no-header-files', '--no-man-pages']
 	launcher {
 		name = 'NBTCoder'
+		unixScriptTemplate = file('unixStartScript.txt')
+		windowsScriptTemplate = file('windowsStartScript.txt')
 	}
 }
