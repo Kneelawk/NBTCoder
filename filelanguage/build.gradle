@@ -1,0 +1,8 @@
+dependencies {
+	api project(':file')
+	implementation project(':hexlanguage')
+	implementation project(':nbtlanguage')
+	implementation project(':utils')
+}
+
+compileJava.dependsOn(':file:jar', ':hexlanguage:jar', ':nbtlanguage:jar', ':utils:jar')

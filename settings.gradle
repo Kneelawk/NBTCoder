@@ -1,0 +1,13 @@
+// Include all subprojects
+
+include 'file'
+include 'filelanguage'
+include 'hexlanguage'
+include 'main'
+include 'nbt'
+include 'nbtlanguage'
+include 'region'
+include 'testhexlanguage'
+include 'testnbtlanguage'
+include 'testutils'
+include 'utils'

@@ -11,5 +11,8 @@
 /*.iml
 /*.ipr
 
+/*/build/
+/*/out/
+
 *.kate-swp
 *.swp

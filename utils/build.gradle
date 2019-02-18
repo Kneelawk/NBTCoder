@@ -1,0 +1,12 @@
+task testJar(type: Jar, dependsOn: test) {
+    from sourceSets.test.output
+    archiveName "${baseName}-${version}-tests.jar"
+}
+
+configurations {
+    testArtifacts
+}
+
+artifacts {
+    testArtifacts testJar
+}

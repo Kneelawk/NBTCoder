@@ -1,0 +1,19 @@
+apply plugin: 'org.beryx.jlink'
+
+mainClassName = 'com.github.kneelawk.nbtcoder.main.NBTCoderMain'
+
+dependencies {
+	implementation project(':file')
+	implementation project(':filelanguage')
+	implementation project(':hexlanguage')
+	implementation project(':nbtlanguage')
+}
+
+compileJava.dependsOn(':file:jar', ':filelanguage:jar', ':hexlanguage:jar', ':nbtlanguage:jar')
+
+jlink {
+	options = ['--compress', '2', '--no-header-files', '--no-man-pages']
+	launcher {
+		name = 'NBTCoder'
+	}
+}

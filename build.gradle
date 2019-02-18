@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.*;
+
 buildscript {
 	repositories {
 		maven {
@@ -5,60 +7,53 @@ buildscript {
 		}
 	}
 	dependencies {
-		classpath "gradle.plugin.com.palantir.graal:gradle-graal:0.2.0-24-g27b929a"
+		classpath 'com.zyxist.chainsaw:com.zyxist.chainsaw.gradle.plugin:0.3.1'
+		classpath 'org.beryx.jlink:org.beryx.jlink.gradle.plugin:2.6.1'
 	}
 }
 
-import org.apache.tools.ant.filters.*;
+subprojects {
+	apply plugin: 'java-library'
+	apply plugin: 'antlr'
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+	apply plugin: 'com.zyxist.chainsaw'
 
-apply plugin: 'java'
-apply plugin: 'antlr'
-apply plugin: 'eclipse'
-apply plugin: 'application'
-apply plugin: 'com.palantir.graal'
+	sourceCompatibility = 11
+	version = '0.0.5-SNAPSHOT'
 
-sourceCompatibility = 1.8
-version = '0.0.4-SNAPSHOT'
-
-mainClassName = 'com.github.kneelawk.nbtcoder.NBTCoderMain'
-
-repositories {
-	jcenter()
-}
-
-dependencies {
-	implementation 'com.google.guava:guava:27.0.1-jre'
-	implementation 'commons-io:commons-io:2.6'
-	implementation 'org.apache.commons:commons-compress:1.18'
-	implementation 'org.apache.commons:commons-lang3:3.8.1'
-	implementation 'org.apache.commons:commons-configuration2:2.4'
-	
-	antlr 'org.antlr:antlr4:4.7.2'
-	
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
-	testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.0'
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
-}
-
-eclipse {
-	classpath {
-		downloadJavadoc = true
-		downloadSources = true
+	repositories {
+		jcenter()
 	}
-}
 
-processResources {
-	filter ReplaceTokens, tokens: [
-		'APPLICATION_VERSION': version
-	]
-}
+	dependencies {
+		implementation 'com.google.guava:guava:27.0.1-jre'
+		implementation 'commons-io:commons-io:2.6'
+		implementation 'org.apache.commons:commons-compress:1.18'
+		implementation 'org.apache.commons:commons-lang3:3.8.1'
+		implementation 'org.apache.commons:commons-configuration2:2.4'
+		
+		antlr 'org.antlr:antlr4:4.7.2'
+		
+		testImplementation 'org.junit.jupiter:junit-jupiter-api:5.4.0'
+		testImplementation 'org.junit.jupiter:junit-jupiter-params:5.4.0'
+		testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.4.0'
+	}
 
-test {
-	useJUnitPlatform()
-}
+	eclipse {
+		classpath {
+			downloadJavadoc = true
+			downloadSources = true
+		}
+	}
 
-graal {
-	mainClass mainClassName
-	outputName 'NBTCoder'
-	graalVersion '1.0.0-rc12'
+	processResources {
+		filter ReplaceTokens, tokens: [
+			'APPLICATION_VERSION': version
+		]
+	}
+
+	test {
+		useJUnitPlatform()
+	}
 }

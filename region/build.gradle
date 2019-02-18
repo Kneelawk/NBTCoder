@@ -1,0 +1,6 @@
+dependencies {
+    api project(':nbt')
+    implementation project(':utils')
+}
+
+compileJava.dependsOn(':nbt:jar', ':utils:jar')
