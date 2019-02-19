@@ -1,5 +1,8 @@
 package com.github.kneelawk.nbtcoder.nbt;
 
+import org.apache.commons.io.input.CloseShieldInputStream;
+import org.apache.commons.io.output.CloseShieldOutputStream;
+
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -22,43 +25,51 @@ public class NBTIO {
 	}
 
 	public static Tag readStream(InputStream is, TagFactory factory) throws IOException {
-		return read(new DataInputStream(is), factory);
+		try (DataInputStream in = new DataInputStream(new CloseShieldInputStream(is))) {
+			return read(in, factory);
+		}
 	}
 
 	public static TagCompound readStreamCompound(InputStream is, TagFactory factory) throws IOException {
-		return readCompound(new DataInputStream(is), factory);
+		try (DataInputStream in = new DataInputStream(new CloseShieldInputStream(is))) {
+			return readCompound(in, factory);
+		}
 	}
 
 	public static void writeStream(Tag tag, OutputStream os) throws IOException {
-		write(tag, new DataOutputStream(os));
+		try (DataOutputStream out = new DataOutputStream(new CloseShieldOutputStream(os))) {
+			write(tag, out);
+		}
 	}
 
 	public static Tag readCompressedStream(InputStream is, TagFactory factory) throws IOException {
-		return read(new DataInputStream(new GZIPInputStream(is)), factory);
+		try (DataInputStream in = new DataInputStream(new GZIPInputStream(new CloseShieldInputStream(is)))) {
+			return read(in, factory);
+		}
 	}
 
 	public static TagCompound readCompressedStreamCompound(InputStream is, TagFactory factory) throws IOException {
-		return readCompound(new DataInputStream(new GZIPInputStream(is)), factory);
+		try (DataInputStream in = new DataInputStream(new GZIPInputStream(new CloseShieldInputStream(is)))) {
+			return readCompound(in, factory);
+		}
 	}
 
 	public static void writeCompressedStream(Tag tag, OutputStream os) throws IOException {
-		write(tag, new DataOutputStream(new GZIPOutputStream(os)));
+		try (DataOutputStream out = new DataOutputStream(new GZIPOutputStream(new CloseShieldOutputStream(os)))) {
+			write(tag, out);
+		}
 	}
 
 	public static Tag readFile(File file, TagFactory factory) throws IOException {
-		Tag tag;
 		try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
-			tag = read(in, factory);
+			return read(in, factory);
 		}
-		return tag;
 	}
 
 	public static TagCompound readFileCompound(File file, TagFactory factory) throws IOException {
-		TagCompound tag;
 		try (DataInputStream in = new DataInputStream(new FileInputStream(file))) {
-			tag = readCompound(in, factory);
+			return readCompound(in, factory);
 		}
-		return tag;
 	}
 
 	public static void writeFile(Tag tag, File file) throws IOException {
@@ -68,19 +79,15 @@ public class NBTIO {
 	}
 
 	public static Tag readCompressedFile(File file, TagFactory factory) throws IOException {
-		Tag tag;
 		try (DataInputStream in = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
-			tag = read(in, factory);
+			return read(in, factory);
 		}
-		return tag;
 	}
 
 	public static TagCompound readCompressedFileCompound(File file, TagFactory factory) throws IOException {
-		TagCompound tag;
 		try (DataInputStream in = new DataInputStream(new GZIPInputStream(new FileInputStream(file)))) {
-			tag = readCompound(in, factory);
+			return readCompound(in, factory);
 		}
-		return tag;
 	}
 
 	public static void writeCompressedFile(Tag tag, File file) throws IOException {
