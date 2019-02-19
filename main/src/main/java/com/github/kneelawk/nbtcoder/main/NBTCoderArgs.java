@@ -1,28 +1,30 @@
 package com.github.kneelawk.nbtcoder.main;
 
 import com.google.common.primitives.Booleans;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.NullOutputStream;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
 
 public class NBTCoderArgs {
-	public static final Properties APPLICATION_PROPERTIES = loadApplicationProperties();
-	public static final String VERSION = APPLICATION_PROPERTIES.getProperty("version");
+	public static final PropertiesConfiguration APPLICATION_PROPERTIES = loadApplicationProperties();
+	public static final String VERSION = APPLICATION_PROPERTIES.getString("version");
 	public static final String USAGE = loadUsage();
 
-	private static Properties loadApplicationProperties() {
+	private static PropertiesConfiguration loadApplicationProperties() {
 		try {
-			Properties props = new Properties();
-			props.load(NBTCoderArgs.class.getResourceAsStream("application.properties"));
+			PropertiesConfiguration props = new PropertiesConfiguration();
+			props.read(new InputStreamReader(NBTCoderArgs.class.getResourceAsStream("application.properties")));
 			return props;
-		} catch (IOException e) {
+		} catch (IOException | ConfigurationException e) {
 			e.printStackTrace();
 		}
 		return null;
