@@ -5,12 +5,13 @@ import com.github.kneelawk.nbtcoder.nbt.NBTValues;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbt.TagFactory;
 import com.github.kneelawk.nbtcoder.region.RegionFileIO;
+import org.apache.commons.io.input.CloseShieldInputStream;
 
 import java.io.*;
 
 public class NBTFileIO {
 	public static SimpleNBTFile readSimpleNBTStream(String filename, InputStream is, boolean compressed,
-			TagFactory factory) throws IOException {
+													TagFactory factory) throws IOException {
 		Tag tag;
 		if (compressed) {
 			tag = NBTIO.readCompressedStream(is, factory);
@@ -74,34 +75,35 @@ public class NBTFileIO {
 
 	public static NBTFile readAutomaticDetectedStream(String filename, InputStream is, TagFactory factory)
 			throws IOException {
-		BufferedInputStream bis = new BufferedInputStream(is);
-		bis.mark(4096);
-		try {
-			return readSimpleNBTStream(filename, bis, true, factory);
-		} catch (IOException e) {
-			bis.reset();
-			SimpleNBTFile file;
+		try (BufferedInputStream bis = new BufferedInputStream(new CloseShieldInputStream(is))) {
+			bis.mark(4096);
 			try {
-				file = readSimpleNBTStream(filename, bis, false, factory);
-			} catch (IOException e1) {
+				return readSimpleNBTStream(filename, bis, true, factory);
+			} catch (IOException e) {
 				bis.reset();
+				SimpleNBTFile file;
 				try {
-					return readRegionNBTStream(filename, bis);
-				} catch (IOException e2) {
-					throw new IOException("Unable to detect NBT file type");
+					file = readSimpleNBTStream(filename, bis, false, factory);
+				} catch (IOException e1) {
+					bis.reset();
+					try {
+						return readRegionNBTStream(filename, bis);
+					} catch (IOException e2) {
+						throw new IOException("Unable to detect NBT file type");
+					}
 				}
-			}
 
-			// A valid file shouldn't consist entirely of a TAG_END
-			if (file.getData().getId() == NBTValues.TAG_END) {
-				bis.reset();
-				try {
-					return readRegionNBTStream(filename, bis);
-				} catch (IOException e2) {
-					throw new IOException("Unable to detect NBT file type");
+				// A valid file shouldn't consist entirely of a TAG_END
+				if (file.getData().getId() == NBTValues.TAG_END) {
+					bis.reset();
+					try {
+						return readRegionNBTStream(filename, bis);
+					} catch (IOException e2) {
+						throw new IOException("Unable to detect NBT file type");
+					}
+				} else {
+					return file;
 				}
-			} else {
-				return file;
 			}
 		}
 	}
@@ -131,21 +133,22 @@ public class NBTFileIO {
 	}
 
 	public static SimpleNBTFile readAutomaticDetectedSimpleNBTStream(String filename, InputStream is,
-			TagFactory factory) throws IOException {
-		BufferedInputStream bis = new BufferedInputStream(is);
-		bis.mark(1024);
-		try {
-			return readSimpleNBTStream(filename, bis, true, factory);
-		} catch (IOException e) {
-			bis.reset();
+																	 TagFactory factory) throws IOException {
+		try (BufferedInputStream bis = new BufferedInputStream(new CloseShieldInputStream(is))) {
+			bis.mark(1024);
 			try {
-				SimpleNBTFile nbtFile = readSimpleNBTStream(filename, bis, false, factory);
-				if (nbtFile.getData().getId() == NBTValues.TAG_END) {
-					throw new IOException("File consists of a single TAG_END");
+				return readSimpleNBTStream(filename, bis, true, factory);
+			} catch (IOException e) {
+				bis.reset();
+				try {
+					SimpleNBTFile nbtFile = readSimpleNBTStream(filename, bis, false, factory);
+					if (nbtFile.getData().getId() == NBTValues.TAG_END) {
+						throw new IOException("File consists of a single TAG_END");
+					}
+					return nbtFile;
+				} catch (IOException e1) {
+					throw new IOException("Unable to detect NBT file type");
 				}
-				return nbtFile;
-			} catch (IOException e1) {
-				throw new IOException("Unable to detect NBT file type");
 			}
 		}
 	}
