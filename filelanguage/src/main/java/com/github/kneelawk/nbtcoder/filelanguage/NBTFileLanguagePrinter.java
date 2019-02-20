@@ -75,6 +75,12 @@ public class NBTFileLanguagePrinter {
 		if (part instanceof EmptyPartition) {
 			partProps.setProperty("size", String.valueOf(part.getSectorCount()));
 			printProperties(partProps, sb);
+
+			if (part.hasPaddingData()) {
+				sb.append('\n');
+
+				printPadding(part.getPaddingData(), 0, sb);
+			}
 		} else if (part instanceof ChunkPartition) {
 			ChunkPartition chunk = (ChunkPartition) part;
 

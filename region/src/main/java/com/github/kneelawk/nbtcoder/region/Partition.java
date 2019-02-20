@@ -10,5 +10,9 @@ public interface Partition {
 
 	void writeData(DataOutputStream output) throws IOException;
 
+	byte[] getPaddingData();
+
+	boolean hasPaddingData();
+
 	String getPartitionType();
 }

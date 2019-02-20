@@ -97,7 +97,9 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		} else if (RegionValues.EMPTY_PARTITION_TYPE_STRING.equals(partType)) {
 			int size = parseIntProperty(partProps, "size", propsContext);
 
-			EmptyPartition part = new EmptyPartition(size);
+			EmptyPartition part = new EmptyPartition(size, padding);
+
+			padding = null;
 
 			partitions.add(part);
 		} else {

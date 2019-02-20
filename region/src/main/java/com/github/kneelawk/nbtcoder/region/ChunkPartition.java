@@ -15,10 +15,6 @@ public interface ChunkPartition extends Partition {
 
 	int getZ();
 
-	byte[] getPaddingData();
-
-	boolean hasPaddingData();
-
 	int size();
 
 	int getTimestamp();

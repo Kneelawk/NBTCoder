@@ -15,7 +15,7 @@ nbtFile
 
 partition
 :
-	PARTITION_START properties data padding? SECTION_END
+	PARTITION_START properties data? padding? SECTION_END
 ;
 
 properties

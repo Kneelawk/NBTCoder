@@ -40,12 +40,27 @@ public class RegionFileIO {
 			int sectorNum = it.next();
 
 			// skip to the correct sector
-			if (sectorsRead < sectorNum) {
-				input.skipBytes((sectorNum - sectorsRead) * RegionValues.BYTES_PER_SECTOR);
-				partitions.add(new EmptyPartition(sectorNum - sectorsRead));
+			if (sectorsRead < sectorNum) {// These may be garbage bytes but they're still important
+				byte[] paddingData = new byte[(sectorNum - sectorsRead) * RegionValues.BYTES_PER_SECTOR];
+				input.readFully(paddingData);
+
+				// where is the data in this array
+				int lastPaddingByte = ByteArrayUtils.lastNonZeroByte(paddingData);
+				if (lastPaddingByte == -1) {
+					// don't keep the extra data if its empty
+					paddingData = null;
+				} else if (lastPaddingByte < paddingData.length - 1) {
+					// shrink the array to just the data because it will get padded with 0s when
+					// written again
+					byte[] newPaddingData = new byte[lastPaddingByte + 1];
+					System.arraycopy(paddingData, 0, newPaddingData, 0, lastPaddingByte + 1);
+					paddingData = newPaddingData;
+				}
+
+				partitions.add(new EmptyPartition(sectorNum - sectorsRead, paddingData));
 				sectorsRead = sectorNum;
 			} else if (sectorsRead > sectorNum) {
-				throw new IOException("Skipped sectors");
+				throw new IOException("Skipped sectors beyond the requested sector (This usually means the region file is corrupt)");
 			}
 
 			ChunkLoc loc = offsetMap.get(sectorNum);
@@ -87,6 +102,43 @@ public class RegionFileIO {
 			sectorsRead += loc.getSectorCount();
 
 			partitions.add(chunk);
+		}
+
+		// grab any data left over at the end of the region
+		int firstByte;
+		if ((firstByte = input.read()) != -1) {
+			// keep expanding paddingData with extra data until we have everything
+			int sectorCount = 0;
+			byte[] paddingData = null;
+			do {
+				byte[] newPaddingData = new byte[RegionValues.BYTES_PER_SECTOR * (sectorCount + 1)];
+				// the `sectorCount + 1` is outside of parentheses on purpose
+				input.readFully(newPaddingData, 1 + RegionValues.BYTES_PER_SECTOR * sectorCount, RegionValues.BYTES_PER_SECTOR - 1);
+				newPaddingData[RegionValues.BYTES_PER_SECTOR * sectorCount] = (byte) (firstByte & 0xFF);
+
+				if (paddingData != null) {
+					System.arraycopy(paddingData, 0, newPaddingData, 0, RegionValues.BYTES_PER_SECTOR * sectorCount);
+				}
+
+				paddingData = newPaddingData;
+
+				sectorCount++;
+			} while ((firstByte = input.read()) != -1);
+
+			// where is the data in this array
+			int lastPaddingByte = ByteArrayUtils.lastNonZeroByte(paddingData);
+			if (lastPaddingByte == -1) {
+				// don't keep the extra data if its empty
+				paddingData = null;
+			} else if (lastPaddingByte < paddingData.length - 1) {
+				// shrink the array to just the data because it will get padded with 0s when
+				// written again
+				byte[] newPaddingData = new byte[lastPaddingByte + 1];
+				System.arraycopy(paddingData, 0, newPaddingData, 0, lastPaddingByte + 1);
+				paddingData = newPaddingData;
+			}
+
+			partitions.add(new EmptyPartition(sectorCount, paddingData));
 		}
 
 		return partitions;
