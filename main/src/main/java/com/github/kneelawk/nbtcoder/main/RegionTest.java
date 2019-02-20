@@ -1,7 +1,7 @@
 package com.github.kneelawk.nbtcoder.main;
 
 import com.github.kneelawk.nbtcoder.file.NBTFile;
-import com.github.kneelawk.nbtcoder.file.NBTFileIO;
+import com.github.kneelawk.nbtcoder.file.NBTFileTypeDetector;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguagePrinter;
 import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguagePrinter;
 import com.github.kneelawk.nbtcoder.nbt.DefaultTagFactory;
@@ -26,7 +26,7 @@ public class RegionTest {
 		NBTFileLanguagePrinter printer = new NBTFileLanguagePrinter(nbtPrinter, hexPrinter);
 
 		System.out.println("Loading...");
-		NBTFile nbtFile = NBTFileIO.readAutomaticDetectedStream(FILENAME, new FileInputStream(IN_FILE), factory);
+		NBTFile nbtFile = NBTFileTypeDetector.readStreamDetectedStream(FILENAME, new FileInputStream(IN_FILE), factory);
 
 		PrintStream out = new PrintStream(new FileOutputStream(OUT_FILE));
 

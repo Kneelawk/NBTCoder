@@ -22,9 +22,9 @@ image can be found at `main/build/image/`.
         Prints this help message.
   NBTCoder --version
         Prints this program's version.
-  NBTCoder (-h | -n) ([-a] | -c | -r | -u) [-s] [-i <input>] [-o <output>]
+  NBTCoder (-h | -n) ([-a] | -A | -c | -r | -u) [-s] [-i <input>] [-o <output>]
         Converts a single file between human-readable format and NBT format.
-  NBTCoder -R (-h | -n) [-a] -i <input> -o <output>
+  NBTCoder -R (-h | -n) ([-a] | -A) -i <input> -o <output>
         Recursively converts a directory of files between human-readable format and NBT
           format.
 ```
@@ -32,8 +32,12 @@ image can be found at `main/build/image/`.
 ### Options:
 
 ```
-    -a, --auto                        Auto detect/select NBT file(s) format. (default).
-                                        (Not compatible with stdin input).
+    -a, --auto                        Auto detect/select NBT file(s) format based on its
+                                        filename. (default). (Not compatible with stdin input
+                                        when reading an nbt file).
+
+    -A, --autodetect-stream           Auto detect NBT file format without the use of
+                                        filenames.
 
     -c, --compressed                  NBT file is in compressed format. (Not compatible
                                         with -R).
@@ -45,6 +49,9 @@ image can be found at `main/build/image/`.
 
     -n, --nbt                         Input file(s) are in nbt format.
 
+        --nbt-file-pattern=<pattern>  Sets the filename pattern for matching nbt files. (This
+                                        is only useful with file-type autodetection -a).
+
     -o, --out-file=<output>           Output file or '-' for stdout. (Will be a directory
                                         if -R is specified).
 
@@ -54,6 +61,11 @@ image can be found at `main/build/image/`.
     -R, --recursive                   Treat in-file and out-file arguments as directories
                                         to be recursively converted. (Not compatible with
                                         stdin input or stdout output).
+
+        --region-file-pattern=<pattern>
+                                      Sets the filename pattern for matching region files.
+                                        (This is only useful with file-type autodetection
+                                        -a).
 
     -s, --stripped                    Human-readable file is stripped of file metadata.
                                         (NBT data only). (Not compatible with -r, -R). (If -h

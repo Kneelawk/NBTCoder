@@ -1,9 +1,6 @@
 package com.github.kneelawk.nbtcoder.main;
 
-import com.github.kneelawk.nbtcoder.file.NBTFile;
-import com.github.kneelawk.nbtcoder.file.NBTFileIO;
-import com.github.kneelawk.nbtcoder.file.PartitionedFile;
-import com.github.kneelawk.nbtcoder.file.SimpleFile;
+import com.github.kneelawk.nbtcoder.file.*;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageParser;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguagePrinter;
 import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguagePrinter;
@@ -22,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class NBTCoderMain {
@@ -39,12 +37,17 @@ public class NBTCoderMain {
 		NBTLanguageParser nbtParser = new NBTLanguageParser();
 		NBTFileLanguageParser fileParser = new NBTFileLanguageParser(nbtParser);
 
+		NBTFileTypeDetector detector = new NBTFileTypeDetector(Pattern.compile(argsObj.getNbtFilePattern()), Pattern.compile(argsObj.getRegionFilePattern()));
+
 		int exitCode = 0;
+
+		OperationMode operationMode = argsObj.getMode();
+		NBTType nbtType = argsObj.getNbtType();
 
 		if (argsObj.isRecursive()) {
 			try {
-				convertDirectory(Paths.get(argsObj.getInput()), Paths.get(argsObj.getOutput()), argsObj.getMode(),
-						filePrinter, fileParser, factory, argsObj.getVerboseStream());
+				convertDirectory(Paths.get(argsObj.getInput()), Paths.get(argsObj.getOutput()), operationMode,
+						nbtType, filePrinter, fileParser, factory, detector, argsObj.getVerboseStream());
 			} catch (IOException e) {
 				e.printStackTrace();
 				exitCode = -1;
@@ -57,15 +60,15 @@ public class NBTCoderMain {
 				in = getInputStream(argsObj);
 
 				// convert the data
-				if (OperationMode.HUMAN_TO_NBT.equals(argsObj.getMode())) {
+				if (OperationMode.HUMAN_TO_NBT.equals(operationMode)) {
 					if (argsObj.isStripped()) {
 						Tag tag = nbtParser.parse(in);
-						if (NBTType.COMPRESSED.equals(argsObj.getNbtType())) {
+						if (NBTType.COMPRESSED.equals(nbtType)) {
 							// initialize the output stream
 							out = getOutputStream(argsObj);
 
 							NBTIO.writeCompressedStream(tag, out);
-						} else if (NBTType.UNCOMPRESSED.equals(argsObj.getNbtType())) {
+						} else if (NBTType.UNCOMPRESSED.equals(nbtType)) {
 							// initialize the output stream
 							out = getOutputStream(argsObj);
 
@@ -77,13 +80,14 @@ public class NBTCoderMain {
 						}
 					} else {
 						NBTFile file = fileParser.parse(in);
-						if (NBTType.AUTO.equals(argsObj.getNbtType())) {
+						if (NBTType.AUTO.equals(nbtType)
+								|| NBTType.AUTODETECT_STREAM.equals(nbtType)) {
 							// initialize the output stream
 							out = getOutputStream(argsObj);
 
 							NBTFileIO.writeNBTStream(file, out);
 						} else if (file instanceof PartitionedFile) {
-							if (NBTType.REGION.equals(argsObj.getNbtType())) {
+							if (NBTType.REGION.equals(nbtType)) {
 								// initialize the output stream
 								out = getOutputStream(argsObj);
 
@@ -93,15 +97,15 @@ public class NBTCoderMain {
 								exitCode = -1;
 							}
 						} else if (file instanceof SimpleFile) {
-							if (NBTType.REGION.equals(argsObj.getNbtType())) {
+							if (NBTType.REGION.equals(nbtType)) {
 								System.err.println("It is not possible to convert a non-region file to a region file.");
 								exitCode = -1;
-							} else if (NBTType.COMPRESSED.equals(argsObj.getNbtType())) {
+							} else if (NBTType.COMPRESSED.equals(nbtType)) {
 								// initialize the output stream
 								out = getOutputStream(argsObj);
 
 								NBTIO.writeCompressedStream(((SimpleFile) file).getData(), out);
-							} else if (NBTType.UNCOMPRESSED.equals(argsObj.getNbtType())) {
+							} else if (NBTType.UNCOMPRESSED.equals(nbtType)) {
 								// initialize the output stream
 								out = getOutputStream(argsObj);
 
@@ -112,13 +116,15 @@ public class NBTCoderMain {
 				} else {
 					NBTFile file = null;
 					String filename = Paths.get(argsObj.getInput()).getFileName().toString();
-					if (NBTType.AUTO.equals(argsObj.getNbtType())) {
-						file = NBTFileIO.readAutomaticDetectedStream(filename, in, factory);
-					} else if (NBTType.REGION.equals(argsObj.getNbtType())) {
+					if (NBTType.AUTO.equals(nbtType)) {
+						file = detector.readFilenameDetectedStream(filename, in, factory);
+					} else if (NBTType.AUTODETECT_STREAM.equals(nbtType)) {
+						file = NBTFileTypeDetector.readStreamDetectedStream(filename, in, factory);
+					} else if (NBTType.REGION.equals(nbtType)) {
 						file = NBTFileIO.readRegionNBTStream(filename, in);
-					} else if (NBTType.COMPRESSED.equals(argsObj.getNbtType())) {
+					} else if (NBTType.COMPRESSED.equals(nbtType)) {
 						file = NBTFileIO.readSimpleNBTStream(filename, in, true, factory);
-					} else if (NBTType.UNCOMPRESSED.equals(argsObj.getNbtType())) {
+					} else if (NBTType.UNCOMPRESSED.equals(nbtType)) {
 						file = NBTFileIO.readSimpleNBTStream(filename, in, false, factory);
 					}
 
@@ -193,9 +199,9 @@ public class NBTCoderMain {
 		}
 	}
 
-	private static void convertDirectory(Path baseIn, Path baseOut, OperationMode mode,
-			NBTFileLanguagePrinter filePrinter, NBTFileLanguageParser fileParser, TagFactory factory,
-			PrintStream verboseStream) throws IOException {
+	private static void convertDirectory(Path baseIn, Path baseOut, OperationMode mode, NBTType detectionType,
+										 NBTFileLanguagePrinter filePrinter, NBTFileLanguageParser fileParser, TagFactory factory,
+										 NBTFileTypeDetector detector, PrintStream verboseStream) throws IOException {
 		verboseStream.println("Counting files...");
 		long count = Files.walk(baseIn).count();
 		verboseStream.println("Converting files...");
@@ -203,7 +209,7 @@ public class NBTCoderMain {
 			// walk the path tree without the use of lambdas so as to keep this function's
 			// context variables
 			long current = 1;
-			for (Iterator<Path> it = walk.iterator(); it.hasNext();) {
+			for (Iterator<Path> it = walk.iterator(); it.hasNext(); ) {
 				Path path = it.next();
 				Path relative = baseIn.relativize(path);
 				Path out = baseOut.resolve(relative);
@@ -218,8 +224,13 @@ public class NBTCoderMain {
 							Path nOut = baseOut.resolve(file.getFilename());
 							NBTFileIO.writeNBTFile(file, nOut.toFile());
 						} else {
-							NBTFile file = NBTFileIO.readAutomaticDetectedFile(relative.toString(), path.toFile(),
-									factory);
+							NBTFile file;
+							if (NBTType.AUTODETECT_STREAM.equals(detectionType)) {
+								file = NBTFileTypeDetector.readStreamDetectedFile(relative.toString(), path.toFile(),
+										factory);
+							} else {
+								file = detector.readFilenameDetectedFile(relative.toString(), path.toFile(), factory);
+							}
 							try (PrintStream outStream = new PrintStream(Files.newOutputStream(out))) {
 								outStream.print(filePrinter.print(file, factory));
 							}

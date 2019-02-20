@@ -19,6 +19,9 @@ public class NBTCoderArgs {
 	public static final String VERSION = APPLICATION_PROPERTIES.getString("version");
 	public static final String USAGE = loadUsage();
 
+	private static final String DEFAULT_NBT_FILE_PATTERN = APPLICATION_PROPERTIES.getString("pattern.nbtFile.default");
+	private static final String DEFAULT_REGION_FILE_PATTERN = APPLICATION_PROPERTIES.getString("pattern.regionFile.default");
+
 	private static PropertiesConfiguration loadApplicationProperties() {
 		try {
 			PropertiesConfiguration props = new PropertiesConfiguration();
@@ -26,8 +29,8 @@ public class NBTCoderArgs {
 			return props;
 		} catch (IOException | ConfigurationException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Unable to load application properties", e);
 		}
-		return null;
 	}
 
 	private static String loadUsage() {
@@ -35,8 +38,8 @@ public class NBTCoderArgs {
 			return IOUtils.toString(NBTCoderArgs.class.getResource("usage.txt"), Charset.defaultCharset());
 		} catch (IOException e) {
 			e.printStackTrace();
+			throw new RuntimeException("Unable to load application usage", e);
 		}
-		return null;
 	}
 
 	private String[] args;
@@ -48,6 +51,8 @@ public class NBTCoderArgs {
 	private String input;
 	private String output;
 	private PrintStream verboseStream;
+	private String nbtFilePattern;
+	private String regionFilePattern;
 
 	public NBTCoderArgs(String[] args) {
 		this.args = args;
@@ -67,7 +72,7 @@ public class NBTCoderArgs {
 			System.out.println(VERSION);
 			System.exit(0);
 		} else if ((state.humanReadable && state.nbt) || (!state.humanReadable && !state.nbt)) {
-			System.err.println("One of --nbt or --human-readable must be specified, not both.");
+			System.err.println("One of --nbt or --human-readable must be specified, but not both.");
 			System.err.println(USAGE);
 			System.exit(-1);
 		}
@@ -91,14 +96,21 @@ public class NBTCoderArgs {
 		}
 
 		if (state.recursive
-				&& Booleans.countTrue(state.compressed, state.region, state.stripped, state.uncompressed) > 0) {
-			System.err.println("-R is not compatible with -c, -r, -s, or -u.");
+				&& Booleans.countTrue(state.compressed, state.region, state.uncompressed) > 0) {
+			System.err.println("-R is not compatible with -c, -r, or -u.");
 			System.err.println(USAGE);
 			System.exit(-1);
 		}
 
-		if (isStream(state.input) && Booleans.countTrue(state.auto, state.recursive) > 0) {
-			System.err.println("Stream input is not compatible with the -a or -R option.");
+		if (isStream(state.input) && state.recursive) {
+			System.err.println("Stream input is not compatible with the -R option.");
+			System.err.println(USAGE);
+			System.exit(-1);
+		}
+
+		if (state.nbt && isStream(state.input) && state.auto) {
+			System.err.println("Filename based autodetect functionality does not work when reading binary files from" +
+					" streams. Try using -A.");
 			System.err.println(USAGE);
 			System.exit(-1);
 		}
@@ -122,15 +134,17 @@ public class NBTCoderArgs {
 			verboseStream = new PrintStream(new NullOutputStream());
 		}
 
-		if (Booleans.countTrue(state.auto, state.compressed, state.region, state.uncompressed) > 1) {
-			System.err.println("Only one of -a, -c, -r, or -u may be specified.");
+		if (Booleans.countTrue(state.auto, state.autodetectStream, state.compressed, state.region, state.uncompressed) > 1) {
+			System.err.println("Only one of -a, -A, -c, -r, or -u may be specified.");
 			System.err.println(USAGE);
 			System.exit(-1);
-		} else if (Booleans.countTrue(state.auto, state.compressed, state.region, state.uncompressed) < 1) {
+		} else if (Booleans.countTrue(state.auto, state.autodetectStream, state.compressed, state.region, state.uncompressed) < 1) {
 			nbtType = NBTType.AUTO;
 		} else {
 			if (state.auto) {
 				nbtType = NBTType.AUTO;
+			} else if (state.autodetectStream) {
+				nbtType = NBTType.AUTODETECT_STREAM;
 			} else if (state.compressed) {
 				nbtType = NBTType.COMPRESSED;
 			} else if (state.region) {
@@ -175,6 +189,18 @@ public class NBTCoderArgs {
 		} else {
 			output = state.output;
 		}
+
+		if (state.nbtFilePattern == null) {
+			nbtFilePattern = DEFAULT_NBT_FILE_PATTERN;
+		} else {
+			nbtFilePattern = state.nbtFilePattern;
+		}
+
+		if (state.regionFilePattern == null) {
+			regionFilePattern = DEFAULT_REGION_FILE_PATTERN;
+		} else {
+			regionFilePattern = state.regionFilePattern;
+		}
 	}
 
 	public OperationMode getMode() {
@@ -205,6 +231,14 @@ public class NBTCoderArgs {
 		return verboseStream;
 	}
 
+	public String getNbtFilePattern() {
+		return nbtFilePattern;
+	}
+
+	public String getRegionFilePattern() {
+		return regionFilePattern;
+	}
+
 	private class ParsingState {
 		boolean error = false;
 		boolean help = false;
@@ -214,6 +248,7 @@ public class NBTCoderArgs {
 		boolean humanReadable = false;
 		boolean nbt = false;
 		boolean auto = false;
+		boolean autodetectStream = false;
 		boolean compressed = false;
 		boolean region = false;
 		boolean uncompressed = false;
@@ -222,6 +257,10 @@ public class NBTCoderArgs {
 		boolean parsingInput = false;
 		String output = null;
 		boolean parsingOutput = false;
+		String nbtFilePattern = null;
+		boolean parsingNbtFilePattern = false;
+		String regionFilePattern = null;
+		boolean parsingRegionFilePattern = false;
 
 		String currentArg;
 
@@ -234,6 +273,12 @@ public class NBTCoderArgs {
 				} else if (parsingOutput) {
 					output = currentArg;
 					parsingOutput = false;
+				} else if (parsingNbtFilePattern) {
+					nbtFilePattern = currentArg;
+					parsingNbtFilePattern = false;
+				} else if (parsingRegionFilePattern) {
+					regionFilePattern = currentArg;
+					parsingRegionFilePattern = false;
 				} else if (currentArg.startsWith("-")) {
 					if (currentArg.startsWith("--")) {
 						String argValue = null;
@@ -263,6 +308,9 @@ public class NBTCoderArgs {
 						case "--auto":
 							auto = true;
 							break;
+						case "--autodetect-stream":
+							autodetectStream = true;
+							break;
 						case "--compressed":
 							compressed = true;
 							break;
@@ -284,6 +332,20 @@ public class NBTCoderArgs {
 								output = argValue;
 							} else {
 								parsingOutput = true;
+							}
+							break;
+						case "--nbt-file-pattern":
+							if (argValue != null) {
+								nbtFilePattern = argValue;
+							} else {
+								parsingNbtFilePattern = true;
+							}
+							break;
+						case "--region-file-pattern":
+							if (argValue != null) {
+								regionFilePattern = argValue;
+							} else {
+								parsingRegionFilePattern = true;
 							}
 							break;
 						case "--verbose":
@@ -324,6 +386,9 @@ public class NBTCoderArgs {
 					break;
 				case 'a':
 					auto = true;
+					break;
+				case 'A':
+					autodetectStream = true;
 					break;
 				case 'c':
 					compressed = true;
@@ -368,6 +433,6 @@ public class NBTCoderArgs {
 	}
 
 	public enum NBTType {
-		AUTO, COMPRESSED, REGION, UNCOMPRESSED
+		AUTO, AUTODETECT_STREAM, COMPRESSED, REGION, UNCOMPRESSED
 	}
 }
