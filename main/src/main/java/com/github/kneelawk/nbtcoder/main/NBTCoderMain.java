@@ -2,7 +2,7 @@ package com.github.kneelawk.nbtcoder.main;
 
 import com.github.kneelawk.nbtcoder.file.NBTFile;
 import com.github.kneelawk.nbtcoder.file.NBTFileIO;
-import com.github.kneelawk.nbtcoder.file.RegionFile;
+import com.github.kneelawk.nbtcoder.file.PartitionedFile;
 import com.github.kneelawk.nbtcoder.file.SimpleFile;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageParser;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguagePrinter;
@@ -82,12 +82,12 @@ public class NBTCoderMain {
 							out = getOutputStream(argsObj);
 
 							NBTFileIO.writeNBTStream(file, out);
-						} else if (file instanceof RegionFile) {
+						} else if (file instanceof PartitionedFile) {
 							if (NBTType.REGION.equals(argsObj.getNbtType())) {
 								// initialize the output stream
 								out = getOutputStream(argsObj);
 
-								NBTFileIO.writeRegionNBTStream((RegionFile) file, out);
+								NBTFileIO.writeRegionNBTStream((PartitionedFile) file, out);
 							} else {
 								System.err.println("It is not possible to convert a region file to a non-region file.");
 								exitCode = -1;

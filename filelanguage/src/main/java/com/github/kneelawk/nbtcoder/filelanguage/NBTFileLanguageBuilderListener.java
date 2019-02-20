@@ -7,12 +7,10 @@ import com.github.kneelawk.nbtcoder.file.SimpleNBTFile;
 import com.github.kneelawk.nbtcoder.filelanguage.NBTFileLanguageSystemParser.*;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguageParser;
-import com.github.kneelawk.nbtcoder.region.Chunk;
-import com.github.kneelawk.nbtcoder.region.EmptyPartition;
-import com.github.kneelawk.nbtcoder.region.Partition;
-import com.github.kneelawk.nbtcoder.region.RegionValues;
+import com.github.kneelawk.nbtcoder.region.*;
 import com.github.kneelawk.nbtcoder.utils.InternalParseException;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.primitives.UnsignedBytes;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -22,8 +20,11 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.regex.Matcher;
 
 public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseListener {
 
@@ -51,7 +52,20 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 
 		switch (fileType) {
 		case NBTFileValues.REGION_FILE_TYPE_STRING:
-			file = new RegionNBTFile(filename, partitions);
+			// collect all the unused timestamp properties
+			Map<ChunkLocation, Integer> unusedTimestamps = Maps.newHashMap();
+			Iterator<String> keys = fileProps.getKeys();
+			while (keys.hasNext()) {
+				String key = keys.next();
+				Matcher matcher = NBTFileLanguageValues.UNUSED_TIMESTAMP_KEY_PATTERN.matcher(key);
+				if (matcher.matches()) {
+					int x = Integer.parseInt(matcher.group("x"));
+					int z = Integer.parseInt(matcher.group("z"));
+					unusedTimestamps.put(new ChunkLocation(x, z), fileProps.getInt(key));
+				}
+			}
+
+			file = new RegionNBTFile(filename, new SimpleRegionFile(partitions, unusedTimestamps));
 			break;
 		case NBTFileValues.UNCOMPRESSED_FILE_TYPE_STRING:
 		case NBTFileValues.COMPRESSED_FILE_TYPE_STRING:

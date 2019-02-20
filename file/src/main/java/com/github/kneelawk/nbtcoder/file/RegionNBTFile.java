@@ -1,29 +1,20 @@
 package com.github.kneelawk.nbtcoder.file;
 
+import com.github.kneelawk.nbtcoder.region.ChunkLocation;
 import com.github.kneelawk.nbtcoder.region.ChunkPartition;
 import com.github.kneelawk.nbtcoder.region.Partition;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
+import com.github.kneelawk.nbtcoder.region.RegionFile;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class RegionNBTFile implements NBTFile, RegionFile {
+public class RegionNBTFile implements NBTFile, PartitionedFile {
 	private String filename;
-	private List<Partition> partitions = Lists.newArrayList();
-	private Map<Integer, ChunkPartition> chunks = Maps.newHashMap();
+	private RegionFile regionFile;
 
-	public RegionNBTFile(String filename, Collection<Partition> partitions) {
+	public RegionNBTFile(String filename, RegionFile regionFile) {
 		this.filename = filename;
-		this.partitions.addAll(partitions);
-
-		for (Partition part : partitions) {
-			if (part instanceof ChunkPartition) {
-				ChunkPartition chunk = (ChunkPartition) part;
-				chunks.put(chunk.getX() + chunk.getZ() * 32, chunk);
-			}
-		}
+		this.regionFile = regionFile;
 	}
 
 	@Override
@@ -38,20 +29,29 @@ public class RegionNBTFile implements NBTFile, RegionFile {
 
 	@Override
 	public List<Partition> getPartitions() {
-		return partitions;
+		return regionFile.getPartitions();
 	}
 
 	@Override
-	public ChunkPartition getChunk(int x, int z) {
-		return chunks.get(x + z * 32);
+	public ChunkPartition getChunk(ChunkLocation location) {
+		return regionFile.getChunk(location);
+	}
+
+	@Override
+	public Map<ChunkLocation, Integer> getUnusedTimestamps() {
+		return regionFile.getUnusedTimestamps();
+	}
+
+	@Override
+	public RegionFile getRegionFile() {
+		return regionFile;
 	}
 
 	public void setFilename(String filename) {
 		this.filename = filename;
 	}
 
-	public void setPartitions(Collection<Partition> partitions) {
-		this.partitions.clear();
-		this.partitions.addAll(partitions);
+	public void setChunk(ChunkLocation location, ChunkPartition partition) {
+		regionFile.setChunk(location, partition);
 	}
 }

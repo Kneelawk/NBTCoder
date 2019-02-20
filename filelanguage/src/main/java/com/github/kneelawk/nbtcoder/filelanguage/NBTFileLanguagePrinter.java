@@ -1,22 +1,20 @@
 package com.github.kneelawk.nbtcoder.filelanguage;
 
 import com.github.kneelawk.nbtcoder.file.NBTFile;
-import com.github.kneelawk.nbtcoder.file.RegionFile;
+import com.github.kneelawk.nbtcoder.file.PartitionedFile;
 import com.github.kneelawk.nbtcoder.file.SimpleFile;
 import com.github.kneelawk.nbtcoder.hexlanguage.HexLanguagePrinter;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbt.TagFactory;
 import com.github.kneelawk.nbtcoder.nbtlanguage.NBTLanguagePrinter;
-import com.github.kneelawk.nbtcoder.region.ChunkPartition;
-import com.github.kneelawk.nbtcoder.region.EmptyPartition;
-import com.github.kneelawk.nbtcoder.region.Partition;
-import com.github.kneelawk.nbtcoder.region.RegionValues;
+import com.github.kneelawk.nbtcoder.region.*;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.apache.commons.io.output.StringBuilderWriter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 public class NBTFileLanguagePrinter {
 	private NBTLanguagePrinter nbtPrinter;
@@ -43,16 +41,27 @@ public class NBTFileLanguagePrinter {
 		PropertiesConfiguration fileProps = new PropertiesConfiguration();
 		fileProps.setProperty("name", file.getFilename());
 		fileProps.setProperty("type", file.getFileType());
-		printProperties(fileProps, sb);
-
-		sb.append('\n');
 
 		if (file instanceof SimpleFile) {
+			printProperties(fileProps, sb);
+
+			sb.append('\n');
+
 			SimpleFile sf = (SimpleFile) file;
 			printData(sf.getData(), sb);
 			sb.append('\n');
-		} else if (file instanceof RegionFile) {
-			RegionFile rf = (RegionFile) file;
+		} else if (file instanceof PartitionedFile) {
+			PartitionedFile rf = (PartitionedFile) file;
+
+			for (Map.Entry<ChunkLocation, Integer> entry : rf.getUnusedTimestamps().entrySet()) {
+				ChunkLocation location = entry.getKey();
+				fileProps.setProperty(String.format(NBTFileLanguageValues.UNUSED_TIMESTAMP_KEY_FORMAT, location.getX(), location.getZ()), entry.getValue());
+			}
+
+			printProperties(fileProps, sb);
+
+			sb.append('\n');
+
 			List<Partition> partitions = rf.getPartitions();
 
 			for (Partition part : partitions) {

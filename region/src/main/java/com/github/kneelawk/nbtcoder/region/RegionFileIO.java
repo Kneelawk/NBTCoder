@@ -2,6 +2,7 @@ package com.github.kneelawk.nbtcoder.region;
 
 import com.github.kneelawk.nbtcoder.utils.ByteArrayUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.io.*;
 import java.util.Iterator;
@@ -11,25 +12,30 @@ import java.util.TreeMap;
 
 public class RegionFileIO {
 
-	public static List<Partition> readRegionFile(InputStream is) throws IOException {
+	public static RegionFile readRegionFile(InputStream is) throws IOException {
 		return readRegionFile(new DataInputStream(new BufferedInputStream(is)));
 	}
 
-	public static List<Partition> readRegionFile(DataInputStream input) throws IOException {
+	public static RegionFile readRegionFile(DataInputStream input) throws IOException {
 		// keys are stored in ascending order
-		Map<Integer, ChunkLoc> offsetMap = new TreeMap<>();
+		Map<Integer, HeaderValue> offsetMap = new TreeMap<>();
 
 		for (int i = 0; i < RegionValues.INTS_PER_SECTOR; i++) {
 			int offset = input.readInt();
 			if (offset != 0) {
-				ChunkLoc loc = new ChunkLoc(offset, i);
+				HeaderValue loc = new HeaderValue(offset, i);
 				offsetMap.put(loc.getSectorNumber(), loc);
 			}
 		}
 
+		Map<ChunkLocation, Integer> unusedTimestamps = Maps.newHashMap();
 		int[] timestamps = new int[RegionValues.INTS_PER_SECTOR];
 		for (int i = 0; i < RegionValues.INTS_PER_SECTOR; i++) {
-			timestamps[i] = input.readInt();
+			int timestamp = input.readInt();
+			if (timestamp != 0) {
+				timestamps[i] = timestamp;
+				unusedTimestamps.put(new ChunkLocation(i), timestamps[i]);
+			}
 		}
 
 		List<Partition> partitions = Lists.newArrayList();
@@ -64,7 +70,7 @@ public class RegionFileIO {
 				throw new IOException("Skipped sectors beyond the requested sector (This usually means the region file is corrupt)");
 			}
 
-			ChunkLoc loc = offsetMap.get(sectorNum);
+			HeaderValue loc = offsetMap.get(sectorNum);
 
 			int length = input.readInt();
 			byte type = input.readByte();
@@ -103,6 +109,8 @@ public class RegionFileIO {
 			sectorsRead += loc.getSectorCount();
 
 			partitions.add(chunk);
+
+			unusedTimestamps.remove(new ChunkLocation(loc.getLocation()));
 		}
 
 		// grab any data left over at the end of the region
@@ -142,16 +150,24 @@ public class RegionFileIO {
 			partitions.add(new EmptyPartition(sectorCount, paddingData));
 		}
 
-		return partitions;
+		return new SimpleRegionFile(partitions, unusedTimestamps);
 	}
 
-	public static void writeRegionFile(OutputStream os, List<Partition> partitions) throws IOException {
-		writeRegionFile(new DataOutputStream(os), partitions);
+	public static void writeRegionFile(OutputStream os, RegionFile regionFile) throws IOException {
+		writeRegionFile(new DataOutputStream(os), regionFile);
 	}
 
-	public static void writeRegionFile(DataOutputStream output, List<Partition> partitions) throws IOException {
+	public static void writeRegionFile(DataOutputStream output, RegionFile regionFile) throws IOException {
 		int[] offsets = new int[RegionValues.INTS_PER_SECTOR];
 		int[] timestamps = new int[RegionValues.INTS_PER_SECTOR];
+
+		List<Partition> partitions = regionFile.getPartitions();
+		Map<ChunkLocation, Integer> unusedTimestamps = regionFile.getUnusedTimestamps();
+
+		// add the unused timestamps
+		for (Map.Entry<ChunkLocation, Integer> entry : unusedTimestamps.entrySet()) {
+			timestamps[entry.getKey().getLocation()] = entry.getValue();
+		}
 
 		// start at sector 2 because the first two sectors are reserved
 		int sectorNum = 2;
@@ -175,11 +191,11 @@ public class RegionFileIO {
 		}
 	}
 
-	private static class ChunkLoc {
+	private static class HeaderValue {
 		private int offset;
 		private int location;
 
-		public ChunkLoc(int offset, int location) {
+		public HeaderValue(int offset, int location) {
 			this.offset = offset;
 			this.location = location;
 		}
@@ -206,7 +222,7 @@ public class RegionFileIO {
 
 		@Override
 		public String toString() {
-			return "ChunkLoc(getSectorNumber()=" + getSectorNumber() + ", getSectorCount()=" + getSectorCount()
+			return "HeaderValue(getSectorNumber()=" + getSectorNumber() + ", getSectorCount()=" + getSectorCount()
 					+ ", getX()=" + getX() + ", getZ()=" + getZ() + ")";
 		}
 	}
