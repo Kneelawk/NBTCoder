@@ -40,7 +40,8 @@ public class RegionFileIO {
 			int sectorNum = it.next();
 
 			// skip to the correct sector
-			if (sectorsRead < sectorNum) {// These may be garbage bytes but they're still important
+			if (sectorsRead < sectorNum) {
+				// These may be garbage bytes but they're still important
 				byte[] paddingData = new byte[(sectorNum - sectorsRead) * RegionValues.BYTES_PER_SECTOR];
 				input.readFully(paddingData);
 
