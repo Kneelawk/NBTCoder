@@ -274,9 +274,8 @@ public class TagCompound extends AbstractTag {
 		return ((TagString) elements.getOrDefault(key, new TagString())).getValue();
 	}
 
-	@SuppressWarnings("unchecked")
 	public TagList<? extends Tag> getList(String key) {
-		return ((TagList<? extends Tag>) elements.getOrDefault(key, new TagList<Tag>()));
+		return ((TagList<? extends Tag>) elements.getOrDefault(key, new TagList<>()));
 	}
 
 	public TagCompound getCompound(String key) {

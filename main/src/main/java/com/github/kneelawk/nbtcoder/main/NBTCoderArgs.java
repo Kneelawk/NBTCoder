@@ -265,8 +265,8 @@ public class NBTCoderArgs {
 		String currentArg;
 
 		void parse(String[] args) {
-			for (int argIndex = 0; argIndex < args.length; argIndex++) {
-				currentArg = args[argIndex];
+			for (String arg : args) {
+				currentArg = arg;
 				if (parsingInput) {
 					input = currentArg;
 					parsingInput = false;

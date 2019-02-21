@@ -19,7 +19,7 @@ public class Chunk implements Partition, ChunkPartition {
 		private byte compressionType;
 		private int x;
 		private int z;
-		private byte[] data;
+		private byte[] data = new byte[0];
 		private byte[] paddingData;
 		private int timestamp;
 
@@ -97,7 +97,7 @@ public class Chunk implements Partition, ChunkPartition {
 	private byte compressionType;
 	private int x;
 	private int z;
-	private byte[] data = new byte[0];
+	private byte[] data;
 	private byte[] paddingData;
 	private int timestamp;
 
@@ -117,7 +117,7 @@ public class Chunk implements Partition, ChunkPartition {
 
 	@Override
 	public Tag readTag(TagFactory factory) throws IOException {
-		DataInputStream in = null;
+		DataInputStream in;
 
 		switch (compressionType) {
 		case RegionValues.DEFLATE_COMPRESSION:
@@ -135,7 +135,7 @@ public class Chunk implements Partition, ChunkPartition {
 
 	public void writeTag(Tag tag) throws IOException {
 		ByteArrayOutputStream arrayOut = new ByteArrayOutputStream();
-		DataOutputStream out = null;
+		DataOutputStream out;
 
 		switch (compressionType) {
 		case RegionValues.DEFLATE_COMPRESSION:

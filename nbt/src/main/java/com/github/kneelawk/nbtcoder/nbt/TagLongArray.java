@@ -43,8 +43,8 @@ public class TagLongArray extends AbstractTag {
 	@Override
 	public void write(DataOutput out) throws IOException {
 		out.writeInt(value.length);
-		for (int i = 0; i < value.length; i++) {
-			out.writeLong(value[i]);
+		for (long l : value) {
+			out.writeLong(l);
 		}
 	}
 

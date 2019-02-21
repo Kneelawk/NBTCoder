@@ -125,9 +125,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		TerminalNode propsData = ctx.PROPERTIES_DATA();
 		try {
 			props.read(new StringReader(propsData.getText()));
-		} catch (IOException e) {
-			throw new InternalParseException(e, propsData);
-		} catch (ConfigurationException e) {
+		} catch (IOException | ConfigurationException e) {
 			throw new InternalParseException(e, propsData);
 		}
 		propertieses.push(props);

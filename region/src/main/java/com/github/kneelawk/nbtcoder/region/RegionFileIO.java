@@ -41,10 +41,7 @@ public class RegionFileIO {
 		List<Partition> partitions = Lists.newArrayList();
 
 		int sectorsRead = 2;
-		Iterator<Integer> it = offsetMap.keySet().iterator();
-		while (it.hasNext()) {
-			int sectorNum = it.next();
-
+		for (int sectorNum : offsetMap.keySet()) {
 			// skip to the correct sector
 			if (sectorsRead < sectorNum) {
 				// These may be garbage bytes but they're still important

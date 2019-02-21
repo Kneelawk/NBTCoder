@@ -8,7 +8,10 @@ import com.google.common.primitives.UnsignedBytes;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.BitSet;
+import java.util.Deque;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -62,7 +65,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 	@Override
 	public void exitTagString(TagStringContext ctx) {
 		String str = ctx.STRING().getText();
-		AbstractTag tag = null;
+		AbstractTag tag;
 		try {
 			tag = parseString(str);
 		} catch (TagParseException e) {
@@ -80,7 +83,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 	public void exitTagList(TagListContext ctx) {
 		TagList<Tag> list = new TagList<>();
 		List<AbstractTag> items = listItems.pop();
-		byte type = 0;
+		byte type;
 		try {
 			type = determineListType(items);
 		} catch (IncompatibleTagTypeException e) {
@@ -132,7 +135,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 				array = new TagByteArray("", hexBytes);
 				break;
 			case "i":
-				int[] ints = typedArrayItems.stream().mapToInt(o -> Integer.parseInt(o)).toArray();
+				int[] ints = typedArrayItems.stream().mapToInt(Integer::parseInt).toArray();
 				array = new TagIntArray("", ints);
 				break;
 			case "ix":
@@ -140,7 +143,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 				array = new TagIntArray("", hexInts);
 				break;
 			case "l":
-				long[] longs = typedArrayItems.stream().mapToLong(o -> Long.parseLong(o)).toArray();
+				long[] longs = typedArrayItems.stream().mapToLong(Long::parseLong).toArray();
 				array = new TagLongArray("", longs);
 				break;
 			case "lx":

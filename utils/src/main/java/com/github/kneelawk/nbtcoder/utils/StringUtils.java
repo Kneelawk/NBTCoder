@@ -5,22 +5,18 @@ public class StringUtils {
 	public static final char SPACE = ' ';
 
 	public static String tabs(int n) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (int i = 0; i < n; i++) {
-			s += TAB;
+			s.append(TAB);
 		}
-		return s;
+		return s.toString();
 	}
 
 	public static void tabs(int n, StringBuilder sb) {
-		for (int i = 0; i < n; i++) {
-			sb.append(TAB);
-		}
+		sb.append(TAB.repeat(Math.max(0, n)));
 	}
 
 	public static void spaces(int n, StringBuilder sb) {
-		for (int i = 0; i < n; i++) {
-			sb.append(SPACE);
-		}
+		sb.append(String.valueOf(SPACE).repeat(Math.max(0, n)));
 	}
 }

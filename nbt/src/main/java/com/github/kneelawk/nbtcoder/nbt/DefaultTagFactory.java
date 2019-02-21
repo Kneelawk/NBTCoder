@@ -26,7 +26,7 @@ public class DefaultTagFactory implements TagFactory {
 		case NBTValues.TAG_STRING:
 			return new TagString(name);
 		case NBTValues.TAG_LIST:
-			return new TagList<Tag>(name);
+			return new TagList<>(name);
 		case NBTValues.TAG_COMPOUND:
 			return new TagCompound(name);
 		case NBTValues.TAG_INT_ARRAY:

@@ -1,4 +1,4 @@
-name, foo, """foo"""
-value, foo, """foo"""
-name, bar, """bar"""
-value, bar, """bar"""
+name ,foo,"""foo"""
+value,foo,"""foo"""
+name ,bar,"""bar"""
+value,bar,"""bar"""
