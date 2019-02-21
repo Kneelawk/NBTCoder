@@ -169,7 +169,7 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 
 	@Override
 	public void enterTagCompound(TagCompoundContext ctx) {
-		compoundItems.add(Lists.newArrayList());
+		compoundItems.push(Lists.newArrayList());
 	}
 
 	@Override
