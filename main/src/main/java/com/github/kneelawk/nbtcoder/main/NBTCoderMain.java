@@ -91,7 +91,7 @@ public class NBTCoderMain {
 								// initialize the output stream
 								out = getOutputStream(argsObj);
 
-								NBTFileIO.writeRegionNBTStream((PartitionedFile) file, out);
+								NBTFileIO.writeNBTStream(file, out);
 							} else {
 								System.err.println("It is not possible to convert a region file to a non-region file.");
 								exitCode = -1;
