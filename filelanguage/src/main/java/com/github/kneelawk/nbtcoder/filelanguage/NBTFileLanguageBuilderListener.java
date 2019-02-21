@@ -20,10 +20,7 @@ import org.apache.commons.configuration2.ex.ConfigurationException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseListener {
@@ -31,7 +28,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 	private NBTLanguageParser nbtParser;
 
 	private NBTFile file;
-	private Stack<PropertiesConfiguration> propertieses = new Stack<>();
+	private Deque<PropertiesConfiguration> propertieses = new ArrayDeque<>();
 	private List<Partition> partitions = Lists.newArrayList();
 	private Tag tag;
 	private byte[] padding;
@@ -133,7 +130,7 @@ public class NBTFileLanguageBuilderListener extends NBTFileLanguageSystemBaseLis
 		} catch (ConfigurationException e) {
 			throw new InternalParseException(e, propsData);
 		}
-		propertieses.add(props);
+		propertieses.push(props);
 	}
 
 	@Override

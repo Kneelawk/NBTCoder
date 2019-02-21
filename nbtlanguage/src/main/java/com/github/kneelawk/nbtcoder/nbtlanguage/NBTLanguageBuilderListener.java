@@ -8,9 +8,7 @@ import com.google.common.primitives.UnsignedBytes;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.BitSet;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,10 +22,10 @@ public class NBTLanguageBuilderListener extends NBTLanguageSystemBaseListener {
 	}
 
 	private AbstractTag root;
-	private Stack<AbstractTag> tags = new Stack<>();
+	private Deque<AbstractTag> tags = new ArrayDeque<>();
 
-	private Stack<List<AbstractTag>> listItems = new Stack<>();
-	private Stack<List<AbstractTag>> compoundItems = new Stack<>();
+	private Deque<List<AbstractTag>> listItems = new ArrayDeque<>();
+	private Deque<List<AbstractTag>> compoundItems = new ArrayDeque<>();
 	private List<String> typedArrayItems = Lists.newArrayList();
 
 	public Tag getRoot() {
