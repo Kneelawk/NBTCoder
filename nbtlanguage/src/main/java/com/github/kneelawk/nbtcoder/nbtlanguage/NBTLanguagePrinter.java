@@ -245,7 +245,7 @@ public class NBTLanguagePrinter {
 				sb.append("\n");
 				tabs(indent + 1, sb);
 			}
-			for (Iterator<Tag> it = tag.tags().iterator(); it.hasNext();) {
+			for (Iterator<Tag> it = tag.tags().iterator(); it.hasNext(); ) {
 				Tag child = it.next();
 				printName(child.getName(), sb);
 				sb.append(":");

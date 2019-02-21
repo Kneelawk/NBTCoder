@@ -17,7 +17,7 @@ public class NBTLanguageTagListParseTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagListWithName.csv", "simplePrintTagListWithName.csv" })
 	public void parseTagListWithName(String name, @ConvertWith(TagListArgumentConverter.class) List<Tag> data,
-			String input) throws IOException {
+									 String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
 		@SuppressWarnings("unchecked")
 		TagList<Tag> tag = (TagList<Tag>) parser.parse(input);
@@ -29,7 +29,7 @@ public class NBTLanguageTagListParseTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagListWithoutName.csv", "simplePrintTagListWithoutName.csv" })
 	public void parseTagListWithoutName(String name, @ConvertWith(TagListArgumentConverter.class) List<Tag> data,
-			String input) throws IOException {
+										String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
 		@SuppressWarnings("unchecked")
 		TagList<Tag> tag = (TagList<Tag>) parser.parse(input);

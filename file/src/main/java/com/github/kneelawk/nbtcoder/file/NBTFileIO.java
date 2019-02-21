@@ -1,11 +1,9 @@
 package com.github.kneelawk.nbtcoder.file;
 
 import com.github.kneelawk.nbtcoder.nbt.NBTIO;
-import com.github.kneelawk.nbtcoder.nbt.NBTValues;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
 import com.github.kneelawk.nbtcoder.nbt.TagFactory;
 import com.github.kneelawk.nbtcoder.region.RegionFileIO;
-import org.apache.commons.io.input.CloseShieldInputStream;
 
 import java.io.*;
 

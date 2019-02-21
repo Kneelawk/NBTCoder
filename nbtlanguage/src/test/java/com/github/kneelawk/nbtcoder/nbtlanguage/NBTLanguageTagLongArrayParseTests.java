@@ -16,7 +16,7 @@ public class NBTLanguageTagLongArrayParseTests {
 	@CsvFileSource(resources = { "prettyPrintTagLongArrayWithName.csv", "simplePrintTagLongArrayWithName.csv",
 			"prettyPrintTagLongArrayWithNameWithHexArrays.csv", "simplePrintTagLongArrayWithNameWithHexArrays.csv" })
 	public void parseTagLongArrayWithName(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
-			String input) throws IOException {
+										  String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
 		TagLongArray tag = (TagLongArray) parser.parse(input);
 
@@ -29,7 +29,7 @@ public class NBTLanguageTagLongArrayParseTests {
 			"prettyPrintTagLongArrayWithoutNameWithHexArrays.csv",
 			"simplePrintTagLongArrayWithoutNameWithHexArrays.csv" })
 	public void parseTagLongArrayWithoutName(String name, @ConvertWith(LongArrayArgumentConverter.class) long[] data,
-			String input) throws IOException {
+											 String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
 		TagLongArray tag = (TagLongArray) parser.parse(input);
 

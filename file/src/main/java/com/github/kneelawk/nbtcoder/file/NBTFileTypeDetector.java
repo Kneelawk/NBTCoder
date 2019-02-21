@@ -1,11 +1,13 @@
 package com.github.kneelawk.nbtcoder.file;
 
-import com.github.kneelawk.nbtcoder.file.*;
 import com.github.kneelawk.nbtcoder.nbt.NBTValues;
 import com.github.kneelawk.nbtcoder.nbt.TagFactory;
 import org.apache.commons.io.input.CloseShieldInputStream;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -137,7 +139,7 @@ public class NBTFileTypeDetector {
 	}
 
 	public static SimpleNBTFile readStreamDetectedSimpleNBTStream(String filename, InputStream is,
-														   TagFactory factory) throws IOException {
+																  TagFactory factory) throws IOException {
 		try (BufferedInputStream bis = new BufferedInputStream(new CloseShieldInputStream(is))) {
 			bis.mark(1024);
 			try {

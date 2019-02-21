@@ -17,7 +17,7 @@ public class NBTIOTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "uncompressedNBT.csv" })
 	public void readUncompressedNBT(@ConvertWith(HexArgumentConverter.class) byte[] data,
-			@ConvertWith(NBTTagArgumentConverter.class) Tag expected) throws IOException {
+									@ConvertWith(NBTTagArgumentConverter.class) Tag expected) throws IOException {
 		TagFactory factory = new DefaultTagFactory();
 		Tag actual = NBTIO.readStream(new ByteArrayInputStream(data), factory);
 
@@ -27,7 +27,7 @@ public class NBTIOTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "uncompressedNBT.csv" })
 	public void writeUncompressedNBT(@ConvertWith(HexArgumentConverter.class) byte[] expected,
-			@ConvertWith(NBTTagArgumentConverter.class) Tag tag) throws IOException {
+									 @ConvertWith(NBTTagArgumentConverter.class) Tag tag) throws IOException {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		NBTIO.writeStream(tag, baos);
 

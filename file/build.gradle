@@ -1,6 +1,6 @@
 dependencies {
-	api project(':nbt')
-	api project(':region')
+    api project(':nbt')
+    api project(':region')
 }
 
 compileJava.dependsOn(':nbt:jar', ':region:jar')

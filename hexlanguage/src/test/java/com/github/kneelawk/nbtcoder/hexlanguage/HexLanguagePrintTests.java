@@ -9,9 +9,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HexLanguagePrintTests {
 	@ParameterizedTest
-	@CsvFileSource(resources = {"printHexWithLineNumbersWithOffset.csv"})
+	@CsvFileSource(resources = { "printHexWithLineNumbersWithOffset.csv" })
 	public void printHexWithLineNumbersWithOffset(@ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
-			int offset, String expected) {
+												  int offset, String expected) {
 		HexLanguagePrinter printer = new HexLanguagePrinter.Builder(true, true).build();
 
 		String out = printer.print(data, offset);
@@ -20,9 +20,9 @@ public class HexLanguagePrintTests {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(resources = {"printHexWithoutLineNumbersWithOffset.csv"})
+	@CsvFileSource(resources = { "printHexWithoutLineNumbersWithOffset.csv" })
 	public void printHexWithoutLineNumbersWithOffset(@ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
-			int offset, String expected) {
+													 int offset, String expected) {
 		HexLanguagePrinter printer = new HexLanguagePrinter.Builder(false, true).build();
 
 		String out = printer.print(data, offset);
@@ -31,9 +31,9 @@ public class HexLanguagePrintTests {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(resources = {"printHexWithLineNumbersWithoutOffset.csv"})
+	@CsvFileSource(resources = { "printHexWithLineNumbersWithoutOffset.csv" })
 	public void printHexWithLineNumbersWithoutOffset(@ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
-			int offset, String expected) {
+													 int offset, String expected) {
 		HexLanguagePrinter printer = new HexLanguagePrinter.Builder(true, false).build();
 
 		String out = printer.print(data, offset);
@@ -42,9 +42,9 @@ public class HexLanguagePrintTests {
 	}
 
 	@ParameterizedTest
-	@CsvFileSource(resources = {"printHexWithoutLineNumbersWithoutOffset.csv"})
+	@CsvFileSource(resources = { "printHexWithoutLineNumbersWithoutOffset.csv" })
 	public void printHexWithoutLineNumbersWithoutOffset(@ConvertWith(ByteArrayArgumentConverter.class) byte[] data,
-			int offset, String expected) {
+														int offset, String expected) {
 		HexLanguagePrinter printer = new HexLanguagePrinter.Builder(false, false).build();
 
 		String out = printer.print(data, offset);

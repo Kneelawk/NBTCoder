@@ -11,8 +11,8 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class HexLanguageParseTests {
 	@ParameterizedTest
-	@CsvFileSource(resources = {"printHexWithLineNumbersWithOffset.csv", "printHexWithoutLineNumbersWithOffset.csv",
-			"printHexWithLineNumbersWithoutOffset.csv", "printHexWithoutLineNumbersWithoutOffset.csv"})
+	@CsvFileSource(resources = { "printHexWithLineNumbersWithOffset.csv", "printHexWithoutLineNumbersWithOffset.csv",
+			"printHexWithLineNumbersWithoutOffset.csv", "printHexWithoutLineNumbersWithoutOffset.csv" })
 	public void parseHex(@ConvertWith(ByteArrayArgumentConverter.class) byte[] expected, int offset, String input)
 			throws IOException {
 		HexLanguageParser parser = new HexLanguageParser();

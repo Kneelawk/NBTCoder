@@ -17,7 +17,7 @@ public class NBTLanguageTagCompoundParseTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagCompoundWithName.csv", "simplePrintTagCompoundWithName.csv" })
 	public void parseTagCompoundWithName(String name, @ConvertWith(TagListArgumentConverter.class) List<Tag> data,
-			String input) throws IOException {
+										 String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
 		TagCompound tag = (TagCompound) parser.parse(input);
 
@@ -28,7 +28,7 @@ public class NBTLanguageTagCompoundParseTests {
 	@ParameterizedTest
 	@CsvFileSource(resources = { "prettyPrintTagCompoundWithoutName.csv", "simplePrintTagCompoundWithoutName.csv" })
 	public void parseTagCompoundWithoutName(String name, @ConvertWith(TagListArgumentConverter.class) List<Tag> data,
-			String input) throws IOException {
+											String input) throws IOException {
 		NBTLanguageParser parser = new NBTLanguageParser();
 		TagCompound tag = (TagCompound) parser.parse(input);
 
