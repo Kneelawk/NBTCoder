@@ -1,10 +1,9 @@
 package com.github.kneelawk.nbtcoder.file;
 
-import com.github.kneelawk.nbtcoder.region.ChunkLocation;
-import com.github.kneelawk.nbtcoder.region.ChunkPartition;
-import com.github.kneelawk.nbtcoder.region.Partition;
-import com.github.kneelawk.nbtcoder.region.RegionFile;
+import com.github.kneelawk.nbtcoder.region.*;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +24,11 @@ public class RegionNBTFile implements NBTFile, PartitionedFile {
 	@Override
 	public String getFileType() {
 		return NBTFileValues.REGION_FILE_TYPE_STRING;
+	}
+
+	@Override
+	public void writeToStream(OutputStream os) throws IOException {
+		RegionFileIO.writeRegionFile(os, regionFile);
 	}
 
 	@Override

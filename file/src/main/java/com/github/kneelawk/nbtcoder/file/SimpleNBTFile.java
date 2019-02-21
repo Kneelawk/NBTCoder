@@ -1,6 +1,10 @@
 package com.github.kneelawk.nbtcoder.file;
 
+import com.github.kneelawk.nbtcoder.nbt.NBTIO;
 import com.github.kneelawk.nbtcoder.nbt.Tag;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class SimpleNBTFile implements NBTFile, SimpleFile {
 	private String filename;
@@ -21,6 +25,15 @@ public class SimpleNBTFile implements NBTFile, SimpleFile {
 	@Override
 	public String getFileType() {
 		return compressed ? NBTFileValues.COMPRESSED_FILE_TYPE_STRING : NBTFileValues.UNCOMPRESSED_FILE_TYPE_STRING;
+	}
+
+	@Override
+	public void writeToStream(OutputStream os) throws IOException {
+		if (compressed) {
+			NBTIO.writeCompressedStream(data, os);
+		} else {
+			NBTIO.writeStream(data, os);
+		}
 	}
 
 	@Override

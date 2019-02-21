@@ -47,47 +47,13 @@ public class NBTFileIO {
 		return readRegionNBTFile(file.getName(), file);
 	}
 
-	public static void writeSimpleNBTStream(SimpleFile sf, OutputStream os) throws IOException {
-		if (sf.isCompressed()) {
-			NBTIO.writeCompressedStream(sf.getData(), os);
-		} else {
-			NBTIO.writeStream(sf.getData(), os);
-		}
-	}
-
-	public static void writeSimpleNBTFile(SimpleFile sf, File file) throws IOException {
-		if (sf.isCompressed()) {
-			NBTIO.writeCompressedFile(sf.getData(), file);
-		} else {
-			NBTIO.writeFile(sf.getData(), file);
-		}
-	}
-
-	public static void writeRegionNBTStream(PartitionedFile rf, OutputStream os) throws IOException {
-		RegionFileIO.writeRegionFile(os, rf.getRegionFile());
-	}
-
-	public static void writeRegionNBTFile(PartitionedFile rf, File file) throws IOException {
-		writeRegionNBTStream(rf, new FileOutputStream(file));
-	}
-
 	public static void writeNBTStream(NBTFile nbtFile, OutputStream os) throws IOException {
-		if (nbtFile instanceof SimpleFile) {
-			writeSimpleNBTStream((SimpleFile) nbtFile, os);
-		} else if (nbtFile instanceof PartitionedFile) {
-			writeRegionNBTStream((PartitionedFile) nbtFile, os);
-		} else {
-			throw new IllegalArgumentException("Unknown NBTFile type: " + nbtFile.getClass());
-		}
+		nbtFile.writeToStream(os);
 	}
 
 	public static void writeNBTFile(NBTFile nbtFile, File file) throws IOException {
-		if (nbtFile instanceof SimpleFile) {
-			writeSimpleNBTFile((SimpleFile) nbtFile, file);
-		} else if (nbtFile instanceof PartitionedFile) {
-			writeRegionNBTFile((PartitionedFile) nbtFile, file);
-		} else {
-			throw new IllegalArgumentException("Unknown NBTFile type: " + nbtFile.getClass());
+		try (FileOutputStream fos = new FileOutputStream(file)) {
+			nbtFile.writeToStream(fos);
 		}
 	}
 }
