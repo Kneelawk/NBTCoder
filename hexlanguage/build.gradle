@@ -4,26 +4,22 @@ dependencies {
     testImplementation project(':testutils')
 }
 
-compileJava.dependsOn(':utils:jar')
-compileTestJava.dependsOn(':testutils:jar')
+compileJava {
+    doFirst {
+        // work around for bug #111 where antlr generated files are not added to the compileJava source path
+        options.sourcepath = project.files(sourceSets.main.java.srcDirs)
+    }
+}
 
-javaModule {
-    extraTestModules = ['com.github.kneelawk.nbtcoder.test.utils']
+compileTestJava {
+    moduleOptions {
+        addModules = ['com.github.kneelawk.nbtcoder.test.utils']
+        addReads = ['com.github.kneelawk.nbtcoder.hexlanguage': 'com.github.kneelawk.nbtcoder.test.utils']
+    }
 }
 
 test {
-    doFirst {
-        def newJvmArgs = new ArrayList<String>()
-        for (int i = 0; i < jvmArgs.size(); i++) {
-            def value = jvmArgs.get(i)
-            newJvmArgs.add(value)
-            String patch
-            if ('--patch-module'.equals(value) && (patch = jvmArgs.get(++i)).startsWith(javaModule.name)) {
-                newJvmArgs.add("$patch:${processTestResources.outputs.files.singleFile}")
-            }
-        }
-        newJvmArgs.add('--add-opens')
-        newJvmArgs.add("${javaModule.name}/${javaModule.name}=org.junit.jupiter.params")
-        jvmArgs = newJvmArgs
+    moduleOptions {
+        addOpens = [("$moduleName/$moduleName".toString()): 'org.junit.jupiter.params']
     }
 }

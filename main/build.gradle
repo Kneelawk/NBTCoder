@@ -1,6 +1,6 @@
 apply plugin: 'org.beryx.jlink'
 
-mainClassName = 'com.github.kneelawk.nbtcoder.main.NBTCoderMain'
+mainClassName = "$moduleName/com.github.kneelawk.nbtcoder.main.NBTCoderMain"
 
 dependencies {
     implementation project(':file')
@@ -15,7 +15,5 @@ jlink {
     options = ['--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'NBTCoder'
-        unixScriptTemplate = file('unixStartScript.txt')
-        windowsScriptTemplate = file('windowsStartScript.txt')
     }
 }

@@ -5,4 +5,9 @@ dependencies {
     implementation project(':utils')
 }
 
-compileJava.dependsOn(':file:jar', ':hexlanguage:jar', ':nbtlanguage:jar', ':utils:jar')
+compileJava {
+    doFirst {
+        // work around for bug where antlr generated files are not added to the compileJava source path
+        options.sourcepath = project.files(sourceSets.main.java.srcDirs)
+    }
+}

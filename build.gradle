@@ -1,15 +1,8 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath 'com.zyxist.chainsaw:com.zyxist.chainsaw.gradle.plugin:0.3.1'
-        classpath 'org.beryx.jlink:org.beryx.jlink.gradle.plugin:2.6.1'
-    }
+plugins {
+    id 'org.javamodularity.moduleplugin' version '1.6.0' apply false
+    id 'org.beryx.jlink' version '2.16.4' apply false
 }
 
 subprojects {
@@ -17,7 +10,7 @@ subprojects {
     apply plugin: 'antlr'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
-    apply plugin: 'com.zyxist.chainsaw'
+    apply plugin: 'org.javamodularity.moduleplugin'
 
     sourceCompatibility = 11
     version = '0.0.5-SNAPSHOT'
@@ -27,11 +20,11 @@ subprojects {
     }
 
     dependencies {
-        implementation 'com.google.guava:guava:27.0.1-jre'
+        implementation 'com.google.guava:guava:28.1-jre'
         implementation 'commons-io:commons-io:2.6'
-        implementation 'org.apache.commons:commons-compress:1.18'
-        implementation 'org.apache.commons:commons-lang3:3.8.1'
-        implementation 'org.apache.commons:commons-configuration2:2.4'
+        implementation 'org.apache.commons:commons-compress:1.19'
+        implementation 'org.apache.commons:commons-lang3:3.9'
+        implementation 'org.apache.commons:commons-configuration2:2.6'
 
         antlr 'org.antlr:antlr4:4.7.2'
 
