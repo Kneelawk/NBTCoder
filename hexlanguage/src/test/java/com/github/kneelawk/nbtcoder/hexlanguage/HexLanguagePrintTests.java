@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
+import static com.github.kneelawk.nbtcoder.test.utils.NewlineUtils.stripCarriageReturn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HexLanguagePrintTests {
@@ -17,7 +18,7 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -28,7 +29,7 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -39,7 +40,7 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -50,6 +51,6 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 }

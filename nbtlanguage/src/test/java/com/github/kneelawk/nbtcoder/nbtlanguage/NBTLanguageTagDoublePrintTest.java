@@ -4,6 +4,7 @@ import com.github.kneelawk.nbtcoder.nbt.TagDouble;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
+import static com.github.kneelawk.nbtcoder.test.utils.NewlineUtils.stripCarriageReturn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NBTLanguageTagDoublePrintTest {
@@ -15,7 +16,7 @@ public class NBTLanguageTagDoublePrintTest {
 
 		String out = printer.print(b);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -26,7 +27,7 @@ public class NBTLanguageTagDoublePrintTest {
 
 		String out = printer.print(b);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -37,7 +38,7 @@ public class NBTLanguageTagDoublePrintTest {
 
 		String out = printer.print(b);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -48,6 +49,6 @@ public class NBTLanguageTagDoublePrintTest {
 
 		String out = printer.print(b);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 }

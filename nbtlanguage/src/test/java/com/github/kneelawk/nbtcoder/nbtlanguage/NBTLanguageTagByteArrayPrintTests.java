@@ -2,10 +2,12 @@ package com.github.kneelawk.nbtcoder.nbtlanguage;
 
 import com.github.kneelawk.nbtcoder.nbt.TagByteArray;
 import com.github.kneelawk.nbtcoder.test.utils.ByteArrayArgumentConverter;
+import com.github.kneelawk.nbtcoder.test.utils.NewlineUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
 
+import static com.github.kneelawk.nbtcoder.test.utils.NewlineUtils.stripCarriageReturn;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class NBTLanguageTagByteArrayPrintTests {
@@ -18,7 +20,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -30,7 +32,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -42,7 +44,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -54,7 +56,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -66,7 +68,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -78,7 +80,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -90,7 +92,7 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -102,6 +104,6 @@ public class NBTLanguageTagByteArrayPrintTests {
 
 		String out = printer.print(tag);
 
-		assertEquals(expected, out);
+		assertEquals(stripCarriageReturn(expected), stripCarriageReturn(out));
 	}
 }
