@@ -1,6 +1,9 @@
 apply plugin: 'org.beryx.jlink'
 
-mainClassName = "$moduleName/com.github.kneelawk.nbtcoder.main.NBTCoderMain"
+application {
+    mainClassName = "com.github.kneelawk.nbtcoder.main.NBTCoderMain"
+    mainModule = "com.github.kneelawk.nbtcoder.main"
+}
 
 dependencies {
     implementation project(':file')
@@ -15,5 +18,11 @@ jlink {
     options = ['--compress', '2', '--no-header-files', '--no-man-pages']
     launcher {
         name = 'NBTCoder'
+    }
+    jpackage {
+        def customInstallerType = System.getProperty("com.kneelawk.nbtcoder.main.installerType", "none")
+        if (customInstallerType != "none") {
+            installerType = customInstallerType
+        }
     }
 }

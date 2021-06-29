@@ -10,16 +10,3 @@ compileJava {
         options.sourcepath = project.files(sourceSets.main.java.srcDirs)
     }
 }
-
-compileTestJava {
-    moduleOptions {
-        addModules = ['com.github.kneelawk.nbtcoder.test.utils']
-        addReads = ['com.github.kneelawk.nbtcoder.hexlanguage': 'com.github.kneelawk.nbtcoder.test.utils']
-    }
-}
-
-test {
-    moduleOptions {
-        addOpens = [("$moduleName/$moduleName".toString()): 'org.junit.jupiter.params']
-    }
-}
