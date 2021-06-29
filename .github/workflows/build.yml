@@ -29,5 +29,23 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.java == '16' }}
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
+          name: Build-Artifacts
           path: main/build/libs/
+      - name: capture hexlanguage test artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test-Artifacts-hexlanguage-${{ matrix.os }}-java-${{ matrix.java }}
+          path: hexlanguage/build/reports/
+      - name: capture nbt test artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test-Artifacts-nbt-${{ matrix.os }}-java-${{ matrix.java }}
+          path: nbt/build/reports/
+      - name: capture nbtlanguage test artifacts
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test-Artifacts-nbtlanguage-${{ matrix.os }}-java-${{ matrix.java }}
+          path: nbtlanguage/build/reports/
