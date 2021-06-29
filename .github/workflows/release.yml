@@ -27,6 +27,8 @@ jobs:
         run: chmod a+x ./gradlew
       - name: jpackage image
         run: ./gradlew jpackageImage
+      - name: list image contents
+        run: ls -la main/build/jpackage
       - name: compress jpackage image *nix
         if: ${{ runner.os != 'Windows' }}
         working-directory: main/build/jpackage
