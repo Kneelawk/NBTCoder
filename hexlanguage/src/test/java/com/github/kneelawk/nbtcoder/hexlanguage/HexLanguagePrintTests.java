@@ -1,6 +1,7 @@
 package com.github.kneelawk.nbtcoder.hexlanguage;
 
 import com.github.kneelawk.nbtcoder.test.utils.ByteArrayArgumentConverter;
+import com.github.kneelawk.nbtcoder.test.utils.NewlineUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -16,7 +17,7 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(expected, out);
+		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -27,7 +28,7 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(expected, out);
+		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -38,7 +39,7 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(expected, out);
+		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
 	}
 
 	@ParameterizedTest
@@ -49,6 +50,6 @@ public class HexLanguagePrintTests {
 
 		String out = printer.print(data, offset);
 
-		assertEquals(expected, out);
+		assertEquals(NewlineUtils.stripCarriageReturn(expected), NewlineUtils.stripCarriageReturn(out));
 	}
 }
